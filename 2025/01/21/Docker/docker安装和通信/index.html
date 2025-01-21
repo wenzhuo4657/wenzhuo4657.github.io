@@ -19,21 +19,21 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-    <meta name="description" content="单路分发前置概念：接收者对象：方法调用的目标对象动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在class文件的常量池里。引用类型&#x2F;静态类型：java对象的声明类型运行类型：jvm中对象的实际类型，是堆区数据的对象类型。 java对象的多态性导致其引用类型和运行类型两者的区分，且各自的方法可能出现重写的现象，因而在对象执行过程中需要找到正确的方法。">
+    <meta name="description" content="docker 安装 docker-ce：包含dockerd、docer-ce-cli和其他依赖（其中有部分containerd依赖，但不直接包含） docker-ce-cli：仅包含 Docker 客户端命令行工具，用于与远程 Docker 守护进程通信。 containerd.io：独立的容器运行时，用于管理和运行容器。  这是最基本的三个安装，可以支持docker的基本功能。 通常安装时使用命">
 <meta property="og:type" content="article">
-<meta property="og:title" content="单路分发和多路分发">
-<meta property="og:url" content="http://example.com/2025/01/21/Java/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/index.html">
+<meta property="og:title" content="docker安装和通信">
+<meta property="og:url" content="http://example.com/2025/01/21/Docker/docker%E5%AE%89%E8%A3%85%E5%92%8C%E9%80%9A%E4%BF%A1/index.html">
 <meta property="og:site_name" content="wenzhuo4657">
-<meta property="og:description" content="单路分发前置概念：接收者对象：方法调用的目标对象动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在class文件的常量池里。引用类型&#x2F;静态类型：java对象的声明类型运行类型：jvm中对象的实际类型，是堆区数据的对象类型。 java对象的多态性导致其引用类型和运行类型两者的区分，且各自的方法可能出现重写的现象，因而在对象执行过程中需要找到正确的方法。">
+<meta property="og:description" content="docker 安装 docker-ce：包含dockerd、docer-ce-cli和其他依赖（其中有部分containerd依赖，但不直接包含） docker-ce-cli：仅包含 Docker 客户端命令行工具，用于与远程 Docker 守护进程通信。 containerd.io：独立的容器运行时，用于管理和运行容器。  这是最基本的三个安装，可以支持docker的基本功能。 通常安装时使用命">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-01-21T05:30:29.000Z">
-<meta property="article:modified_time" content="2025-01-21T05:36:55.654Z">
+<meta property="article:published_time" content="2025-01-21T05:48:28.000Z">
+<meta property="article:modified_time" content="2025-01-21T05:56:55.978Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>单路分发和多路分发 - wenzhuo4657</title>
+  <title>docker安装和通信 - wenzhuo4657</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -212,7 +212,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="单路分发和多路分发"></span>
+            <span id="subtitle" data-typed-text="docker安装和通信"></span>
           
         </div>
 
@@ -223,7 +223,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-01-21 13:30" pubdate>
+        <time datetime="2025-01-21 13:48" pubdate>
           2025年1月21日 下午
         </time>
       </span>
@@ -235,7 +235,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          879 字
+          1.3k 字
         
       </span>
     
@@ -246,7 +246,7 @@
         
         
         
-          8 分钟
+          11 分钟
         
       </span>
     
@@ -292,33 +292,61 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">单路分发和多路分发</h1>
+            <h1 id="seo-header">docker安装和通信</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="单路分发"><a href="#单路分发" class="headerlink" title="单路分发"></a>单路分发</h1><p>前置概念：<br>接收者对象：方法调用的目标对象<br>动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在<strong>class文件的常量池</strong>里。<br>引用类型&#x2F;静态类型：java对象的声明类型<br>运行类型：jvm中对象的实际类型，是堆区数据的对象类型。</p>
-<p>java对象的多态性导致其引用类型和运行类型两者的区分，且各自的方法可能出现重写的现象，因而在对象执行过程中需要找到正确的方法。jvm只有在运行阶段才会创建对象，调用方法时根据动态链接找到堆区的方法实现。。</p>
-<p>java单路分发：接收者对象（实际上是指堆区创建的对象，也就是运行类型）调用方法时根据动态链接找到方法区的真正实现。</p>
-<p>单路分发定义：查找方法只能根据接收者对象判断，而不考虑方法参数的实际类型。</p>
-<p>例如：<code>string.valueof(bi)</code> 接收者对象为string,单路分发只会考虑方法参数的引用类型，而非实际类型。</p>
-<p>注意：我们说java方法调用是单路分发，不考虑方法参数的<strong>实际类型</strong>。其中对于实际类型的理解需要和重载相区分，因为重载是从参数的引用类型进行选择。而我们所说的单路分发、多路分发实际上是根据方法的实际运行类型进行选择方法的具体实现（动态链接），而java的机制仅仅只支持根据接受者对象来选择方法的动态链接，因此java的分发机制是单路分发。</p>
-<ul>
-<li>方法重载的匹配：编译器在编译时根据参数类型选择最匹配的方法。</li>
-<li>编译器生成的字节码：编译器将方法调用转换为字节码指令，这些指令包含了方法调用的具体信息。</li>
-<li>动态链接：在类加载时，方法引用被解析为具体的方法地址。在方法调用时，JVM 根据接收者对象的实际类型选择具体的方法实现。</li>
+                <h1 id="docker-安装"><a href="#docker-安装" class="headerlink" title="docker 安装"></a>docker 安装</h1><ul>
+<li><strong><code>docker-ce</code></strong>：包含dockerd、docer-ce-cli和其他依赖（其中有部分containerd依赖，但不直接包含）</li>
+<li><strong><code>docker-ce-cli</code></strong>：仅包含 Docker 客户端命令行工具，用于与远程 Docker 守护进程通信。</li>
+<li><strong><code>containerd.io</code></strong>：独立的容器运行时，用于管理和运行容器。</li>
 </ul>
-<h1 id="两路分发和多路分发"><a href="#两路分发和多路分发" class="headerlink" title="两路分发和多路分发"></a>两路分发和多路分发</h1><p>参考;<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Yee-Q/p/14035322.html">Java 枚举 enum 详解 - 低吟不作语 - 博客园</a></p>
-<p>java实现两路分发实际上就是在方法调用中再次触发方法调用，根据方法参数的实际类型进行选择方法。</p>
-<p>硬编码实现</p>
-<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><br>## 可以使用枚举、swich简化代码实现<br><span class="hljs-meta">@Override</span> <span class="hljs-keyword">public</span> Outcome compete(Item it) <br>&#123; <span class="hljs-keyword">return</span> <br>it.eval(<span class="hljs-keyword">this</span>); <br>&#125;<br></code></pre></td></tr></table></figure>
-
-
-<p>且注意，只有<code>it.eveal(this)</code>找到的方法才是期望的方法，第一次执行找到compete方法是实现两路分发的过程。</p>
-<p> EnumMap 实现：</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs typescript">package enums;<br><span class="hljs-keyword">import</span> java.<span class="hljs-property">util</span>.*;<br><span class="hljs-keyword">import</span> <span class="hljs-keyword">static</span> enums.<span class="hljs-property">Outcome</span>.*;<br><span class="hljs-keyword">enum</span> <span class="hljs-title class_">RoShamBo5</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Competitor</span>&lt;<span class="hljs-title class_">RoShamBo5</span>&gt; &#123;<br>    <span class="hljs-variable constant_">PAPER</span>, <span class="hljs-variable constant_">SCISSORS</span>, <span class="hljs-variable constant_">ROCK</span>;<br>    <span class="hljs-keyword">static</span> <span class="hljs-title class_">EnumMap</span>&lt;<span class="hljs-title class_">RoShamBo5</span>,<span class="hljs-title class_">EnumMap</span>&lt;<span class="hljs-title class_">RoShamBo5</span>,<span class="hljs-title class_">Outcome</span>&gt;&gt;<br>            table = <span class="hljs-keyword">new</span> <span class="hljs-title class_">EnumMap</span>&lt;&gt;(<span class="hljs-title class_">RoShamBo5</span>.<span class="hljs-property">class</span>);<br>    <span class="hljs-keyword">static</span> &#123;<br>        <span class="hljs-keyword">for</span>(<span class="hljs-title class_">RoShamBo5</span> it : <span class="hljs-title class_">RoShamBo5</span>.<span class="hljs-title function_">values</span>())<br>            table.<span class="hljs-title function_">put</span>(it, <span class="hljs-keyword">new</span> <span class="hljs-title class_">EnumMap</span>&lt;&gt;(<span class="hljs-title class_">RoShamBo5</span>.<span class="hljs-property">class</span>));<br>        <span class="hljs-title function_">initRow</span>(<span class="hljs-variable constant_">PAPER</span>, <span class="hljs-variable constant_">DRAW</span>, <span class="hljs-variable constant_">LOSE</span>, <span class="hljs-variable constant_">WIN</span>);<br>        <span class="hljs-title function_">initRow</span>(<span class="hljs-variable constant_">SCISSORS</span>, <span class="hljs-variable constant_">WIN</span>, <span class="hljs-variable constant_">DRAW</span>, <span class="hljs-variable constant_">LOSE</span>);<br>        <span class="hljs-title function_">initRow</span>(<span class="hljs-variable constant_">ROCK</span>, <span class="hljs-variable constant_">LOSE</span>, <span class="hljs-variable constant_">WIN</span>, <span class="hljs-variable constant_">DRAW</span>);<br>    &#125;<br>    <span class="hljs-keyword">static</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">initRow</span>(<span class="hljs-params"><span class="hljs-title class_">RoShamBo5</span> it,</span><br><span class="hljs-params">                        <span class="hljs-title class_">Outcome</span> vPAPER, <span class="hljs-title class_">Outcome</span> vSCISSORS, <span class="hljs-title class_">Outcome</span> vROCK</span>) &#123;<br>        <span class="hljs-title class_">EnumMap</span>&lt;<span class="hljs-title class_">RoShamBo5</span>,<span class="hljs-title class_">Outcome</span>&gt; row =<br>                <span class="hljs-title class_">RoShamBo5</span>.<span class="hljs-property">table</span>.<span class="hljs-title function_">get</span>(it);<br>        row.<span class="hljs-title function_">put</span>(<span class="hljs-title class_">RoShamBo5</span>.<span class="hljs-property">PAPER</span>, vPAPER);<br>        row.<span class="hljs-title function_">put</span>(<span class="hljs-title class_">RoShamBo5</span>.<span class="hljs-property">SCISSORS</span>, vSCISSORS);<br>        row.<span class="hljs-title function_">put</span>(<span class="hljs-title class_">RoShamBo5</span>.<span class="hljs-property">ROCK</span>, vROCK);<br>    &#125;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Outcome</span> <span class="hljs-title function_">compete</span>(<span class="hljs-params"><span class="hljs-title class_">RoShamBo5</span> it</span>) &#123;<br>        <span class="hljs-keyword">return</span> table.<span class="hljs-title function_">get</span>(<span class="hljs-variable language_">this</span>).<span class="hljs-title function_">get</span>(it);<br>    &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">main</span>(<span class="hljs-params"><span class="hljs-title class_">String</span>[] args</span>) &#123;<br>        <span class="hljs-title class_">RoShamBo</span>.<span class="hljs-title function_">play</span>(<span class="hljs-title class_">RoShamBo5</span>.<span class="hljs-property">class</span>, <span class="hljs-number">20</span>);<br>    &#125;<br>&#125;<br><br></code></pre></td></tr></table></figure>
-
-<p>实际上依旧是二次选择，只是没有触发方法的动态链接机制，而是通过map类型手动填充了一张表格进行分发。</p>
+<p>这是最基本的三个安装，可以支持docker的基本功能。</p>
+<p>通常安装时使用命令<br><code>sudo apt install docker-ce docker-ce-cli containerd.io</code><br>这是因为apt 默认会选择最新的稳定版本来安装,而docker-ce中的docker-ce-cli有时不是最新的。</p>
+<p>此外还有docker-compose等其他支撑重要功能的包。可通过 <code>apt search docker</code>进行搜索</p>
+<h1 id="docker-desktop"><a href="#docker-desktop" class="headerlink" title="docker desktop"></a>docker desktop</h1><p>配置文件地址<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40233736/article/details/121505890">Windows Docker Desktop 配置损坏无法启动还原配置_docker desktop 调整资源后无法重启-CSDN博客</a><br>win11上： %userprofile%.docker</p>
+<p>![](&#x2F;docker安装和通信&#x2F;Pasted image 20241102090325.png)</p>
+<p>一系列尝试后，</p>
+<ul>
+<li>daemon.json: <code> 主机上的配置和集成的wsl实例配置有冲突关系。   因此当我清空wsl实例中的</code>&#x2F;etc&#x2F;docker&#x2F;daemon.json&#96;,将配置保留在win11上的之后发现docker.service可以正常运行。</li>
+<li>dokcer.service:主机配置与wsl实例无关系，但似乎类似与集群，因为我win11上的docker一直在正常启动，我疑惑的是不知道为什么在wsl上无法连接win11上的docker,同时也对默认守护进程的监听端口&#x2F;docker.sock发送过消息，可以正常发送</li>
+</ul>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk">我的覆盖配置<br>[Service] <br>ExecStart=  <span class="hljs-comment"># 清空了默认的 ExecStart 指令</span><br>ExecStart=<span class="hljs-regexp">/usr/</span>bin<span class="hljs-regexp">/dockerd -H fd:/</span><span class="hljs-regexp">/ -H tcp:/</span>/<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">2375</span>  <br></code></pre></td></tr></table></figure>
+<p>因此我wsl实例中的docker连接的是本机的docker Service,事实上应该让其远程连接win11上的docker（docker的架构是cs架构，而并非集群）。</p>
+<p>因此尝试删除docker其他组件，仅仅留下docker cli用于运行docker 客户端命令，此外使用<code>export DOCKER_HOST=&quot;unix:///var/run/docker.sock&quot;</code>进行通信。</p>
+<p>很不理解这里的目录，因此尝试重新安装一个实例，采用Ubuntu20LTS,没有进行docker安装，仅仅在docker desktop中开启集成，然后发现可以正常运行，查看环境变量并没有找到docker-host的配置，，这里只能认为docker-cli默认使用docker.sock，且发送消息可以正常接收返回。<br>![](docker安装和通信&#x2F;Pasted image 20241102130448.png)<br>![](&#x2F;docker安装和通信&#x2F;Pasted image 20241102130522.png)</p>
+<p>因此，当docker desktop集成其他wsl实例时，</p>
+<ul>
+<li><p>保存docker -cli命令的文件<br> 通过<code>apt list --installed</code>查看得知并没有安装包，但是可以通过<code>which docker</code>找到命令信息。</p>
+</li>
+<li><p>保存docker.sock等通信文件<br>  ![[Pasted image 20241102131135.png]]</p>
+</li>
+<li><p>由于访问的是同一个守护进程，所以只要在desktop上登录，被集成wsl实例执行docker login不需要输入密码。<br>  ![[Pasted image 20241102132148.png]]</p>
+</li>
+</ul>
+<h1 id="docker通信"><a href="#docker通信" class="headerlink" title="docker通信"></a>docker通信</h1><h2 id="docker-sock文件"><a href="#docker-sock文件" class="headerlink" title="docker.sock文件"></a>docker.sock文件</h2><p>在我创建portainer被要求挂载数据卷 <code>/var/run/docker.sock</code>,如果不挂在就会报错无法连接守护进程，但提示信息中并没有显示为什么无法连接，因此好几个小时内我都在尝试启动守护进程，直到越来越跑骗，开始尝试启动tcp远程访问守护进程。</p>
+<p><em>portainer要求挂载docker.sock,实际上印证了在同一台机器任何地方、不同虚拟机之间，都可以通过该文件和docker Daemon进行通信。</em></p>
+<p>参考: <a target="_blank" rel="noopener" href="https://docs.docker.net.cn/engine/">https://docs.docker.net.cn/engine/</a></p>
+<p>docker.sock:Unix域套接字文件，用于Docker客户端与Docker守护进程之间的本地通信。</p>
+<p>参考: <a target="_blank" rel="noopener" href="https://www.cnblogs.com/nufangrensheng/p/3569416.html">https://www.cnblogs.com/nufangrensheng/p/3569416.html</a><br>Unix域套接字文件：<br><strong>UNIX域套接字用于在同一台机器上运行的进程之间的通信</strong>。虽然因特网域套接字可用于同一目的，但UNIX域套接字的效率更高。<strong>UNIX域套接字仅仅复制数据</strong>；它们并不执行协议处理，不需要添加或删除网络报头，无需计算检验和，不要产生顺序号，无需发送确认报文。</p>
+<p><a target="_blank" rel="noopener" href="https://docs.docker.com/reference/cli/dockerd/#daemon-socket-option">https://docs.docker.com/reference/cli/dockerd/#daemon-socket-option</a><br>docker deamon（守护进程）默认监听&#x2F;var&#x2F;run&#x2F;docker.sock,除非明确禁止，否则一定会监听，该文件用于在同一台机器中docker通信。</p>
+<p>![](&#x2F;docker安装和通信&#x2F;Pasted image 20241101171522.png)</p>
+<h1 id="守护进程"><a href="#守护进程" class="headerlink" title="守护进程"></a>守护进程</h1><p>默认只允许本地访问，也就是docker.sock文件。</p>
+<p>参考文档: <a target="_blank" rel="noopener" href="https://docs.docker.net.cn/config/daemon/start/">https://docs.docker.net.cn/config/daemon/start/</a></p>
+<h2 id="启动方式："><a href="#启动方式：" class="headerlink" title="启动方式："></a>启动方式：</h2><p>sudo systemctl start docker（Ubuntu、 Debian中默认自动启动）<br>dockerd（属于命令行启动）</p>
+<h2 id="配置远程访问"><a href="#配置远程访问" class="headerlink" title="配置远程访问"></a>配置远程访问</h2><p><a target="_blank" rel="noopener" href="https://docs.docker.com/reference/cli/dockerd/#daemon-socket-option">https://docs.docker.com/reference/cli/dockerd/#daemon-socket-option</a></p>
+<p>可以三种不同类型的 Socket监听 </p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/api/">Docker Engine API</a><code>unix</code>请求</li>
+<li><code>tcp</code></li>
+<li><code>fd</code></li>
+</ul>
+<p>配置文件<br><a target="_blank" rel="noopener" href="https://docs.docker.com/engine/daemon/remote-access/#enable-remote-access">https://docs.docker.com/engine/daemon/remote-access/#enable-remote-access</a><br><code>/etc/docker/daemon.json</code>：守护进程的配置文件</p>
+<p><code>sudo systemctl edit docker.service</code> ：systemd服务单元配置，用于添加一个unit片段文件，以增加或覆盖默认设置。<br>![](&#x2F;docker安装和通信&#x2F;Pasted image 20241101173258.png)</p>
+<h4 id="tcp监听"><a href="#tcp监听" class="headerlink" title="tcp监听"></a>tcp监听</h4><p>使用tcp监听时，Docker 守护进程默认提供对 Docker 守护进程的未加密和未认证的直接访问。但是可以使用 <a target="_blank" rel="noopener" href="https://docs.docker.com/engine/security/protect-access/">内置的 HTTPS 加密套接字</a>或在其前面放置安全的 Web 代理来保护守护进程。</p>
+<h4 id="非-常规"><a href="#非-常规" class="headerlink" title="非 常规"></a>非 常规</h4><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/NUT_0/article/details/131459920">Windows宿主机如何访问连接虚拟机中的Docker容器_本地如何访问docker虚拟ip-CSDN博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_16213431/8729845">blog.51cto.com&#x2F;u_16213431&#x2F;8729845</a></p>
 
                 
               </div>
@@ -326,27 +354,6 @@
             <hr/>
             <div>
               <div class="post-metas my-3">
-  
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Java/" class="category-chain-item">Java</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
   
   
 </div>
@@ -357,8 +364,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>单路分发和多路分发</div>
-      <div>http://example.com/2025/01/21/Java/单路分发和多路分发/</div>
+      <div>docker安装和通信</div>
+      <div>http://example.com/2025/01/21/Docker/docker安装和通信/</div>
     </div>
     <div class="license-meta">
       
@@ -402,15 +409,15 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/01/21/Docker/docker%E5%AE%89%E8%A3%85%E5%92%8C%E9%80%9A%E4%BF%A1/" title="docker安装和通信">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">docker安装和通信</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2025/01/21/Java/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/" title="单路分发和多路分发">
+                        <span class="hidden-mobile">单路分发和多路分发</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
