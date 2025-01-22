@@ -1,0 +1,710 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载） 按需加载jdk的spi的配置文件 12org.example.ToyotaCarorg.example.HondaCar  dubbo的spi的配置文件 1234567toyota&#x3D;org.example.ToyotaCarhonda&#x3D;org.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="详解dubbo的spi加载方式">
+<meta property="og:url" content="http://example.com/2025/01/22/Dubbo/dubbo%E7%9A%84spi/index.html">
+<meta property="og:site_name" content="wenzhuo4657">
+<meta property="og:description" content="dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载） 按需加载jdk的spi的配置文件 12org.example.ToyotaCarorg.example.HondaCar  dubbo的spi的配置文件 1234567toyota&#x3D;org.example.ToyotaCarhonda&#x3D;org.">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/dubbo%E7%9A%84spi/image-20250122174648892.png">
+<meta property="article:published_time" content="2025-01-22T08:47:11.000Z">
+<meta property="article:modified_time" content="2025-01-22T10:39:16.485Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/dubbo%E7%9A%84spi/image-20250122174648892.png">
+  
+  
+  
+  <title>详解dubbo的spi加载方式 - wenzhuo4657</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":"U1CoNgLQ5Gc1sHjirJkghWGd-MdYXbMMI","app_key":"yXTI0JAPoaHUgODpRbIvtM1s","server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+  
+
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="wenzhuo4657" type="application/atom+xml">
+</head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>思考</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="详解dubbo的spi加载方式"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-01-22 16:47" pubdate>
+          2025年1月22日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          746 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          7 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="leancloud-page-views-container" class="post-meta" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="leancloud-page-views"></span> 次
+        </span>
+        
+      
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">详解dubbo的spi加载方式</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载）</p>
+<h2 id="按需加载"><a href="#按需加载" class="headerlink" title="按需加载"></a>按需加载</h2><p>jdk的spi的配置文件</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs stylus">org<span class="hljs-selector-class">.example</span><span class="hljs-selector-class">.ToyotaCar</span><br>org<span class="hljs-selector-class">.example</span>.HondaCar<br></code></pre></td></tr></table></figure>
+
+<p>dubbo的spi的配置文件</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">toyota=org.example.ToyotaCar<br>honda=org.example.HondaCar<br><span class="hljs-keyword">wrapper</span>=org.example.aop.CarWrapper1<br><span class="hljs-keyword">wrapper</span>=org.example.aop.CarWrapper2<br>Race=org.example.ioc.RaceRes<br>red=org.example.ioc.PenRes<br><br></code></pre></td></tr></table></figure>
+
+<p>二者的区别在于dubbo中使用键值，可以实现按需加载，请注意，该加载并非指配置文件的加载，而加载配置文件之后的对于<strong>服务对象的实例化</strong>。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><h4 id="jdk的spi"><a href="#jdk的spi" class="headerlink" title="jdk的spi"></a>jdk的spi</h4><figure class="highlight abnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs abnf">      ServiceLoader&lt;Car&gt; load <span class="hljs-operator">=</span> ServiceLoader.load(Car.class)<span class="hljs-comment">;</span><br><br>//        获取迭代器遍历<br>        Iterator&lt;Car&gt; iterator <span class="hljs-operator">=</span> load.iterator()<span class="hljs-comment">;</span><br>        while (iterator.hasNext())&#123;<br>            Car registry <span class="hljs-operator">=</span> iterator.next()<span class="hljs-comment">;</span><br>            registry.run()<span class="hljs-comment">;</span><br>        &#125;<br>        <br></code></pre></td></tr></table></figure>
+
+<p>追溯源码可以看到迭代器内部。</p>
+<p><img src="/dubbo%E7%9A%84spi/image-20250122174648892.png" srcset="/img/loading.gif" lazyload alt="image-20250122174648892"></p>
+<p>关键成员变量</p>
+<p>Iterator<String> pending ;&#x2F;&#x2F;配置文件读取的数据  <strong>该变量也是迭代器</strong><br>String nextName ;&#x2F;&#x2F;下一个将要读取的配置</p>
+<p>存在关键方法</p>
+<p>hasNextService：用于判断下一个服务名称，即配置文件当中的全限定类名。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">private</span> <span class="hljs-built_in">boolean</span> <span class="hljs-title function_">hasNextService</span>(<span class="hljs-params"></span>) &#123;<br>     <span class="hljs-keyword">if</span> (nextName != <span class="hljs-literal">null</span>) &#123;<br>         <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>     &#125;<br>     <span class="hljs-keyword">if</span> (configs == <span class="hljs-literal">null</span>) &#123;<br>         <span class="hljs-keyword">try</span> &#123;<br>             <span class="hljs-title class_">String</span> fullName = <span class="hljs-variable constant_">PREFIX</span> + service.<span class="hljs-title function_">getName</span>();<br>             <span class="hljs-keyword">if</span> (loader == <span class="hljs-literal">null</span>)<br>                 configs = <span class="hljs-title class_">ClassLoader</span>.<span class="hljs-title function_">getSystemResources</span>(fullName);<br>             <span class="hljs-keyword">else</span><br>                 configs = loader.<span class="hljs-title function_">getResources</span>(fullName);<br>         &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">IOException</span> x) &#123;<br>             <span class="hljs-title function_">fail</span>(service, <span class="hljs-string">&quot;Error locating configuration files&quot;</span>, x);<br>         &#125;<br>     &#125;<br>     <span class="hljs-keyword">while</span> ((pending == <span class="hljs-literal">null</span>) || !pending.<span class="hljs-title function_">hasNext</span>()) &#123;<br>         <span class="hljs-keyword">if</span> (!configs.<span class="hljs-title function_">hasMoreElements</span>()) &#123;<br>             <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>         &#125;<br>         pending = <span class="hljs-title function_">parse</span>(service, configs.<span class="hljs-title function_">nextElement</span>());<br>     &#125;<br>     nextName = pending.<span class="hljs-title function_">next</span>();<span class="hljs-comment">//获取下一个元素，</span><br>     <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br> &#125;<br><br></code></pre></td></tr></table></figure>
+
+
+
+<p>nextService：</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">private</span> S <span class="hljs-title function_">nextService</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-keyword">if</span> (!<span class="hljs-title function_">hasNextService</span>())<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">NoSuchElementException</span>();<br>        <span class="hljs-title class_">String</span> cn = nextName;<br>        nextName = <span class="hljs-literal">null</span>;<br>        <span class="hljs-title class_">Class</span>&lt;?&gt; c = <span class="hljs-literal">null</span>;<br>        <span class="hljs-keyword">try</span> &#123;<br>            c = <span class="hljs-title class_">Class</span>.<span class="hljs-title function_">forName</span>(cn, <span class="hljs-literal">false</span>, loader);<span class="hljs-comment">//获取类加载器</span><br>        &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">ClassNotFoundException</span> x) &#123;<br>            <span class="hljs-title function_">fail</span>(service,<br>                 <span class="hljs-string">&quot;Provider &quot;</span> + cn + <span class="hljs-string">&quot; not found&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">if</span> (!service.<span class="hljs-title function_">isAssignableFrom</span>(c)) &#123;<br>            <span class="hljs-title function_">fail</span>(service,<br>                 <span class="hljs-string">&quot;Provider &quot;</span> + cn  + <span class="hljs-string">&quot; not a subtype&quot;</span>);<br>        &#125;<br>        <span class="hljs-keyword">try</span> &#123;<br>            S p = service.<span class="hljs-title function_">cast</span>(c.<span class="hljs-title function_">newInstance</span>());<span class="hljs-comment">//实例化对象</span><br>            providers.<span class="hljs-title function_">put</span>(cn, p);<span class="hljs-comment">//延迟加载，将其收入到一个map集合当中</span><br>            <span class="hljs-keyword">return</span> p;<span class="hljs-comment">//返回加载元素</span><br>        &#125; <span class="hljs-keyword">catch</span> (<span class="hljs-title class_">Throwable</span> x) &#123;<br>            <span class="hljs-title function_">fail</span>(service,<br>                 <span class="hljs-string">&quot;Provider &quot;</span> + cn + <span class="hljs-string">&quot; could not be instantiated&quot;</span>,<br>                 x);<br>        &#125;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>();          <span class="hljs-comment">// This cannot happen</span><br>    &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="dubbo的spi"><a href="#dubbo的spi" class="headerlink" title="dubbo的spi"></a>dubbo的spi</h4><p>dubbo的spi则使用键值加载。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-title class_">ExtensionLoader</span>&lt;<span class="hljs-title class_">Car</span>&gt; extensionLoader;<br><span class="hljs-meta">@Before</span><br><span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span>  <span class="hljs-title function_">fi</span>(<span class="hljs-params"></span>)&#123;<br>    extensionLoader = <span class="hljs-title class_">ExtensionLoader</span>.<span class="hljs-title function_">getExtensionLoader</span>(<span class="hljs-title class_">Car</span>.<span class="hljs-property">class</span>);<br>&#125;<br><br><br><span class="hljs-comment">/**</span><br><span class="hljs-comment"> *  <span class="hljs-doctag">@author</span>:wenzhuo4657</span><br><span class="hljs-comment">    des:</span><br><span class="hljs-comment">dubbo基本服务发现，和jdk的主要区别在于可以用键去获取指定的扩展实现。</span><br><span class="hljs-comment">*/</span><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">test</span>(<span class="hljs-params"></span>)&#123;<br>        <span class="hljs-title class_">Car</span> car = extensionLoader.<span class="hljs-title function_">getExtension</span>(<span class="hljs-string">&quot;ali&quot;</span>,<span class="hljs-literal">false</span>);<span class="hljs-comment">//false表示不进行自动装配等其他配置，默认为true,</span><br>        car.<span class="hljs-title function_">run</span>();<br>        <span class="hljs-keyword">if</span> (car <span class="hljs-keyword">instanceof</span> <span class="hljs-title class_">HondaCar</span>)&#123;<br>            <span class="hljs-title class_">System</span>.<span class="hljs-property">out</span>.<span class="hljs-title function_">println</span>(<span class="hljs-string">&quot;true&quot;</span>);<br>        &#125;<br>    &#125;<br>   <br></code></pre></td></tr></table></figure>
+
+
+
+<p>追溯getExtension方法，可以看到关键实例化对象的createExtension方法</p>
+<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">private T createExtension(String <span class="hljs-type">name</span>, <span class="hljs-type">boolean</span> wrap) &#123;<br>       <span class="hljs-keyword">Class</span>&lt;?&gt; clazz = getExtensionClasses().<span class="hljs-keyword">get</span>(<span class="hljs-type">name</span>);<br>       <span class="hljs-keyword">if</span> (clazz == <span class="hljs-keyword">null</span>) &#123;<br>           throw findException(<span class="hljs-type">name</span>);<br>       &#125;<br>       try &#123;<br>           T instance = (T) EXTENSION_INSTANCES.<span class="hljs-keyword">get</span>(clazz);<br>           <span class="hljs-keyword">if</span> (instance == <span class="hljs-keyword">null</span>) &#123;<br>               EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.newInstance());<br>               instance = (T) EXTENSION_INSTANCES.<span class="hljs-keyword">get</span>(clazz);<br>           &#125;<br>           injectExtension(instance);<br><br><br>           <span class="hljs-keyword">if</span> (wrap) &#123;<br><br>               List&lt;<span class="hljs-keyword">Class</span>&lt;?&gt;&gt; wrapperClassesList = <span class="hljs-built_in">new</span> ArrayList&lt;&gt;();<br>               <span class="hljs-keyword">if</span> (cachedWrapperClasses != <span class="hljs-keyword">null</span>) &#123;<br>                   wrapperClassesList.addAll(cachedWrapperClasses);<br>                   wrapperClassesList.sort(WrapperComparator.COMPARATOR);<br>                   Collections.reverse(wrapperClassesList);<br>               &#125;<br><br>               <span class="hljs-keyword">if</span> (CollectionUtils.isNotEmpty(wrapperClassesList)) &#123;<br>                   <span class="hljs-keyword">for</span> (<span class="hljs-keyword">Class</span>&lt;?&gt; wrapperClass : wrapperClassesList) &#123;<br>                       <span class="hljs-keyword">Wrapper</span> <span class="hljs-keyword">wrapper</span> = wrapperClass.getAnnotation(<span class="hljs-keyword">Wrapper</span>.<span class="hljs-keyword">class</span>);<br>                       <span class="hljs-keyword">if</span> (<span class="hljs-keyword">wrapper</span> == <span class="hljs-keyword">null</span><br>                               || (ArrayUtils.contains(<span class="hljs-keyword">wrapper</span>.matches(), <span class="hljs-type">name</span>) &amp;&amp; !ArrayUtils.contains(<span class="hljs-keyword">wrapper</span>.mismatches(), <span class="hljs-type">name</span>))) &#123;<br>                           instance = injectExtension((T) wrapperClass.getConstructor(<span class="hljs-keyword">type</span>).newInstance(instance));<br>                       &#125;<br>                   &#125;<br>               &#125;<br>           &#125;<br><br>           initExtension(instance);<br>           <span class="hljs-keyword">return</span> instance;<br>       &#125; catch (Throwable t) &#123;<br>           throw <span class="hljs-built_in">new</span> IllegalStateException(&quot;Extension instance (name: &quot; + <span class="hljs-type">name</span> + &quot;, class: &quot; +<br>                   <span class="hljs-keyword">type</span> + &quot;) couldn&#x27;t be instantiated: &quot; + t.getMessage(), t);<br>       &#125;<br>   &#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<p>1，提前获取类加载器，</p>
+<p>Class<?> clazz = getExtensionClasses().get(name);方法内部可以看到有一个成员变量`private final Holder<Map<String, Class<?>&gt;&gt; cachedClasses &#x3D; new Holder&lt;&gt;();&#96;</p>
+<h1 id="DUBBO的扩展点加载"><a href="#DUBBO的扩展点加载" class="headerlink" title="DUBBO的扩展点加载"></a>DUBBO的扩展点加载</h1><p><a target="_blank" rel="noopener" href="https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/spi/">扩展点加载 | Apache Dubbo</a>:该文档旨在对官网翻译，助于理解</p>
+<p>dubbo扩展点加载与单纯的spi不同，会使用Wrapper包装类对服务方法进行扩展，实际上将，这有点像aop。</p>
+<p>包装之后，获取的对象将不是所需要的服务对象，而是包装类对象。</p>
+<figure class="highlight angelscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs angelscript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-symbol">XxxProtocolWrapper</span> <span class="hljs-symbol">implements</span> <span class="hljs-symbol">Protocol</span> &#123;<br>    Protocol impl;<br> <br>    <span class="hljs-keyword">public</span> XxxProtocolWrapper(Protocol protocol) &#123; impl = protocol; &#125;<br> <br>    <span class="hljs-comment">// 接口方法做一个操作后，再调用extension的方法</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-built_in">ref</span>er() &#123;<br>        <span class="hljs-comment">//... 一些操作</span><br>        impl.<span class="hljs-built_in">ref</span>er();<br>        <span class="hljs-comment">// ... 一些操作</span><br>    &#125;<br> <br>    <span class="hljs-comment">// ...</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
+
+
+<p>可以在加载是通过参数指定是否开启包装类代理。</p>
+<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">Car car = extensionLoader.getExtension(<span class="hljs-string">&quot;ali&quot;</span>,<span class="hljs-literal">false</span>);//<span class="hljs-literal">false</span>表示不进行自动装配等其他配置，默认为<span class="hljs-literal">true</span>,<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="自动装配"><a href="#自动装配" class="headerlink" title="自动装配"></a>自动装配</h2><p>自动装配对应spring DI自动注入，判断方式为方法名称。</p>
+<p>形如setWheelMaker 方法的 WheelMaker 也是扩展点则会注入 WheelMaker 的实现。</p>
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RaceCarMaker</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">CarMaker</span> &#123;<br>    <span class="hljs-title class_">WheelMaker</span> wheelMaker;<br> <br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setWheelMaker</span>(<span class="hljs-params"><span class="hljs-title class_">WheelMaker</span> wheelMaker</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">wheelMaker</span> = wheelMaker;<br>    &#125;<br> <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Car</span> <span class="hljs-title function_">makeCar</span>(<span class="hljs-params"></span>) &#123;<br>        <span class="hljs-comment">// ...</span><br>        <span class="hljs-title class_">Wheel</span> wheel = wheelMaker.<span class="hljs-title function_">makeWheel</span>();<br>        <span class="hljs-comment">// ...</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RaceCar</span>(wheel, ...);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>但是这种注入无法指定依赖服务的实现，一般为默认实现或者优先级判断使用哪个实现，但无论是哪种都是全局唯一的默认，无法实现特例。</p>
+<h2 id="自适应装配"><a href="#自适应装配" class="headerlink" title="自适应装配"></a>自适应装配</h2><p>该装配利用了包装类和方法参数，实现在扩展时加载服务对象并调用方法。</p>
+<p>（<strong>该方式和自动装配并不冲突，只是并不使用自动装配的服务，并且由于包装类方法执行的缘故，甚至不用判断是否使用默认服务。</strong>）</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs kotlin"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">CarMaker</span> &#123;<br>	 <span class="hljs-meta">@Adaptive(&#123;<span class="hljs-string">&quot;CarMaker&quot;</span>&#125;)</span><br>    Car makeCar(URL url);<br>&#125;<br> <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">WheelMaker</span> &#123;<br>	 <span class="hljs-meta">@Adaptive(&#123;<span class="hljs-string">&quot;WheelMaker&quot;</span>&#125;)</span><br>    Wheel makeWheel(URL url);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs typescript"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RaceCarMaker</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">CarMaker</span> &#123;<br>    <span class="hljs-title class_">WheelMaker</span> wheelMaker;<br> <br>    <span class="hljs-keyword">public</span> <span class="hljs-built_in">void</span> <span class="hljs-title function_">setWheelMaker</span>(<span class="hljs-params"><span class="hljs-title class_">WheelMaker</span> wheelMaker</span>) &#123;<br>        <span class="hljs-variable language_">this</span>.<span class="hljs-property">wheelMaker</span> = wheelMaker;<br>    &#125;<br> <br>    <span class="hljs-keyword">public</span> <span class="hljs-title class_">Car</span> <span class="hljs-title function_">makeCar</span>(<span class="hljs-params">URL url</span>) &#123;<br>        <span class="hljs-comment">// ...</span><br>        <span class="hljs-title class_">Wheel</span> wheel = wheelMaker.<span class="hljs-title function_">makeWheel</span>(url);<br>        <span class="hljs-comment">// ...</span><br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RaceCar</span>(wheel, ...);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">Pen</span> <span class="hljs-variable">pen</span> <span class="hljs-operator">=</span> extensionLoader.getAdaptiveExtension();<br><span class="hljs-type">URL</span> <span class="hljs-variable">url</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">URL</span>(<span class="hljs-string">&quot;dubbo&quot;</span>, <span class="hljs-string">&quot;127.0.0.1&quot;</span>, <span class="hljs-number">20880</span>).<br>        addParameter(<span class="hljs-string">&quot;WheelMaker&quot;</span>, <span class="hljs-string">&quot;wheel&quot;</span>).<br>        addParameter(<span class="hljs-string">&quot;CarMaker&quot;</span>,<span class="hljs-string">&quot;car&quot;</span>);<br><br><span class="hljs-comment">// 调用方法</span><br>pen.run(url);<br></code></pre></td></tr></table></figure>
+
+<p>使用@Adaptive注解定义包装类实例化服务的key,在url参数中指定，最终实现特定服务调用特定服务。</p>
+<p>深入源码中即可发现这一实现的依赖于包装类。</p>
+<figure class="highlight coffeescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs coffeescript">public java.lang.<span class="hljs-built_in">String</span> queryCountry(org.apache.dubbo.common.URL arg0) &#123;         <span class="hljs-keyword">if</span> (arg0 == <span class="hljs-literal">null</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalArgumentException(<span class="hljs-string">&quot;url == null&quot;</span>);         org.apache.dubbo.common.URL url = arg0;         <span class="hljs-built_in">String</span> extName = url.getParameter(<span class="hljs-string">&quot;person.service&quot;</span>, <span class="hljs-string">&quot;china&quot;</span>);<span class="hljs-regexp">//</span>获取指定扩展服务         <span class="hljs-keyword">if</span> (extName == <span class="hljs-literal">null</span>)             <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> IllegalStateException(<span class="hljs-string">&quot;Failed to get extension (org.dubbo.spi.example.PersonService) name from url (&quot;</span> + url.toString() + <span class="hljs-string">&quot;) use keys([person.service])&quot;</span>);         org.dubbo.spi.example.PersonService extension = (org.dubbo.spi.example.PersonService) ExtensionLoader.getExtensionLoader(org.dubbo.spi.example.PersonService.<span class="hljs-keyword">class</span>).getExtension(extName); <span class="hljs-regexp">//</span>扩展服务加载      <br><span class="hljs-keyword">return</span> extension.queryCountry(arg0);<span class="hljs-regexp">//</span>扩展服务执行    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>它会在扩展执行时通过url参数中的指定值，加载扩展服务执行。 </p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>详解dubbo的spi加载方式</div>
+      <div>http://example.com/2025/01/22/Dubbo/dubbo的spi/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>John Doe</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年1月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/01/21/Java/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/" title="单路分发和多路分发">
+                        <span class="hidden-mobile">单路分发和多路分发</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script defer src="/js/leancloud.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
