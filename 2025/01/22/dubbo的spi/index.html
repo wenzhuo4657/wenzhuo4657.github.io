@@ -16,7 +16,7 @@
 <meta property="og:locale">
 <meta property="og:image" content="http://example.com/img/404.jpg">
 <meta property="article:published_time" content="2025-01-22T08:47:11.000Z">
-<meta property="article:modified_time" content="2025-03-02T02:36:11.845Z">
+<meta property="article:modified_time" content="2025-03-10T06:35:51.951Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/img/404.jpg">
@@ -65,7 +65,7 @@
 
 <!-- Variable -->
 <script>window.ASYNC_CONFIG = {"hostname":"example.com","author":"John Doe","root":"/","typed_text":["Web Developer"],"theme_version":"2.2.4","theme":{"switch":true,"default":"style-light"},"favicon":{"logo":"log.svg","icon16":"log.svg","icon32":"log.svg","apple_touch_icon":"apple-touch-icon.png","webmanifest":"/site.webmanifest","visibilitychange":true,"hidden":"failure.ico","show_text":"(/≧▽≦/)咦！又好了！","hide_text":"(●—●)喔哟，崩溃啦！"},"i18n":{"placeholder":"搜索文章...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）","author":"本文作者：","copyright_link":"本文链接：","copyright_license_title":"版权声明：","copyright_license_content":"本博客所有文章除特别声明外，均默认采用 undefined 许可协议。","copy_success":"复制成功","copy_failure":"复制失败","open_read_mode":"进入阅读模式","exit_read_mode":"退出阅读模式","notice_outdate_message":"距离上次更新已经 undefined 天了, 文章内容可能已经过时。","sticky":"置顶","just":"刚刚","min":"分钟前","hour":"小时前","day":"天前","month":"个月前"},"swup":false,"plugin":{"flickr_justified_gallery":"https://npm.elemecdn.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"icon-hupilan","moon":"icon-hupilan","play":"icon-hupilan","email":"icon-hupilan","next":"icon-hupilan","calendar":"icon-hupilan","clock":"icon-hupilan","user":"icon-hupilan","back_top":"icon-hupilan","close":"icon-hupilan","search":"icon-hupilan","reward":"icon-hupilan","toc_tag":"icon-hupilan","read":"icon-hupilan","arrows":"icon-hupilan","double_arrows":"icon-hupilan","copy":"icon-hupilan","user_tag":"icon-hupilan"},"icontype":"symbol","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":false,"title":"mac","height_limit":200},"toc":{"post_title":true},"live_time":{"start_time":"","prefix":"博客已萌萌哒运行 undefined 天"},"danmu":{"enable":false,"el":".trm-banner"}};</script>
-<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2025-03-02 10:36:11"};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2025-03-10 14:35:51"};</script>
 
 <!-- Theme mode css -->
 <link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.2.4" id="trm-switch-style">
@@ -456,6 +456,9 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public java.lang.String queryCountry(org.apache.dubbo.common.URL arg0) &#123;         if (arg0 == null) throw new IllegalArgumentException(&quot;url == null&quot;);         org.apache.dubbo.common.URL url = arg0;         String extName = url.getParameter(&quot;person.service&quot;, &quot;china&quot;);//获取指定扩展服务         if (extName == null)             throw new IllegalStateException(&quot;Failed to get extension (org.dubbo.spi.example.PersonService) name from url (&quot; + url.toString() + &quot;) use keys([person.service])&quot;);         org.dubbo.spi.example.PersonService extension = (org.dubbo.spi.example.PersonService) ExtensionLoader.getExtensionLoader(org.dubbo.spi.example.PersonService.class).getExtension(extName); //扩展服务加载      </span><br><span class="line">return extension.queryCountry(arg0);//扩展服务执行    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>它会在扩展执行时通过url参数中的指定值，加载扩展服务执行。 </p>
+<h1 id="补充要点"><a href="#补充要点" class="headerlink" title="补充要点"></a>补充要点</h1><h2 id="jdk的加载默认使用无参构造器"><a href="#jdk的加载默认使用无参构造器" class="headerlink" title="jdk的加载默认使用无参构造器"></a>jdk的加载默认使用无参构造器</h2><p>这一点可以在ServiceLoader.LazyIterator#nextService()中看到</p>
+<p><code>S p = service.cast(c.newInstance());</code></p>
+<p>而Dubbo可以通过url携带参数实例化。</p>
 
 </article>
     
