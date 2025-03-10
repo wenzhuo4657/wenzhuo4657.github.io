@@ -3,11 +3,11 @@
   <title>Hexo</title>
   
   
-  <link href="http://example.com/atom.xml" rel="self"/>
+  <link href="http://wenzhuo4657.org/atom.xml" rel="self"/>
   
-  <link href="http://example.com/"/>
+  <link href="http://wenzhuo4657.org/"/>
   <updated>2025-03-10T07:50:50.252Z</updated>
-  <id>http://example.com/</id>
+  <id>http://wenzhuo4657.org/</id>
   
   <author>
     <name>John Doe</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>tomcat源码阅读（二）</title>
-    <link href="http://example.com/2025/03/10/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
-    <id>http://example.com/2025/03/10/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/</id>
+    <link href="http://wenzhuo4657.org/2025/03/10/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
+    <id>http://wenzhuo4657.org/2025/03/10/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/</id>
     <published>2025-03-10T06:59:35.000Z</published>
     <updated>2025-03-10T07:50:50.252Z</updated>
     
@@ -33,15 +33,15 @@
     
     
     
-    <category term="源码" scheme="http://example.com/categories/%E6%BA%90%E7%A0%81/"/>
+    <category term="源码" scheme="http://wenzhuo4657.org/categories/%E6%BA%90%E7%A0%81/"/>
     
     
   </entry>
   
   <entry>
     <title>tomcat源码阅读（一）</title>
-    <link href="http://example.com/2025/03/07/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/"/>
-    <id>http://example.com/2025/03/07/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/</id>
+    <link href="http://wenzhuo4657.org/2025/03/07/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://wenzhuo4657.org/2025/03/07/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/</id>
     <published>2025-03-07T08:07:46.000Z</published>
     <updated>2025-03-10T07:32:06.321Z</updated>
     
@@ -55,15 +55,15 @@
     
     
     
-    <category term="源码" scheme="http://example.com/categories/%E6%BA%90%E7%A0%81/"/>
+    <category term="源码" scheme="http://wenzhuo4657.org/categories/%E6%BA%90%E7%A0%81/"/>
     
     
   </entry>
   
   <entry>
     <title>零拷贝</title>
-    <link href="http://example.com/2025/02/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/"/>
-    <id>http://example.com/2025/02/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/</id>
+    <link href="http://wenzhuo4657.org/2025/02/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/"/>
+    <id>http://wenzhuo4657.org/2025/02/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/</id>
     <published>2025-02-15T08:23:43.000Z</published>
     <updated>2025-03-02T02:36:00.993Z</updated>
     
@@ -78,15 +78,15 @@
     
     
     
-    <category term="OS" scheme="http://example.com/categories/OS/"/>
+    <category term="OS" scheme="http://wenzhuo4657.org/categories/OS/"/>
     
     
   </entry>
   
   <entry>
     <title>dubbo的spi</title>
-    <link href="http://example.com/2025/01/22/dubbo%E7%9A%84spi/"/>
-    <id>http://example.com/2025/01/22/dubbo%E7%9A%84spi/</id>
+    <link href="http://wenzhuo4657.org/2025/01/22/dubbo%E7%9A%84spi/"/>
+    <id>http://wenzhuo4657.org/2025/01/22/dubbo%E7%9A%84spi/</id>
     <published>2025-01-22T08:47:11.000Z</published>
     <updated>2025-03-10T06:35:51.951Z</updated>
     
@@ -101,15 +101,15 @@
     
     
     
-    <category term="dubbo" scheme="http://example.com/categories/dubbo/"/>
+    <category term="dubbo" scheme="http://wenzhuo4657.org/categories/dubbo/"/>
     
     
   </entry>
   
   <entry>
     <title>单路分发和多路分发</title>
-    <link href="http://example.com/2025/01/21/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/"/>
-    <id>http://example.com/2025/01/21/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/</id>
+    <link href="http://wenzhuo4657.org/2025/01/21/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/"/>
+    <id>http://wenzhuo4657.org/2025/01/21/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/</id>
     <published>2025-01-21T07:01:05.000Z</published>
     <updated>2025-03-02T02:36:08.029Z</updated>
     
@@ -123,7 +123,7 @@
     
     
     
-    <category term="设计思路" scheme="http://example.com/categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF/"/>
+    <category term="设计思路" scheme="http://wenzhuo4657.org/categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF/"/>
     
     
   </entry>
