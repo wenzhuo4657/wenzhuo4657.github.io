@@ -6,7 +6,7 @@
   <link href="http://wenzhuo4657.org/atom.xml" rel="self"/>
   
   <link href="http://wenzhuo4657.org/"/>
-  <updated>2025-03-10T07:50:50.252Z</updated>
+  <updated>2025-03-12T08:30:38.246Z</updated>
   <id>http://wenzhuo4657.org/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>git入门系列（一）</title>
+    <link href="http://wenzhuo4657.org/2025/03/12/git%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/"/>
+    <id>http://wenzhuo4657.org/2025/03/12/git%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/</id>
+    <published>2025-03-12T07:37:15.000Z</published>
+    <updated>2025-03-12T08:30:38.246Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="git是什么？"><a href="#git是什么？" class="headerlink" title="git是什么？"></a>git是什么？</h1><h2 id="以键值数据库为基础的文件版本控制系统"><a href="#以键值数据库为基础的文件版本控制系统" class="headerlink" title="以键值数据库为基础的文件版本控制系统"></a>以键值数据库为基础的文件版本控制系统</h2><p>参考：<a href="https://git-scm.com/book/zh/v2/%e8%b5%b7%e6%ad%a5-Git-%e6%98%af%e4%bb%80%e4%b9%88%ef%bc%9f">https://git-scm.com/book/zh/v2/%e8%b5%b7%e6%ad%a5-Git-%e6%98%af%e4%bb%80%e4%b9%88%ef%bc%9f</a></p><p>提醒： 本篇大部分在git官网都存在，只是顺序不一致，按我理解，这样有助于直接理解git的钩子机制。</p><p>传统的文件版本数据库通过累计文件差异来区分文件版本，而git则是通过不断累计文件快照，然后使用链接管理当前版本应该显示的文件！</p><ul><li>好处：如果存储文件差异，则不可避免的需要从文件内部开始操作，所带来的是复杂且绝不能出错的高安全性要求，而git管理文件链接，换言之，他只需要保存每个版本的文件链接列表即可，对于真实的文件数据，他们互相隔离。</li><li>坏处：文件系统容易变得臃肿庞大。</li></ul><p>参考:<a href="https://git-scm.com/book/zh/v2/Git-%e5%86%85%e9%83%a8%e5%8e%9f%e7%90%86-Git-%e5%af%b9%e8%b1%a1">https://git-scm.com/book/zh/v2/Git-%e5%86%85%e9%83%a8%e5%8e%9f%e7%90%86-Git-%e5%af%b9%e8%b1%a1</a></p><p>文件快照存储的方式则是键值数据库，位于.git&#x2F;objects 目录。</p><p>存储值，并返回唯一键（SHA-1 哈希值）：<code>echo &#39;test content&#39; | git hash-object -w --stdin</code></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ echo &#x27;test content&#x27; | git hash-object -w --stdin</span><br><span class="line">d670460b4b4aece5915caf5c68d12f560a9fe3e4</span><br></pre></td></tr></table></figure><p>取出： </p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4</span><br><span class="line">test content</span><br></pre></td></tr></table></figure><p>此外还有树对象用于组织这些键值。</p><p><img src="https://blog.wenzhuo4657.org/img/image-20250312155433934.png" alt="image-20250312155433934"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p><p>但是这仍然不是我们所熟知的git commit提交对象，这并没有提交信息的对应，这一点简单的说即是sha-1哈希值和文本的对应。随意找一个仓库都可以看到他们之间的关联。</p><p><img src="https://blog.wenzhuo4657.org/img/image-20250312155805995.png" alt="image-20250312155805995"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p><h2 id="待补充"><a href="#待补充" class="headerlink" title="待补充"></a>待补充</h2><h1 id="钩子函数"><a href="#钩子函数" class="headerlink" title="钩子函数"></a>钩子函数</h1><p>git的钩子位于<code>.git\hooks</code>,默认情况下都是.sample结尾，去掉这个后缀即可启用。</p><p><img src="https://blog.wenzhuo4657.org/img/image-20250312160203955.png" alt="image-20250312160203955"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p><p>尝试打开即可他先，他们都是统一的shell脚本，所以如果想要看懂是需要一点基础的。</p><p>统一机制：当以非零退出脚本时，停止提交。</p><p>提醒：shell脚本的运行并不是git管理的一部分，他们只是使用了git命令的一段编码，通常使用&#x2F;bin&#x2F;bash解释器运行。</p><h2 id="pre-commit：提交前执行"><a href="#pre-commit：提交前执行" class="headerlink" title="pre-commit：提交前执行"></a>pre-commit：提交前执行</h2><p>作用：当前分支是否存在，如果不存在会提供一个sha-1哈希值。</p><p>git rev-parse –verify HEAD  （该命令可以验证参数是否可以转换为sha-1哈希值，即他是否在对象数据库中有对应关系，常见有分支名、标签名）</p><h2 id="prepare-commit-msg：提交前执行"><a href="#prepare-commit-msg：提交前执行" class="headerlink" title="prepare-commit-msg：提交前执行"></a>prepare-commit-msg：提交前执行</h2><p>作用：</p><p>1，修改默认提交消息</p><p>2，添加gpt签名</p><p>3，将 git diff 结果插入提交消息的注释部分（咱不理解，自行查询）</p><p>修改默认消息最直接的途径就是在文件末尾<code>echo &quot;default msg&quot; &gt; $1</code>,这样就会覆盖</p><p><code>/usr/bin/perl -i.bak -ne &#39;print unless(m/^. Please enter the commit message/..m/^#$/)&#39; &quot;$COMMIT_MSG_FILE&quot;</code></p><h1 id="推荐文档"><a href="#推荐文档" class="headerlink" title="推荐文档"></a>推荐文档</h1><p><a href="https://cloud.tencent.com/developer/doc/1096">腾讯云</a></p><p><a href="https://git-scm.com/book/en/v2">git</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;git是什么？&quot;&gt;&lt;a href=&quot;#git是什么？&quot; class=&quot;headerlink&quot; title=&quot;git是什么？&quot;&gt;&lt;/a&gt;git是什么？&lt;/h1&gt;&lt;h2 id=&quot;以键值数据库为基础的文件版本控制系统&quot;&gt;&lt;a href=&quot;#以键值数据库为基础的文件版本控</summary>
+      
+    
+    
+    
+    <category term="教程" scheme="http://wenzhuo4657.org/categories/%E6%95%99%E7%A8%8B/"/>
+    
+    
+  </entry>
   
   <entry>
     <title>tomcat源码阅读（二）</title>
