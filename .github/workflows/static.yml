@@ -1,5 +1,5 @@
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: 将静态页面部署到github的免费服务器
 
 on:
   # main分支提交事件，自动出发工作流
