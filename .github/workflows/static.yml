@@ -2,11 +2,12 @@
 name: 将静态页面部署到github的免费服务器
 
 on:
-  # main分支提交事件，自动出发工作流
-  push:
-    branches: ["main"]
-  # 允许外部调用工作流
   workflow_dispatch:
+    inputs:
+      environment:
+        description: '部署至免费服务器'
+        required: true
+        default: 'production'
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
