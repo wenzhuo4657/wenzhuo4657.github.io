@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="x5-fullscreen" content="true">
+<meta name="full-screen" content="yes">
+<meta name="theme-color" content="#317EFB" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0" name="viewport">
+<meta name="description" content="tomcat源码idea环境搭建源码版本apache-tomcat-9.0.43-src https:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;tomcat&#x2F;tomcat-9&#x2F;v9.0.43&#x2F;src&#x2F; 注意： 不同版本的搭建方式可能略有不同，但这源码核心是大差不差的。 安装ant(已安装的可以直接跳过)Apache Ant 是一个帮助构建软件的 Java 库和命令行工具。 官网：http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat源码阅读（一）">
+<meta property="og:url" content="http://wenzhuo4657.org/2025/03/07/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="tomcat源码idea环境搭建源码版本apache-tomcat-9.0.43-src https:&#x2F;&#x2F;archive.apache.org&#x2F;dist&#x2F;tomcat&#x2F;tomcat-9&#x2F;v9.0.43&#x2F;src&#x2F; 注意： 不同版本的搭建方式可能略有不同，但这源码核心是大差不差的。 安装ant(已安装的可以直接跳过)Apache Ant 是一个帮助构建软件的 Java 库和命令行工具。 官网：http">
+<meta property="og:locale">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="article:published_time" content="2025-03-07T08:07:46.000Z">
+<meta property="article:modified_time" content="2025-04-06T06:23:27.297Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wenzhuo4657.org/img/404.jpg">
+
+
+<title >tomcat源码阅读（一）</title>
+
+<!-- Favicon -->
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='16x16' ></link>
+
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='32x32' ></link>
+
+
+    <link href='/apple-touch-icon.png?v=2.2.4' rel='apple-touch-icon' sizes='180x180' ></link>
+
+
+    <link href='/site.webmanifest' rel='manifest' ></link>
+
+
+<!-- Plugin -->
+
+
+
+
+    
+<link rel="stylesheet" href="/css/plugins/bootstrap.row.css">
+
+    
+<link rel="stylesheet" href="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.css">
+
+    
+    
+
+
+
+
+<!-- Icon -->
+
+
+    
+<script src="//at.alicdn.com/t/c/font_4843277_8cs9atfk29g.js"></script>
+
+
+
+<!-- Variable -->
+<script>window.ASYNC_CONFIG = {"hostname":"wenzhuo4657.org","author":"John Doe","root":"/","typed_text":["Web Developer"],"theme_version":"2.2.4","theme":{"switch":true,"default":"style-light"},"favicon":{"logo":"log.svg","icon16":"log.svg","icon32":"log.svg","apple_touch_icon":"apple-touch-icon.png","webmanifest":"/site.webmanifest","visibilitychange":true,"hidden":"failure.ico","show_text":"(/≧▽≦/)咦！又好了！","hide_text":"(●—●)喔哟，崩溃啦！"},"i18n":{"placeholder":"搜索文章...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）","author":"本文作者：","copyright_link":"本文链接：","copyright_license_title":"版权声明：","copyright_license_content":"本博客所有文章除特别声明外，均默认采用 undefined 许可协议。","copy_success":"复制成功","copy_failure":"复制失败","open_read_mode":"进入阅读模式","exit_read_mode":"退出阅读模式","notice_outdate_message":"距离上次更新已经 undefined 天了, 文章内容可能已经过时。","sticky":"置顶","just":"刚刚","min":"分钟前","hour":"小时前","day":"天前","month":"个月前"},"swup":false,"plugin":{"flickr_justified_gallery":"https://npm.elemecdn.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"icon-hupilan","moon":"icon-hupilan","play":"icon-hupilan","email":"icon-hupilan","next":"icon-hupilan","calendar":"icon-hupilan","clock":"icon-hupilan","user":"icon-hupilan","back_top":"icon-hupilan","close":"icon-hupilan","search":"icon-hupilan","reward":"icon-hupilan","toc_tag":"icon-hupilan","read":"icon-hupilan","arrows":"icon-hupilan","double_arrows":"icon-hupilan","copy":"icon-hupilan","user_tag":"icon-hupilan"},"icontype":"symbol","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":false,"title":"mac","height_limit":200},"toc":{"post_title":true},"live_time":{"start_time":"","prefix":"博客已萌萌哒运行 undefined 天"},"danmu":{"enable":false,"el":".trm-banner"}};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2025-04-06 14:23:27"};</script>
+
+<!-- Theme mode css -->
+<link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.2.4" id="trm-switch-style">
+<script>
+    let defaultMode = ASYNC_CONFIG.theme.default !=='auto' ?  ASYNC_CONFIG.theme.default : (window.matchMedia("(prefers-color-scheme: light)").matches ? 'style-light' : 'style-dark')
+    let catchMode = localStorage.getItem('theme-mode') || defaultMode;
+    let type = catchMode === 'style-dark' ? 'add' : 'remove';
+    document.documentElement.classList[type]('dark')
+</script>
+
+<!-- CDN -->
+
+
+    
+    
+
+
+
+<!-- Site Analytics -->
+
+ 
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+<body>
+
+  <!-- app wrapper -->
+  <div class="trm-app-frame">
+
+    <!-- page preloader -->
+    <div class="trm-preloader">
+    <div class="trm-holder">
+        <div class="preloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+    <!-- page preloader end -->
+
+    <!-- change mode preloader -->
+    <div class="trm-mode-swich-animation-frame">
+    <div class="trm-mode-swich-animation">
+        <i class="i-sun"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+        <div class="trm-horizon"></div>
+        <i class="i-moon"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+    </div>
+</div>
+    <!-- change mode preloader end -->
+
+      <!-- scroll container -->
+      <div id="trm-dynamic-content" class="trm-swup-animation">
+        <div id="trm-scroll-container" class="trm-scroll-container" style="opacity: 0">
+            <!-- top bar -->
+            <header class="trm-top-bar">
+	<div class="container">
+		<div class="trm-left-side">
+			<!-- logo -->
+<a href="/" class="trm-logo-frame trm-anima-link">
+    
+        <img alt="logo" src="/log.svg">
+    
+    
+        <div class="trm-logo-text">
+            wenzhuo<span></span>
+        </div>
+    
+</a>
+<!-- logo end -->
+		</div>
+		<div class="trm-right-side">
+			<!-- menu -->
+<div class="trm-menu">
+    <nav>
+        <ul>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/" target="">
+                    首页
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/categories/" target="">
+                    分类
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/archives/" target="">
+                    归档
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/links/" target="">
+                    友链
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/myproject/" target="">
+                    我的项目
+                </a>
+                
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+<!-- menu end -->
+			
+    <!-- mode switcher place -->
+    <div class="trm-mode-switcher-place">
+        <div class="trm-mode-switcher">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+            <input class="tgl tgl-light" id="trm-swich" type="checkbox">
+            <label class="trm-swich" for="trm-swich"></label>
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    </div>
+    <!-- mode switcher place end -->
+
+			
+		</div>
+		<div class="trm-menu-btn">
+			<span></span>
+		</div>
+	</div>
+</header>
+            <!-- top bar end -->
+
+            <!-- body -->
+            
+<div class="trm-content-start">
+    <!-- banner -->
+    <div class="trm-banner">
+    
+    <!-- banner cover -->
+    <img style="object-position:top;object-fit:cover;" alt="banner" class="trm-banner-cover" src="/img/banner.png">
+    <!-- banner cover end -->
+    
+
+    <!-- banner content -->
+    <div class="trm-banner-content trm-overlay">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-4"></div>
+                
+                <div class="col-lg-8">
+
+                    <!-- banner title -->
+                    <div class="trm-banner-text ">
+                        <div class="trm-label trm-mb-20">
+                            NEWS LETTER
+                        </div>
+                        <h1 class="trm-mb-30 trm-hsmb-font">
+                            tomcat源码阅读（一）
+                        </h1>
+
+                        
+                            <ul class="trm-breadcrumbs trm-label">
+                                <li>
+                                    <a href="/" class="trm-anima-link">Home</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        2025
+                                    </span>
+                                </li>
+                            </ul>
+                        
+                    </div>
+                    <!-- banner title end -->
+
+                    <!-- scroll hint -->
+                    <span id="scroll-triger" class="trm-scroll-hint-frame">
+                        <div class="trm-scroll-hint"></div>
+                        <span class="trm-label">Scroll down</span>
+                    </span>
+                    <!-- scroll hint end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner content end -->
+</div>
+    <!-- banner end -->
+    <div class="container">
+        <div class="row">
+            
+                <div class="trm-page-sidebar col-lg-4 hidden-sm">
+                    <!-- main card -->
+                    <div class="trm-main-card-frame trm-sidebar">
+    <div class="trm-main-card"> 
+        <!-- card header -->
+<div class="trm-mc-header">
+    <div class="trm-avatar-frame trm-mb-20">
+        <img alt="Avatar" class="trm-avatar" src="https://blog.wenzhuo4657.org/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240930172816.jpg">
+    </div>
+    <h5 class="trm-name trm-mb-15">
+        wenzhuo4657
+    </h5>
+    
+        <div class="trm-label">
+            I`m
+            <span class="trm-typed-text">
+                <!-- Words for theme.user.typedText -->
+            </span>
+        </div>
+    
+</div>
+<!-- card header end -->
+        <!-- sidebar social -->
+
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<div class="trm-social">
+    
+        <a href="https://github.com/wenzhuo4657" title="github" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-guibeizhu"></use>
+</svg>
+        </a>
+    
+        <a href="https://wenzhuo4657.org/atom.xml" title="rss" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hehua"></use>
+</svg>
+        </a>
+    
+</div>
+
+<!-- sidebar social end -->
+        <!-- info -->
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<ul class="trm-table trm-mb-20">
+    
+        <li>
+            <div class="trm-label">
+                Residence:
+            </div>
+            <div class="trm-label trm-label-light">
+                Mars
+            </div>
+        </li>
+    
+</ul>
+<!-- info end -->
+
+        
+    <div class="trm-divider trm-mb-40 trm-mt-40"></div>
+    <!-- action button -->
+    <div class="text-center">
+        <a href="mailto:wenzhuo4657@gmail.com" class="trm-btn">
+            联系我
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </a>
+    </div>
+    <!-- action button end -->
+
+    </div>
+</div>
+                    <!-- main card end -->
+                </div>
+            
+            <div class="trm-page-content col-lg-8">
+                <div id="trm-content" class="trm-content">
+                    <div class="trm-post-info row hidden-sm">
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            03/07
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            16:07
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="post-author" class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            John Doe
+        </div>
+    </div>
+</div>
+<div class="trm-card ">
+    <article id="article-container" class="trm-publication">
+    <h1 id="tomcat源码"><a href="#tomcat源码" class="headerlink" title="tomcat源码"></a>tomcat源码</h1><h2 id="idea环境搭建"><a href="#idea环境搭建" class="headerlink" title="idea环境搭建"></a>idea环境搭建</h2><p>源码版本apache-tomcat-9.0.43-src</p>
+<p><a target="_blank" rel="noopener" href="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.43/src/">https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.43/src/</a></p>
+<p>注意： 不同版本的搭建方式可能略有不同，但这源码核心是大差不差的。</p>
+<h3 id="安装ant-已安装的可以直接跳过"><a href="#安装ant-已安装的可以直接跳过" class="headerlink" title="安装ant(已安装的可以直接跳过)"></a>安装ant(已安装的可以直接跳过)</h3><p>Apache Ant 是一个帮助构建软件的 Java 库和命令行工具。</p>
+<p>官网：<a target="_blank" rel="noopener" href="https://ant.apache.org/bindownload.cgi">https://ant.apache.org/bindownload.cgi</a></p>
+<p>直接下载最新版即可，解压之后设置环境变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ANT_HOME=/Library/Apache/apache-ant-1.9.15</span><br><span class="line">PATH=$PATH:$ANT_HOME/bin</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>使用<code>ant -verison</code>验证安装是否成功</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250307171403529.png" alt="image-20250307171403529"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h3 id="构建项目"><a href="#构建项目" class="headerlink" title="构建项目"></a>构建项目</h3><p><em>在打开idea之前操作，这一点非常重要！！！否则会由于编译器的一些操作导致XXXXX</em></p>
+<p>直接将res目录idea-support中的.idea文件粘贴到根目录中的.idea（手动创建</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134412453.png" alt="image-20250309134412453"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134454556.png" alt="image-20250309134454556"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134544101.png" alt="image-20250309134544101"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p>此时打开项目可以发现项目被正确加载，但是会依赖报错</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309135659189.png" alt="image-20250309135659189"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p>尝试构建项目，启动test</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309135743059.png" alt="image-20250309135743059"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134654470.png" alt="image-20250309134654470"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p>将这些jar包和ant目录下的lib库加入项目的外部库即可。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309141125493.png" alt="image-20250309141125493"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h2 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h2><p>找到启动类Bootstrap</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309141245515.png" alt="image-20250309141245515"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309141253099.png" alt="image-20250309141253099"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h1 id="中文乱码"><a href="#中文乱码" class="headerlink" title="中文乱码"></a>中文乱码</h1><p>对于乱码，网上搜索在日志配置中更改编码，</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_44109450/article/details/126544310">https://blog.csdn.net/weixin_44109450/article/details/126544310</a></p>
+<p>但是对于源码编译环境来说，似乎并不会读取conf下的配置，追溯源码找到<code>java.util.logging.ConsoleHandler</code>.</p>
+<p>断点调试发现，并没有获取到配置</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309142742777.png" alt="image-20250309142742777"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p>并且由于该类属于依赖包jdk的一部分，<img src="https://blog.wenzhuo4657.org/img/image-20250309142835530.png" alt="image-20250309142835530"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p>进一步追溯之后发现关键读取文件的方法LogManager#readConfiguration（）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">String fname = System.getProperty(&quot;java.util.logging.config.file&quot;);</span><br><span class="line">     if (fname == null) &#123;</span><br><span class="line">         fname = System.getProperty(&quot;java.home&quot;);</span><br><span class="line">         if (fname == null) &#123;</span><br><span class="line">             throw new Error(&quot;Can&#x27;t find java.home ??&quot;);</span><br><span class="line">         &#125;</span><br><span class="line">         File f = new File(fname, &quot;lib&quot;);</span><br><span class="line">         f = new File(f, &quot;logging.properties&quot;);</span><br><span class="line">         fname = f.getCanonicalPath();</span><br><span class="line">     &#125;</span><br><span class="line">     try (final InputStream in = new FileInputStream(fname)) &#123;</span><br><span class="line">         final BufferedInputStream bin = new BufferedInputStream(in);</span><br><span class="line">         readConfiguration(bin);</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先说结论，无论使更改成conf还是jdk目录下的logging.properties,他们所影响的编码都只是外层的一部分，不能影响tomcat输出的报错信息。</p>
+<p>但是我注意到了另外一个属性java.util.logging.ConsoleHandler.formatter，该属性用于格式化输出的文本，但是默认的使jdk的jar包实现，所以我转到tomcat的配置文件中寻找实现，尝试修改启动后</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">java.util.logging.ConsoleHandler.level = INFO</span><br><span class="line"># java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter</span><br><span class="line">java.util.logging.ConsoleHandler.formatter = org.apache.juli.OneLineFormatter</span><br><span class="line">java.util.logging.ConsoleHandler.encoding= UTF-8</span><br></pre></td></tr></table></figure>
+
+
+
+<p>修改后无效，放弃处理，在SimpleFormatter#format后追溯输出语句，最终追溯的源码包下的适配类<code>org.apache.juli.logging.DirectJDKLog#log</code>,查看输出类后发现他们都使用<code>StringManager.getString(final String key, final Object... args) </code>格式化。</p>
+<p>最终追踪到资源包类<code>PropertyResourceBundle</code>,发现资源读取的全是乱码，而编码格式均是正确的。</p>
+<p>追溯读取资源的源码后找到关键方法</p>
+<p><code>bundle = *findBundle*(cacheKey, candidateLocales, formats, 0, control, baseBundle);</code></p>
+<p>查看输出乱码的类，去寻找StringManager的绑定资源可发现</p>
+<p>对应资源名称为<code>org.apache.catalina.startup.LocalStrings zh_CN </code></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309170614673.png" alt="image-20250309170614673"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309170334320.png" alt="image-20250309170334320"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h2 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_54430656/article/details/122440049">https://blog.csdn.net/weixin_54430656/article/details/122440049</a></p>
+<p>最终解决实际上是我的一个误区，在前面的编码转换时我总是将错误的编码转换为utf-8,而忽略了java读取默认时<code>iso8859-1</code>的编码读取才导致的中文乱码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if (bundle != null) &#123;</span><br><span class="line">          str = bundle.getString(key);</span><br><span class="line">          str= new String(str.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);</span><br><span class="line">      &#125;</span><br><span class="line">      </span><br></pre></td></tr></table></figure>
+
+
+
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309172916003.png" alt="image-20250309172916003"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+
+</article>
+    
+    
+
+</div>
+<div class="trm-post-next-prev row">
+    <div class="col-lg-12">
+        <!-- title -->
+        <h5 class="trm-title-with-divider">
+            其他文章
+            <span data-number="02"></span>
+        </h5>
+    </div>
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/03/10/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/%E6%BA%90%E7%A0%81/">
+                    源码
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/03/10/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/" class="trm-anima-link">
+                    tomcat源码阅读（二）
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/03/10</li>
+                <li>14:59</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/02/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/OS/">
+                    OS
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/02/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" class="trm-anima-link">
+                    零拷贝
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/02/15</li>
+                <li>16:23</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+</div>
+
+    
+
+    <div id="giscus-wrap" class="trm-card trm-scroll-animation comment-container"></div>
+<script data-swup-reload-script>
+    function loadGiscus() {
+        let nowTheme = document.documentElement.classList.contains('dark') ? '' : ''
+        const config = {
+            src: 'https://giscus.app/client.js',
+            "data-repo": 'wenzhuo4657/comment',
+            "data-repo-id": 'R_kgDOOBvPZQ',
+            "data-category": 'Announcements',
+            "data-category-id": 'DIC_kwDOOBvPZc4Cnef9',
+            "data-mapping": 'pathname',
+            "data-reactions-enabled": '1',
+            "data-emit-metadata": '0',
+            "data-theme": nowTheme,
+            "data-lang": 'zh-CN',
+            crossorigin: "anonymous",
+            async: true
+        }
+        let ele = document.createElement('script')
+        for (let key in config) {
+            ele.setAttribute(key, config[key])
+        }
+        document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin', ele)
+    }
+
+    function changeGiscusTheme() {
+        let theme = document.documentElement.classList.contains('dark') ? '' : ''
+
+        function sendMessage(message) {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe) return;
+            iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+
+        sendMessage({
+            setConfig: {
+                theme: theme
+            }
+        });
+    }
+
+    loadGiscus();
+</script>
+
+
+
+                    <div class="trm-divider footer-divider"></div>
+
+                    <!-- footer -->
+                    <footer class="trm-footer-card trm-scroll-animation">
+
+    
+
+    
+
+    
+        <div class="trm-footer-item">
+            <span>
+                由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0
+            </span>
+            <span class="footer-separator" data-separator=" | "></span>
+            <span> 
+                主题 - 
+                <a rel="noopener" href='https://github.com/MaLuns/hexo-theme-async' target='_blank'>Async</a>
+                v2.2.4
+            </span>
+        </div>
+      
+
+     
+
+     
+</footer>
+                    <!-- footer end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- body end -->
+
+            
+
+            
+<div class="trm-fixed-container">
+    
+    
+        <div class="trm-fixed-btn" data-title="阅读模式" onclick="asyncFun.switchReadMode()">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    
+    
+    <div id="trm-back-top" class="trm-fixed-btn" data-title="回到顶部">
+        <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+    </div>
+</div>
+        </div>
+      </div>
+      <!-- scroll container end -->
+  </div>
+  <!-- app wrapper end -->
+
+  
+  <!-- Plugin -->
+
+
+
+
+    
+    
+<script src="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+    
+
+    
+        <script src="/js/plugins/typing.js?v=2.2.4"></script>
+    
+
+    
+
+    <!-- 数学公式 -->
+    
+
+    <!-- 评论插件 -->
+    
+        
+
+        
+    
+
+		
+
+
+
+
+    <!-- Service Worker -->
+    
+    <!-- baidu push -->
+    
+
+
+<script id="async-script" src="/js/main.js?v=2.2.4"></script>
+
+<!-- CDN -->
+
+
+    
+
+    
+
+    
+
+
+
+</body>
+
+</html>

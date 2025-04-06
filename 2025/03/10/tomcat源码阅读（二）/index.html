@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="x5-fullscreen" content="true">
+<meta name="full-screen" content="yes">
+<meta name="theme-color" content="#317EFB" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0" name="viewport">
+<meta name="description" content="tomcat源码阅读日志模块梳理现在日志通常分为日志门面和日志的具体实现。 日志门面：充当应用程序和日志框架之间的沟通媒介，可以在程序无感的条件下更换日志框架。 日志的具体实现：直接记录日志(console、file)，并且需要注意的是，这些信息都是由日志门面交给日志实现的。 对于非日志编程的程序员来说，我们只需要明白如何根据日志门面切换日志实现即可，没必要阅读日志实现的代码。 常见的日志门面：J">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tomcat源码阅读（二）">
+<meta property="og:url" content="http://wenzhuo4657.org/2025/03/10/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%BA%8C%EF%BC%89/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="tomcat源码阅读日志模块梳理现在日志通常分为日志门面和日志的具体实现。 日志门面：充当应用程序和日志框架之间的沟通媒介，可以在程序无感的条件下更换日志框架。 日志的具体实现：直接记录日志(console、file)，并且需要注意的是，这些信息都是由日志门面交给日志实现的。 对于非日志编程的程序员来说，我们只需要明白如何根据日志门面切换日志实现即可，没必要阅读日志实现的代码。 常见的日志门面：J">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-03-10T06:59:35.000Z">
+<meta property="article:modified_time" content="2025-04-06T06:23:27.297Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<title >tomcat源码阅读（二）</title>
+
+<!-- Favicon -->
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='16x16' ></link>
+
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='32x32' ></link>
+
+
+    <link href='/apple-touch-icon.png?v=2.2.4' rel='apple-touch-icon' sizes='180x180' ></link>
+
+
+    <link href='/site.webmanifest' rel='manifest' ></link>
+
+
+<!-- Plugin -->
+
+
+
+
+    
+<link rel="stylesheet" href="/css/plugins/bootstrap.row.css">
+
+    
+<link rel="stylesheet" href="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.css">
+
+    
+    
+
+
+
+
+<!-- Icon -->
+
+
+    
+<script src="//at.alicdn.com/t/c/font_4843277_8cs9atfk29g.js"></script>
+
+
+
+<!-- Variable -->
+<script>window.ASYNC_CONFIG = {"hostname":"wenzhuo4657.org","author":"John Doe","root":"/","typed_text":["Web Developer"],"theme_version":"2.2.4","theme":{"switch":true,"default":"style-light"},"favicon":{"logo":"log.svg","icon16":"log.svg","icon32":"log.svg","apple_touch_icon":"apple-touch-icon.png","webmanifest":"/site.webmanifest","visibilitychange":true,"hidden":"failure.ico","show_text":"(/≧▽≦/)咦！又好了！","hide_text":"(●—●)喔哟，崩溃啦！"},"i18n":{"placeholder":"搜索文章...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）","author":"本文作者：","copyright_link":"本文链接：","copyright_license_title":"版权声明：","copyright_license_content":"本博客所有文章除特别声明外，均默认采用 undefined 许可协议。","copy_success":"复制成功","copy_failure":"复制失败","open_read_mode":"进入阅读模式","exit_read_mode":"退出阅读模式","notice_outdate_message":"距离上次更新已经 undefined 天了, 文章内容可能已经过时。","sticky":"置顶","just":"刚刚","min":"分钟前","hour":"小时前","day":"天前","month":"个月前"},"swup":false,"plugin":{"flickr_justified_gallery":"https://npm.elemecdn.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"icon-hupilan","moon":"icon-hupilan","play":"icon-hupilan","email":"icon-hupilan","next":"icon-hupilan","calendar":"icon-hupilan","clock":"icon-hupilan","user":"icon-hupilan","back_top":"icon-hupilan","close":"icon-hupilan","search":"icon-hupilan","reward":"icon-hupilan","toc_tag":"icon-hupilan","read":"icon-hupilan","arrows":"icon-hupilan","double_arrows":"icon-hupilan","copy":"icon-hupilan","user_tag":"icon-hupilan"},"icontype":"symbol","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":false,"title":"mac","height_limit":200},"toc":{"post_title":true},"live_time":{"start_time":"","prefix":"博客已萌萌哒运行 undefined 天"},"danmu":{"enable":false,"el":".trm-banner"}};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2025-04-06 14:23:27"};</script>
+
+<!-- Theme mode css -->
+<link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.2.4" id="trm-switch-style">
+<script>
+    let defaultMode = ASYNC_CONFIG.theme.default !=='auto' ?  ASYNC_CONFIG.theme.default : (window.matchMedia("(prefers-color-scheme: light)").matches ? 'style-light' : 'style-dark')
+    let catchMode = localStorage.getItem('theme-mode') || defaultMode;
+    let type = catchMode === 'style-dark' ? 'add' : 'remove';
+    document.documentElement.classList[type]('dark')
+</script>
+
+<!-- CDN -->
+
+
+    
+    
+
+
+
+<!-- Site Analytics -->
+
+ 
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+<body>
+
+  <!-- app wrapper -->
+  <div class="trm-app-frame">
+
+    <!-- page preloader -->
+    <div class="trm-preloader">
+    <div class="trm-holder">
+        <div class="preloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+    <!-- page preloader end -->
+
+    <!-- change mode preloader -->
+    <div class="trm-mode-swich-animation-frame">
+    <div class="trm-mode-swich-animation">
+        <i class="i-sun"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+        <div class="trm-horizon"></div>
+        <i class="i-moon"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+    </div>
+</div>
+    <!-- change mode preloader end -->
+
+      <!-- scroll container -->
+      <div id="trm-dynamic-content" class="trm-swup-animation">
+        <div id="trm-scroll-container" class="trm-scroll-container" style="opacity: 0">
+            <!-- top bar -->
+            <header class="trm-top-bar">
+	<div class="container">
+		<div class="trm-left-side">
+			<!-- logo -->
+<a href="/" class="trm-logo-frame trm-anima-link">
+    
+        <img alt="logo" src="/log.svg">
+    
+    
+        <div class="trm-logo-text">
+            wenzhuo<span></span>
+        </div>
+    
+</a>
+<!-- logo end -->
+		</div>
+		<div class="trm-right-side">
+			<!-- menu -->
+<div class="trm-menu">
+    <nav>
+        <ul>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/" target="">
+                    首页
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/categories/" target="">
+                    分类
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/archives/" target="">
+                    归档
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/links/" target="">
+                    友链
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/myproject/" target="">
+                    我的项目
+                </a>
+                
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+<!-- menu end -->
+			
+    <!-- mode switcher place -->
+    <div class="trm-mode-switcher-place">
+        <div class="trm-mode-switcher">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+            <input class="tgl tgl-light" id="trm-swich" type="checkbox">
+            <label class="trm-swich" for="trm-swich"></label>
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    </div>
+    <!-- mode switcher place end -->
+
+			
+		</div>
+		<div class="trm-menu-btn">
+			<span></span>
+		</div>
+	</div>
+</header>
+            <!-- top bar end -->
+
+            <!-- body -->
+            
+<div class="trm-content-start">
+    <!-- banner -->
+    <div class="trm-banner">
+    
+    <!-- banner cover -->
+    <img style="object-position:top;object-fit:cover;" alt="banner" class="trm-banner-cover" src="/img/banner.png">
+    <!-- banner cover end -->
+    
+
+    <!-- banner content -->
+    <div class="trm-banner-content trm-overlay">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-4"></div>
+                
+                <div class="col-lg-8">
+
+                    <!-- banner title -->
+                    <div class="trm-banner-text ">
+                        <div class="trm-label trm-mb-20">
+                            NEWS LETTER
+                        </div>
+                        <h1 class="trm-mb-30 trm-hsmb-font">
+                            tomcat源码阅读（二）
+                        </h1>
+
+                        
+                            <ul class="trm-breadcrumbs trm-label">
+                                <li>
+                                    <a href="/" class="trm-anima-link">Home</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        2025
+                                    </span>
+                                </li>
+                            </ul>
+                        
+                    </div>
+                    <!-- banner title end -->
+
+                    <!-- scroll hint -->
+                    <span id="scroll-triger" class="trm-scroll-hint-frame">
+                        <div class="trm-scroll-hint"></div>
+                        <span class="trm-label">Scroll down</span>
+                    </span>
+                    <!-- scroll hint end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner content end -->
+</div>
+    <!-- banner end -->
+    <div class="container">
+        <div class="row">
+            
+                <div class="trm-page-sidebar col-lg-4 hidden-sm">
+                    <!-- main card -->
+                    <div class="trm-main-card-frame trm-sidebar">
+    <div class="trm-main-card"> 
+        <!-- card header -->
+<div class="trm-mc-header">
+    <div class="trm-avatar-frame trm-mb-20">
+        <img alt="Avatar" class="trm-avatar" src="https://blog.wenzhuo4657.org/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240930172816.jpg">
+    </div>
+    <h5 class="trm-name trm-mb-15">
+        wenzhuo4657
+    </h5>
+    
+        <div class="trm-label">
+            I`m
+            <span class="trm-typed-text">
+                <!-- Words for theme.user.typedText -->
+            </span>
+        </div>
+    
+</div>
+<!-- card header end -->
+        <!-- sidebar social -->
+
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<div class="trm-social">
+    
+        <a href="https://github.com/wenzhuo4657" title="github" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-guibeizhu"></use>
+</svg>
+        </a>
+    
+        <a href="https://wenzhuo4657.org/atom.xml" title="rss" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hehua"></use>
+</svg>
+        </a>
+    
+</div>
+
+<!-- sidebar social end -->
+        <!-- info -->
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<ul class="trm-table trm-mb-20">
+    
+        <li>
+            <div class="trm-label">
+                Residence:
+            </div>
+            <div class="trm-label trm-label-light">
+                Mars
+            </div>
+        </li>
+    
+</ul>
+<!-- info end -->
+
+        
+    <div class="trm-divider trm-mb-40 trm-mt-40"></div>
+    <!-- action button -->
+    <div class="text-center">
+        <a href="mailto:wenzhuo4657@gmail.com" class="trm-btn">
+            联系我
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </a>
+    </div>
+    <!-- action button end -->
+
+    </div>
+</div>
+                    <!-- main card end -->
+                </div>
+            
+            <div class="trm-page-content col-lg-8">
+                <div id="trm-content" class="trm-content">
+                    <div class="trm-post-info row hidden-sm">
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            03/10
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            14:59
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="post-author" class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            John Doe
+        </div>
+    </div>
+</div>
+<div class="trm-card ">
+    <article id="article-container" class="trm-publication">
+    <h1 id="tomcat源码阅读"><a href="#tomcat源码阅读" class="headerlink" title="tomcat源码阅读"></a>tomcat源码阅读</h1><h2 id="日志模块梳理"><a href="#日志模块梳理" class="headerlink" title="日志模块梳理"></a>日志模块梳理</h2><p>现在日志通常分为日志门面和日志的具体实现。</p>
+<p>日志门面：充当应用程序和日志框架之间的沟通媒介，可以在程序无感的条件下更换日志框架。</p>
+<p>日志的具体实现：直接记录日志(console、file)，并且需要注意的是，这些信息都是由日志门面交给日志实现的。</p>
+<p>对于非日志编程的程序员来说，我们只需要明白如何根据日志门面切换日志实现即可，没必要阅读日志实现的代码。</p>
+<p>常见的日志门面：JCL、slf4j</p>
+<p>常见的日志实现：JUL（java.util.logging）、log4j、logback、log4j2</p>
+<h3 id="tomcat的日志门面JULI"><a href="#tomcat的日志门面JULI" class="headerlink" title="tomcat的日志门面JULI"></a>tomcat的日志门面JULI</h3><p>该日志门面位于源码包<code>org.apache.juli</code>,基于JCL实现的。</p>
+<p>较为重要的三个类：</p>
+<p>org.apache.juli.logging.Log： 日志接口</p>
+<p>org.apache.juli.logging.DirectJDKLog：tomcat的默认日志实现。</p>
+<p>org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现。</p>
+<p>在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class&lt;?&gt; clazz)。</p>
+<p>并且在LogFactory#release(ClassLoader classLoader)也可以看到日志实现默认为JUL,硬编码控制的。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public static void release(ClassLoader classLoader) &#123;</span><br><span class="line">    // JULI&#x27;s log manager looks at the current classLoader so there is no</span><br><span class="line">    // need to use the passed in classLoader, the default implementation</span><br><span class="line">    // does not so calling reset in that case will break things</span><br><span class="line">    if (!LogManager.getLogManager().getClass().getName().equals(</span><br><span class="line">            &quot;java.util.logging.LogManager&quot;)) &#123;</span><br><span class="line">        LogManager.getLogManager().reset();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="关于日志实现log的加载"><a href="#关于日志实现log的加载" class="headerlink" title="关于日志实现log的加载"></a>关于日志实现log的加载</h2><p>在LogFactory的无参构造器器中看到关键语句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">ServiceLoader&lt;Log&gt; logLoader = ServiceLoader.load(Log.class);</span><br><span class="line">Constructor&lt;? extends Log&gt; m=null;</span><br><span class="line">for (Log log: logLoader) &#123;</span><br><span class="line">    Class&lt;? extends Log&gt; c=log.getClass();</span><br><span class="line">    try &#123;</span><br><span class="line">        m=c.getConstructor(String.class);</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">    catch (NoSuchMethodException | SecurityException e) &#123;</span><br><span class="line">        throw new Error(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">discoveredLogConstructor=m;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>其中ServiceLoader.load(Log.class)是用javaspi加载META-INF&#x2F;services&#x2F;类权全限定名称实例的方法，所以如果查看常见日志框架实现的源码的话，应该是有对应文件的。</p>
+<p>但是需要注意的是tomcat的默认实现DirectJDKLog并不在这里加载，即便我们自主添加了资源类也会报错，这是因为DirectJDKLog只有一个String参数的构造器，而ServiceLoader在遍历服务时会默认使用无参构造器。</p>
+<p>那么DirectJDKLog是如何使用的呢？追溯iscoveredLogConstructor调用找到</p>
+<p><code>LogFactory#getInstance(String name);</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public Log getInstance(String name) throws LogConfigurationException &#123;</span><br><span class="line">    if (discoveredLogConstructor == null) &#123;</span><br><span class="line">        return DirectJDKLog.getInstance(name); //默认实现、</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    try &#123;</span><br><span class="line">        return discoveredLogConstructor.newInstance(name);</span><br><span class="line">    &#125; catch (ReflectiveOperationException | IllegalArgumentException e) &#123;</span><br><span class="line">        throw new LogConfigurationException(e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="日志格式化"><a href="#日志格式化" class="headerlink" title="日志格式化"></a>日志格式化</h2><p>格式化大致就是一些日志的信息读取格式和输出格式，这一部分一定会在经过程序编码，所以直接调试即可。</p>
+<p>例如： </p>
+<p>StringManager:大部分都会通过这个类格式化字符串，其余可以自行查看日志门面的实现。</p>
+<h2 id="关于文件转码"><a href="#关于文件转码" class="headerlink" title="关于文件转码"></a>关于文件转码</h2><p>java读取配置文件默认iso8859-1编码格式，如果我们已经读取了这个格式代码，那么该如何转变为UTF-8呢？</p>
+<p>理论上来说如果有iso8859-1编码的字节，直接进行转码即可，但是我们可能会对一个字符串进行多次转码，可能导致字符串的编码不再是iso8859-1。</p>
+<p>例如tomcat会在中途对字符串进行转码，所以到达StringManager时字符串编码已经变为了“UTF-8”，所以直接进行转码会失败</p>
+<p><code>str= new String(str.getBytes(), StandardCharsets.*UTF_8*);</code> 失败，追溯str.getBytes()发现底层编码已经改变。这时我们可以强行指定编码。</p>
+<p><code>str= new String(str.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);</code></p>
+
+</article>
+    
+    
+
+</div>
+<div class="trm-post-next-prev row">
+    <div class="col-lg-12">
+        <!-- title -->
+        <h5 class="trm-title-with-divider">
+            其他文章
+            <span data-number="02"></span>
+        </h5>
+    </div>
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/03/12/git%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/%E6%95%99%E7%A8%8B/">
+                    教程
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/03/12/git%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%EF%BC%88%E4%B8%80%EF%BC%89/" class="trm-anima-link">
+                    git入门系列（一）
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/03/12</li>
+                <li>15:37</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/03/07/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/%E6%BA%90%E7%A0%81/">
+                    源码
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/03/07/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/" class="trm-anima-link">
+                    tomcat源码阅读（一）
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/03/07</li>
+                <li>16:07</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+</div>
+
+    
+
+    <div id="giscus-wrap" class="trm-card trm-scroll-animation comment-container"></div>
+<script data-swup-reload-script>
+    function loadGiscus() {
+        let nowTheme = document.documentElement.classList.contains('dark') ? '' : ''
+        const config = {
+            src: 'https://giscus.app/client.js',
+            "data-repo": 'wenzhuo4657/comment',
+            "data-repo-id": 'R_kgDOOBvPZQ',
+            "data-category": 'Announcements',
+            "data-category-id": 'DIC_kwDOOBvPZc4Cnef9',
+            "data-mapping": 'pathname',
+            "data-reactions-enabled": '1',
+            "data-emit-metadata": '0',
+            "data-theme": nowTheme,
+            "data-lang": 'zh-CN',
+            crossorigin: "anonymous",
+            async: true
+        }
+        let ele = document.createElement('script')
+        for (let key in config) {
+            ele.setAttribute(key, config[key])
+        }
+        document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin', ele)
+    }
+
+    function changeGiscusTheme() {
+        let theme = document.documentElement.classList.contains('dark') ? '' : ''
+
+        function sendMessage(message) {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe) return;
+            iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+
+        sendMessage({
+            setConfig: {
+                theme: theme
+            }
+        });
+    }
+
+    loadGiscus();
+</script>
+
+
+
+                    <div class="trm-divider footer-divider"></div>
+
+                    <!-- footer -->
+                    <footer class="trm-footer-card trm-scroll-animation">
+
+    
+
+    
+
+    
+        <div class="trm-footer-item">
+            <span>
+                由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0
+            </span>
+            <span class="footer-separator" data-separator=" | "></span>
+            <span> 
+                主题 - 
+                <a rel="noopener" href='https://github.com/MaLuns/hexo-theme-async' target='_blank'>Async</a>
+                v2.2.4
+            </span>
+        </div>
+      
+
+     
+
+     
+</footer>
+                    <!-- footer end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- body end -->
+
+            
+
+            
+<div class="trm-fixed-container">
+    
+    
+        <div class="trm-fixed-btn" data-title="阅读模式" onclick="asyncFun.switchReadMode()">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    
+    
+    <div id="trm-back-top" class="trm-fixed-btn" data-title="回到顶部">
+        <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+    </div>
+</div>
+        </div>
+      </div>
+      <!-- scroll container end -->
+  </div>
+  <!-- app wrapper end -->
+
+  
+  <!-- Plugin -->
+
+
+
+
+    
+    
+<script src="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+    
+
+    
+        <script src="/js/plugins/typing.js?v=2.2.4"></script>
+    
+
+    
+
+    <!-- 数学公式 -->
+    
+
+    <!-- 评论插件 -->
+    
+        
+
+        
+    
+
+		
+
+
+
+
+    <!-- Service Worker -->
+    
+    <!-- baidu push -->
+    
+
+
+<script id="async-script" src="/js/main.js?v=2.2.4"></script>
+
+<!-- CDN -->
+
+
+    
+
+    
+
+    
+
+
+
+</body>
+
+</html>

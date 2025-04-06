@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="x5-fullscreen" content="true">
+<meta name="full-screen" content="yes">
+<meta name="theme-color" content="#317EFB" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0" name="viewport">
+<meta name="description" content="单路分发前置概念：接收者对象：方法调用的目标对象动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在class文件的常量池里。引用类型&#x2F;静态类型：java对象的声明类型运行类型：jvm中对象的实际类型，是堆区数据的对象类型。 java对象的多态性导致其引用类型和运行类型两者的区分，且各自的方法可能出现重写的现象，因而在对象执行过程中需要找到正确的方法。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="单路分发和多路分发">
+<meta property="og:url" content="http://wenzhuo4657.org/2025/01/21/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="单路分发前置概念：接收者对象：方法调用的目标对象动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在class文件的常量池里。引用类型&#x2F;静态类型：java对象的声明类型运行类型：jvm中对象的实际类型，是堆区数据的对象类型。 java对象的多态性导致其引用类型和运行类型两者的区分，且各自的方法可能出现重写的现象，因而在对象执行过程中需要找到正确的方法。">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-01-21T07:01:05.000Z">
+<meta property="article:modified_time" content="2025-04-06T06:23:27.297Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<title >单路分发和多路分发</title>
+
+<!-- Favicon -->
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='16x16' ></link>
+
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='32x32' ></link>
+
+
+    <link href='/apple-touch-icon.png?v=2.2.4' rel='apple-touch-icon' sizes='180x180' ></link>
+
+
+    <link href='/site.webmanifest' rel='manifest' ></link>
+
+
+<!-- Plugin -->
+
+
+
+
+    
+<link rel="stylesheet" href="/css/plugins/bootstrap.row.css">
+
+    
+<link rel="stylesheet" href="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.css">
+
+    
+    
+
+
+
+
+<!-- Icon -->
+
+
+    
+<script src="//at.alicdn.com/t/c/font_4843277_8cs9atfk29g.js"></script>
+
+
+
+<!-- Variable -->
+<script>window.ASYNC_CONFIG = {"hostname":"wenzhuo4657.org","author":"John Doe","root":"/","typed_text":["Web Developer"],"theme_version":"2.2.4","theme":{"switch":true,"default":"style-light"},"favicon":{"logo":"log.svg","icon16":"log.svg","icon32":"log.svg","apple_touch_icon":"apple-touch-icon.png","webmanifest":"/site.webmanifest","visibilitychange":true,"hidden":"failure.ico","show_text":"(/≧▽≦/)咦！又好了！","hide_text":"(●—●)喔哟，崩溃啦！"},"i18n":{"placeholder":"搜索文章...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）","author":"本文作者：","copyright_link":"本文链接：","copyright_license_title":"版权声明：","copyright_license_content":"本博客所有文章除特别声明外，均默认采用 undefined 许可协议。","copy_success":"复制成功","copy_failure":"复制失败","open_read_mode":"进入阅读模式","exit_read_mode":"退出阅读模式","notice_outdate_message":"距离上次更新已经 undefined 天了, 文章内容可能已经过时。","sticky":"置顶","just":"刚刚","min":"分钟前","hour":"小时前","day":"天前","month":"个月前"},"swup":false,"plugin":{"flickr_justified_gallery":"https://npm.elemecdn.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"icon-hupilan","moon":"icon-hupilan","play":"icon-hupilan","email":"icon-hupilan","next":"icon-hupilan","calendar":"icon-hupilan","clock":"icon-hupilan","user":"icon-hupilan","back_top":"icon-hupilan","close":"icon-hupilan","search":"icon-hupilan","reward":"icon-hupilan","toc_tag":"icon-hupilan","read":"icon-hupilan","arrows":"icon-hupilan","double_arrows":"icon-hupilan","copy":"icon-hupilan","user_tag":"icon-hupilan"},"icontype":"symbol","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":false,"title":"mac","height_limit":200},"toc":{"post_title":true},"live_time":{"start_time":"","prefix":"博客已萌萌哒运行 undefined 天"},"danmu":{"enable":false,"el":".trm-banner"}};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2025-04-06 14:23:27"};</script>
+
+<!-- Theme mode css -->
+<link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.2.4" id="trm-switch-style">
+<script>
+    let defaultMode = ASYNC_CONFIG.theme.default !=='auto' ?  ASYNC_CONFIG.theme.default : (window.matchMedia("(prefers-color-scheme: light)").matches ? 'style-light' : 'style-dark')
+    let catchMode = localStorage.getItem('theme-mode') || defaultMode;
+    let type = catchMode === 'style-dark' ? 'add' : 'remove';
+    document.documentElement.classList[type]('dark')
+</script>
+
+<!-- CDN -->
+
+
+    
+    
+
+
+
+<!-- Site Analytics -->
+
+ 
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+<body>
+
+  <!-- app wrapper -->
+  <div class="trm-app-frame">
+
+    <!-- page preloader -->
+    <div class="trm-preloader">
+    <div class="trm-holder">
+        <div class="preloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+    <!-- page preloader end -->
+
+    <!-- change mode preloader -->
+    <div class="trm-mode-swich-animation-frame">
+    <div class="trm-mode-swich-animation">
+        <i class="i-sun"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+        <div class="trm-horizon"></div>
+        <i class="i-moon"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+    </div>
+</div>
+    <!-- change mode preloader end -->
+
+      <!-- scroll container -->
+      <div id="trm-dynamic-content" class="trm-swup-animation">
+        <div id="trm-scroll-container" class="trm-scroll-container" style="opacity: 0">
+            <!-- top bar -->
+            <header class="trm-top-bar">
+	<div class="container">
+		<div class="trm-left-side">
+			<!-- logo -->
+<a href="/" class="trm-logo-frame trm-anima-link">
+    
+        <img alt="logo" src="/log.svg">
+    
+    
+        <div class="trm-logo-text">
+            wenzhuo<span></span>
+        </div>
+    
+</a>
+<!-- logo end -->
+		</div>
+		<div class="trm-right-side">
+			<!-- menu -->
+<div class="trm-menu">
+    <nav>
+        <ul>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/" target="">
+                    首页
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/categories/" target="">
+                    分类
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/archives/" target="">
+                    归档
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/links/" target="">
+                    友链
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/myproject/" target="">
+                    我的项目
+                </a>
+                
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+<!-- menu end -->
+			
+    <!-- mode switcher place -->
+    <div class="trm-mode-switcher-place">
+        <div class="trm-mode-switcher">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+            <input class="tgl tgl-light" id="trm-swich" type="checkbox">
+            <label class="trm-swich" for="trm-swich"></label>
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    </div>
+    <!-- mode switcher place end -->
+
+			
+		</div>
+		<div class="trm-menu-btn">
+			<span></span>
+		</div>
+	</div>
+</header>
+            <!-- top bar end -->
+
+            <!-- body -->
+            
+<div class="trm-content-start">
+    <!-- banner -->
+    <div class="trm-banner">
+    
+    <!-- banner cover -->
+    <img style="object-position:top;object-fit:cover;" alt="banner" class="trm-banner-cover" src="/img/banner.png">
+    <!-- banner cover end -->
+    
+
+    <!-- banner content -->
+    <div class="trm-banner-content trm-overlay">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-4"></div>
+                
+                <div class="col-lg-8">
+
+                    <!-- banner title -->
+                    <div class="trm-banner-text ">
+                        <div class="trm-label trm-mb-20">
+                            NEWS LETTER
+                        </div>
+                        <h1 class="trm-mb-30 trm-hsmb-font">
+                            单路分发和多路分发
+                        </h1>
+
+                        
+                            <ul class="trm-breadcrumbs trm-label">
+                                <li>
+                                    <a href="/" class="trm-anima-link">Home</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        2025
+                                    </span>
+                                </li>
+                            </ul>
+                        
+                    </div>
+                    <!-- banner title end -->
+
+                    <!-- scroll hint -->
+                    <span id="scroll-triger" class="trm-scroll-hint-frame">
+                        <div class="trm-scroll-hint"></div>
+                        <span class="trm-label">Scroll down</span>
+                    </span>
+                    <!-- scroll hint end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner content end -->
+</div>
+    <!-- banner end -->
+    <div class="container">
+        <div class="row">
+            
+                <div class="trm-page-sidebar col-lg-4 hidden-sm">
+                    <!-- main card -->
+                    <div class="trm-main-card-frame trm-sidebar">
+    <div class="trm-main-card"> 
+        <!-- card header -->
+<div class="trm-mc-header">
+    <div class="trm-avatar-frame trm-mb-20">
+        <img alt="Avatar" class="trm-avatar" src="https://blog.wenzhuo4657.org/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240930172816.jpg">
+    </div>
+    <h5 class="trm-name trm-mb-15">
+        wenzhuo4657
+    </h5>
+    
+        <div class="trm-label">
+            I`m
+            <span class="trm-typed-text">
+                <!-- Words for theme.user.typedText -->
+            </span>
+        </div>
+    
+</div>
+<!-- card header end -->
+        <!-- sidebar social -->
+
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<div class="trm-social">
+    
+        <a href="https://github.com/wenzhuo4657" title="github" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-guibeizhu"></use>
+</svg>
+        </a>
+    
+        <a href="https://wenzhuo4657.org/atom.xml" title="rss" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hehua"></use>
+</svg>
+        </a>
+    
+</div>
+
+<!-- sidebar social end -->
+        <!-- info -->
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<ul class="trm-table trm-mb-20">
+    
+        <li>
+            <div class="trm-label">
+                Residence:
+            </div>
+            <div class="trm-label trm-label-light">
+                Mars
+            </div>
+        </li>
+    
+</ul>
+<!-- info end -->
+
+        
+    <div class="trm-divider trm-mb-40 trm-mt-40"></div>
+    <!-- action button -->
+    <div class="text-center">
+        <a href="mailto:wenzhuo4657@gmail.com" class="trm-btn">
+            联系我
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </a>
+    </div>
+    <!-- action button end -->
+
+    </div>
+</div>
+                    <!-- main card end -->
+                </div>
+            
+            <div class="trm-page-content col-lg-8">
+                <div id="trm-content" class="trm-content">
+                    <div class="trm-post-info row hidden-sm">
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            01/21
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            15:01
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="post-author" class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            John Doe
+        </div>
+    </div>
+</div>
+<div class="trm-card ">
+    <article id="article-container" class="trm-publication">
+    <h1 id="单路分发"><a href="#单路分发" class="headerlink" title="单路分发"></a>单路分发</h1><p>前置概念：<br>接收者对象：方法调用的目标对象<br>动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在<strong>class文件的常量池</strong>里。<br>引用类型&#x2F;静态类型：java对象的声明类型<br>运行类型：jvm中对象的实际类型，是堆区数据的对象类型。</p>
+<p>java对象的多态性导致其引用类型和运行类型两者的区分，且各自的方法可能出现重写的现象，因而在对象执行过程中需要找到正确的方法。jvm只有在运行阶段才会创建对象，调用方法时根据动态链接找到堆区的方法实现。。</p>
+<p>java单路分发：接收者对象（实际上是指堆区创建的对象，也就是运行类型）调用方法时根据动态链接找到方法区的真正实现。</p>
+<p>单路分发定义：查找方法只能根据接收者对象判断，而不考虑方法参数的实际类型。</p>
+<p>例如：<code>string.valueof(bi)</code> 接收者对象为string,单路分发只会考虑方法参数的引用类型，而非实际类型。</p>
+<p>注意：我们说java方法调用是单路分发，不考虑方法参数的<strong>实际类型</strong>。其中对于实际类型的理解需要和重载相区分，因为重载是从参数的引用类型进行选择。而我们所说的单路分发、多路分发实际上是根据方法的实际运行类型进行选择方法的具体实现（动态链接），而java的机制仅仅只支持根据接受者对象来选择方法的动态链接，因此java的分发机制是单路分发。</p>
+<ul>
+<li>方法重载的匹配：编译器在编译时根据参数类型选择最匹配的方法。</li>
+<li>编译器生成的字节码：编译器将方法调用转换为字节码指令，这些指令包含了方法调用的具体信息。</li>
+<li>动态链接：在类加载时，方法引用被解析为具体的方法地址。在方法调用时，JVM 根据接收者对象的实际类型选择具体的方法实现。</li>
+</ul>
+<h1 id="两路分发和多路分发"><a href="#两路分发和多路分发" class="headerlink" title="两路分发和多路分发"></a>两路分发和多路分发</h1><p>参考;<a target="_blank" rel="noopener" href="https://www.cnblogs.com/Yee-Q/p/14035322.html">Java 枚举 enum 详解 - 低吟不作语 - 博客园</a></p>
+<p>java实现两路分发实际上就是在方法调用中再次触发方法调用，根据方法参数的实际类型进行选择方法。</p>
+<p>硬编码实现</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">## 可以使用枚举、swich简化代码实现</span><br><span class="line"><span class="meta">@Override</span> <span class="keyword">public</span> Outcome <span class="title function_">compete</span><span class="params">(Item it)</span> </span><br><span class="line">&#123; <span class="keyword">return</span> </span><br><span class="line">it.eval(<span class="built_in">this</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>且注意，只有<code>it.eveal(this)</code>找到的方法才是期望的方法，第一次执行找到compete方法是实现两路分发的过程。</p>
+<p> EnumMap 实现：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> enums;</span><br><span class="line"><span class="keyword">import</span> java.util.*;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> enums.Outcome.*;</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">RoShamBo5</span> <span class="keyword">implements</span> <span class="title class_">Competitor</span>&lt;RoShamBo5&gt; &#123;</span><br><span class="line">    PAPER, SCISSORS, ROCK;</span><br><span class="line">    <span class="keyword">static</span> EnumMap&lt;RoShamBo5,EnumMap&lt;RoShamBo5,Outcome&gt;&gt;</span><br><span class="line">            table = <span class="keyword">new</span> <span class="title class_">EnumMap</span>&lt;&gt;(RoShamBo5.class);</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">for</span>(RoShamBo5 it : RoShamBo5.values())</span><br><span class="line">            table.put(it, <span class="keyword">new</span> <span class="title class_">EnumMap</span>&lt;&gt;(RoShamBo5.class));</span><br><span class="line">        initRow(PAPER, DRAW, LOSE, WIN);</span><br><span class="line">        initRow(SCISSORS, WIN, DRAW, LOSE);</span><br><span class="line">        initRow(ROCK, LOSE, WIN, DRAW);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">initRow</span><span class="params">(RoShamBo5 it,</span></span><br><span class="line"><span class="params">                        Outcome vPAPER, Outcome vSCISSORS, Outcome vROCK)</span> &#123;</span><br><span class="line">        EnumMap&lt;RoShamBo5,Outcome&gt; row =</span><br><span class="line">                RoShamBo5.table.get(it);</span><br><span class="line">        row.put(RoShamBo5.PAPER, vPAPER);</span><br><span class="line">        row.put(RoShamBo5.SCISSORS, vSCISSORS);</span><br><span class="line">        row.put(RoShamBo5.ROCK, vROCK);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Outcome <span class="title function_">compete</span><span class="params">(RoShamBo5 it)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> table.get(<span class="built_in">this</span>).get(it);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        RoShamBo.play(RoShamBo5.class, <span class="number">20</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>实际上依旧是二次选择，只是没有触发方法的动态链接机制，而是通过map类型手动填充了一张表格进行分发。</p>
+
+</article>
+    
+    
+
+</div>
+<div class="trm-post-next-prev row">
+    <div class="col-lg-12">
+        <!-- title -->
+        <h5 class="trm-title-with-divider">
+            其他文章
+            <span data-number="02"></span>
+        </h5>
+    </div>
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/01/22/dubbo%E7%9A%84spi/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/dubbo/">
+                    dubbo
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/01/22/dubbo%E7%9A%84spi/" class="trm-anima-link">
+                    dubbo的spi
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/01/22</li>
+                <li>16:47</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+    
+
+    <div id="giscus-wrap" class="trm-card trm-scroll-animation comment-container"></div>
+<script data-swup-reload-script>
+    function loadGiscus() {
+        let nowTheme = document.documentElement.classList.contains('dark') ? '' : ''
+        const config = {
+            src: 'https://giscus.app/client.js',
+            "data-repo": 'wenzhuo4657/comment',
+            "data-repo-id": 'R_kgDOOBvPZQ',
+            "data-category": 'Announcements',
+            "data-category-id": 'DIC_kwDOOBvPZc4Cnef9',
+            "data-mapping": 'pathname',
+            "data-reactions-enabled": '1',
+            "data-emit-metadata": '0',
+            "data-theme": nowTheme,
+            "data-lang": 'zh-CN',
+            crossorigin: "anonymous",
+            async: true
+        }
+        let ele = document.createElement('script')
+        for (let key in config) {
+            ele.setAttribute(key, config[key])
+        }
+        document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin', ele)
+    }
+
+    function changeGiscusTheme() {
+        let theme = document.documentElement.classList.contains('dark') ? '' : ''
+
+        function sendMessage(message) {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe) return;
+            iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+
+        sendMessage({
+            setConfig: {
+                theme: theme
+            }
+        });
+    }
+
+    loadGiscus();
+</script>
+
+
+
+                    <div class="trm-divider footer-divider"></div>
+
+                    <!-- footer -->
+                    <footer class="trm-footer-card trm-scroll-animation">
+
+    
+
+    
+
+    
+        <div class="trm-footer-item">
+            <span>
+                由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0
+            </span>
+            <span class="footer-separator" data-separator=" | "></span>
+            <span> 
+                主题 - 
+                <a rel="noopener" href='https://github.com/MaLuns/hexo-theme-async' target='_blank'>Async</a>
+                v2.2.4
+            </span>
+        </div>
+      
+
+     
+
+     
+</footer>
+                    <!-- footer end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- body end -->
+
+            
+
+            
+<div class="trm-fixed-container">
+    
+    
+        <div class="trm-fixed-btn" data-title="阅读模式" onclick="asyncFun.switchReadMode()">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    
+    
+    <div id="trm-back-top" class="trm-fixed-btn" data-title="回到顶部">
+        <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+    </div>
+</div>
+        </div>
+      </div>
+      <!-- scroll container end -->
+  </div>
+  <!-- app wrapper end -->
+
+  
+  <!-- Plugin -->
+
+
+
+
+    
+    
+<script src="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+    
+
+    
+        <script src="/js/plugins/typing.js?v=2.2.4"></script>
+    
+
+    
+
+    <!-- 数学公式 -->
+    
+
+    <!-- 评论插件 -->
+    
+        
+
+        
+    
+
+		
+
+
+
+
+    <!-- Service Worker -->
+    
+    <!-- baidu push -->
+    
+
+
+<script id="async-script" src="/js/main.js?v=2.2.4"></script>
+
+<!-- CDN -->
+
+
+    
+
+    
+
+    
+
+
+
+</body>
+
+</html>

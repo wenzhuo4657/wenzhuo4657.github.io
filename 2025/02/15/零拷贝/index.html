@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="x5-fullscreen" content="true">
+<meta name="full-screen" content="yes">
+<meta name="theme-color" content="#317EFB" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0" name="viewport">
+<meta name="description" content="首先说结论，零拷贝技术是针对与磁盘中数据到网卡发送数据的一个简化，是系统函数级别的优化，与程序编程无关，在使用中我们只需要调用即可。 系统拷贝 read&#x2F;write前置概念：  页缓存（内核缓冲区）：该区域是为了提升磁盘数据的读写速度所设立的一个区域，处于（主存）内存当中。 socket缓冲区：是内核为每个 Socket 分配的内存区域，用于临时存储发送和接收的数据，处于（主存）内存当中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="零拷贝">
+<meta property="og:url" content="http://wenzhuo4657.org/2025/02/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="首先说结论，零拷贝技术是针对与磁盘中数据到网卡发送数据的一个简化，是系统函数级别的优化，与程序编程无关，在使用中我们只需要调用即可。 系统拷贝 read&#x2F;write前置概念：  页缓存（内核缓冲区）：该区域是为了提升磁盘数据的读写速度所设立的一个区域，处于（主存）内存当中。 socket缓冲区：是内核为每个 Socket 分配的内存区域，用于临时存储发送和接收的数据，处于（主存）内存当中">
+<meta property="og:locale">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="article:published_time" content="2025-02-15T08:23:43.000Z">
+<meta property="article:modified_time" content="2025-04-06T06:23:27.297Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wenzhuo4657.org/img/404.jpg">
+
+
+<title >零拷贝</title>
+
+<!-- Favicon -->
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='16x16' ></link>
+
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='32x32' ></link>
+
+
+    <link href='/apple-touch-icon.png?v=2.2.4' rel='apple-touch-icon' sizes='180x180' ></link>
+
+
+    <link href='/site.webmanifest' rel='manifest' ></link>
+
+
+<!-- Plugin -->
+
+
+
+
+    
+<link rel="stylesheet" href="/css/plugins/bootstrap.row.css">
+
+    
+<link rel="stylesheet" href="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.css">
+
+    
+    
+
+
+
+
+<!-- Icon -->
+
+
+    
+<script src="//at.alicdn.com/t/c/font_4843277_8cs9atfk29g.js"></script>
+
+
+
+<!-- Variable -->
+<script>window.ASYNC_CONFIG = {"hostname":"wenzhuo4657.org","author":"John Doe","root":"/","typed_text":["Web Developer"],"theme_version":"2.2.4","theme":{"switch":true,"default":"style-light"},"favicon":{"logo":"log.svg","icon16":"log.svg","icon32":"log.svg","apple_touch_icon":"apple-touch-icon.png","webmanifest":"/site.webmanifest","visibilitychange":true,"hidden":"failure.ico","show_text":"(/≧▽≦/)咦！又好了！","hide_text":"(●—●)喔哟，崩溃啦！"},"i18n":{"placeholder":"搜索文章...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）","author":"本文作者：","copyright_link":"本文链接：","copyright_license_title":"版权声明：","copyright_license_content":"本博客所有文章除特别声明外，均默认采用 undefined 许可协议。","copy_success":"复制成功","copy_failure":"复制失败","open_read_mode":"进入阅读模式","exit_read_mode":"退出阅读模式","notice_outdate_message":"距离上次更新已经 undefined 天了, 文章内容可能已经过时。","sticky":"置顶","just":"刚刚","min":"分钟前","hour":"小时前","day":"天前","month":"个月前"},"swup":false,"plugin":{"flickr_justified_gallery":"https://npm.elemecdn.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"icon-hupilan","moon":"icon-hupilan","play":"icon-hupilan","email":"icon-hupilan","next":"icon-hupilan","calendar":"icon-hupilan","clock":"icon-hupilan","user":"icon-hupilan","back_top":"icon-hupilan","close":"icon-hupilan","search":"icon-hupilan","reward":"icon-hupilan","toc_tag":"icon-hupilan","read":"icon-hupilan","arrows":"icon-hupilan","double_arrows":"icon-hupilan","copy":"icon-hupilan","user_tag":"icon-hupilan"},"icontype":"symbol","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":false,"title":"mac","height_limit":200},"toc":{"post_title":true},"live_time":{"start_time":"","prefix":"博客已萌萌哒运行 undefined 天"},"danmu":{"enable":false,"el":".trm-banner"}};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2025-04-06 14:23:27"};</script>
+
+<!-- Theme mode css -->
+<link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.2.4" id="trm-switch-style">
+<script>
+    let defaultMode = ASYNC_CONFIG.theme.default !=='auto' ?  ASYNC_CONFIG.theme.default : (window.matchMedia("(prefers-color-scheme: light)").matches ? 'style-light' : 'style-dark')
+    let catchMode = localStorage.getItem('theme-mode') || defaultMode;
+    let type = catchMode === 'style-dark' ? 'add' : 'remove';
+    document.documentElement.classList[type]('dark')
+</script>
+
+<!-- CDN -->
+
+
+    
+    
+
+
+
+<!-- Site Analytics -->
+
+ 
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+<body>
+
+  <!-- app wrapper -->
+  <div class="trm-app-frame">
+
+    <!-- page preloader -->
+    <div class="trm-preloader">
+    <div class="trm-holder">
+        <div class="preloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+    <!-- page preloader end -->
+
+    <!-- change mode preloader -->
+    <div class="trm-mode-swich-animation-frame">
+    <div class="trm-mode-swich-animation">
+        <i class="i-sun"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+        <div class="trm-horizon"></div>
+        <i class="i-moon"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+    </div>
+</div>
+    <!-- change mode preloader end -->
+
+      <!-- scroll container -->
+      <div id="trm-dynamic-content" class="trm-swup-animation">
+        <div id="trm-scroll-container" class="trm-scroll-container" style="opacity: 0">
+            <!-- top bar -->
+            <header class="trm-top-bar">
+	<div class="container">
+		<div class="trm-left-side">
+			<!-- logo -->
+<a href="/" class="trm-logo-frame trm-anima-link">
+    
+        <img alt="logo" src="/log.svg">
+    
+    
+        <div class="trm-logo-text">
+            wenzhuo<span></span>
+        </div>
+    
+</a>
+<!-- logo end -->
+		</div>
+		<div class="trm-right-side">
+			<!-- menu -->
+<div class="trm-menu">
+    <nav>
+        <ul>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/" target="">
+                    首页
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/categories/" target="">
+                    分类
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/archives/" target="">
+                    归档
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/links/" target="">
+                    友链
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/myproject/" target="">
+                    我的项目
+                </a>
+                
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+<!-- menu end -->
+			
+    <!-- mode switcher place -->
+    <div class="trm-mode-switcher-place">
+        <div class="trm-mode-switcher">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+            <input class="tgl tgl-light" id="trm-swich" type="checkbox">
+            <label class="trm-swich" for="trm-swich"></label>
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    </div>
+    <!-- mode switcher place end -->
+
+			
+		</div>
+		<div class="trm-menu-btn">
+			<span></span>
+		</div>
+	</div>
+</header>
+            <!-- top bar end -->
+
+            <!-- body -->
+            
+<div class="trm-content-start">
+    <!-- banner -->
+    <div class="trm-banner">
+    
+    <!-- banner cover -->
+    <img style="object-position:top;object-fit:cover;" alt="banner" class="trm-banner-cover" src="/img/banner.png">
+    <!-- banner cover end -->
+    
+
+    <!-- banner content -->
+    <div class="trm-banner-content trm-overlay">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-4"></div>
+                
+                <div class="col-lg-8">
+
+                    <!-- banner title -->
+                    <div class="trm-banner-text ">
+                        <div class="trm-label trm-mb-20">
+                            NEWS LETTER
+                        </div>
+                        <h1 class="trm-mb-30 trm-hsmb-font">
+                            零拷贝
+                        </h1>
+
+                        
+                            <ul class="trm-breadcrumbs trm-label">
+                                <li>
+                                    <a href="/" class="trm-anima-link">Home</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        2025
+                                    </span>
+                                </li>
+                            </ul>
+                        
+                    </div>
+                    <!-- banner title end -->
+
+                    <!-- scroll hint -->
+                    <span id="scroll-triger" class="trm-scroll-hint-frame">
+                        <div class="trm-scroll-hint"></div>
+                        <span class="trm-label">Scroll down</span>
+                    </span>
+                    <!-- scroll hint end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner content end -->
+</div>
+    <!-- banner end -->
+    <div class="container">
+        <div class="row">
+            
+                <div class="trm-page-sidebar col-lg-4 hidden-sm">
+                    <!-- main card -->
+                    <div class="trm-main-card-frame trm-sidebar">
+    <div class="trm-main-card"> 
+        <!-- card header -->
+<div class="trm-mc-header">
+    <div class="trm-avatar-frame trm-mb-20">
+        <img alt="Avatar" class="trm-avatar" src="https://blog.wenzhuo4657.org/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240930172816.jpg">
+    </div>
+    <h5 class="trm-name trm-mb-15">
+        wenzhuo4657
+    </h5>
+    
+        <div class="trm-label">
+            I`m
+            <span class="trm-typed-text">
+                <!-- Words for theme.user.typedText -->
+            </span>
+        </div>
+    
+</div>
+<!-- card header end -->
+        <!-- sidebar social -->
+
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<div class="trm-social">
+    
+        <a href="https://github.com/wenzhuo4657" title="github" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-guibeizhu"></use>
+</svg>
+        </a>
+    
+        <a href="https://wenzhuo4657.org/atom.xml" title="rss" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hehua"></use>
+</svg>
+        </a>
+    
+</div>
+
+<!-- sidebar social end -->
+        <!-- info -->
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<ul class="trm-table trm-mb-20">
+    
+        <li>
+            <div class="trm-label">
+                Residence:
+            </div>
+            <div class="trm-label trm-label-light">
+                Mars
+            </div>
+        </li>
+    
+</ul>
+<!-- info end -->
+
+        
+    <div class="trm-divider trm-mb-40 trm-mt-40"></div>
+    <!-- action button -->
+    <div class="text-center">
+        <a href="mailto:wenzhuo4657@gmail.com" class="trm-btn">
+            联系我
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </a>
+    </div>
+    <!-- action button end -->
+
+    </div>
+</div>
+                    <!-- main card end -->
+                </div>
+            
+            <div class="trm-page-content col-lg-8">
+                <div id="trm-content" class="trm-content">
+                    <div class="trm-post-info row hidden-sm">
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            02/15
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            16:23
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="post-author" class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            John Doe
+        </div>
+    </div>
+</div>
+<div class="trm-card ">
+    <article id="article-container" class="trm-publication">
+    <p>首先说结论，零拷贝技术是针对与磁盘中数据到网卡发送数据的一个简化，是系统函数级别的优化，与程序编程无关，在使用中我们只需要调用即可。</p>
+<h2 id="系统拷贝-read-write"><a href="#系统拷贝-read-write" class="headerlink" title="系统拷贝 read&#x2F;write"></a>系统拷贝 read&#x2F;write</h2><p>前置概念：</p>
+<ul>
+<li>页缓存（内核缓冲区）：该区域是为了提升磁盘数据的读写速度所设立的一个区域，处于（主存）内存当中。</li>
+<li>socket缓冲区：是内核为每个 Socket 分配的内存区域，用于临时存储发送和接收的数据，处于（主存）内存当中。</li>
+</ul>
+<p>os系统的加载，学过操作系统的都知道，内存当中的区域分为内核态和用户态。</p>
+<p>在操作系统启动时，cpu会根据cs:ip表示的地址进行寻址，找到位于磁盘当中的操作系统程序部分，最终结果可以认为将系统代码搬进了ram主存当中，并且设置了一些列安全手段，除此之外则还为用户态提供了一系列系统函数。</p>
+<p><strong>磁盘&#x3D;&#x3D; “外设”</strong>：</p>
+<p>对于cpu来说，磁盘相当于外设，它会通过外设上的寄存器来管理，此处衍生出的技术为dma。</p>
+<ul>
+<li>dma:为了避免cpu的重复性的移动地址等的操作，进行的一项优化，具体来说，读取数据到缓冲区等重复性劳动可以交给dma设备。</li>
+</ul>
+<p>但是dma拷贝也并非万能，在某些场景下它不能使用</p>
+<ul>
+<li>用户空间和内核空间之间的数据拷贝：内核不能直接访问用户态内存</li>
+<li>调试和诊断：dma是硬件自动完成，难以插入调试逻辑。</li>
+</ul>
+<p><img src="http://blog.wenzhuo4657.org/img/image-20250215171022865.png" alt="image-20250215171022865"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h1 id="系统函数"><a href="#系统函数" class="headerlink" title="系统函数"></a>系统函数</h1><h2 id="mmap-write"><a href="#mmap-write" class="headerlink" title="mmap+write"></a>mmap+write</h2><p>将page buffer和程序工作缓存空间进行映射，减少page-buffer-&gt;程序缓存的cpu拷贝，但是对于程序工作缓存-》socket buffer这一部分仍然需要cpu拷贝。</p>
+<p><strong>为什么仍然是cpu拷贝？</strong></p>
+<p>这里将其理解为，我们仅仅是做到了在用户态可以看到page buffer,但是并没有打破用户态和内核态的内存空间限制，所以此处的拷贝仍然是cpu拷贝，而并非dma拷贝。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250215172019525.png" alt="image-20250215172019525"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<h2 id="sendfile"><a href="#sendfile" class="headerlink" title="sendfile"></a>sendfile</h2><p><img src="https://blog.wenzhuo4657.org/img/image-20250215172632051.png" alt="image-20250215172632051"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p>如图，sendfile使page buff直接拷贝到socket buffer。</p>
+<p><strong>为什么使用的使cpu拷贝，而非DMA拷贝？</strong></p>
+<p>ds给我的答案使，DMA通常用于外设和主存之间，</p>
+<h2 id="网卡支持SG-DMA技术的sendfile"><a href="#网卡支持SG-DMA技术的sendfile" class="headerlink" title="网卡支持SG-DMA技术的sendfile"></a>网卡支持SG-DMA技术的sendfile</h2><p><img src="https://blog.wenzhuo4657.org/img/image-20250215173227238.png" alt="image-20250215173227238"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p>如图，该函数实际上是外设功能的调用，原本socket buffer的功能被网卡认为多余，获取可以被替代之类的，提出直接从page buffer中拷贝。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>实际应用：</p>
+<p>普通的文件读写：read&#x2F;write,有利于提高系统速度，但这是非具体场景的随机读取。</p>
+<p>rocketmq: mmap+write，适合小文件并行，因为该区域用户缓存都可以看到。</p>
+<p>kafka:sendfile,适合大文件，或者说对于小文件并行支持不好，因为为了安全性，通常会对page buffer进行锁定，避免并发问题。</p>
+<p>ps:上述总结可以喂给ds，会得到更加优质的回答！</p>
+
+</article>
+    
+    
+
+</div>
+<div class="trm-post-next-prev row">
+    <div class="col-lg-12">
+        <!-- title -->
+        <h5 class="trm-title-with-divider">
+            其他文章
+            <span data-number="02"></span>
+        </h5>
+    </div>
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/03/07/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/%E6%BA%90%E7%A0%81/">
+                    源码
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/03/07/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/" class="trm-anima-link">
+                    tomcat源码阅读（一）
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/03/07</li>
+                <li>16:07</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/01/22/dubbo%E7%9A%84spi/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/dubbo/">
+                    dubbo
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/01/22/dubbo%E7%9A%84spi/" class="trm-anima-link">
+                    dubbo的spi
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/01/22</li>
+                <li>16:47</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+</div>
+
+    
+
+    <div id="giscus-wrap" class="trm-card trm-scroll-animation comment-container"></div>
+<script data-swup-reload-script>
+    function loadGiscus() {
+        let nowTheme = document.documentElement.classList.contains('dark') ? '' : ''
+        const config = {
+            src: 'https://giscus.app/client.js',
+            "data-repo": 'wenzhuo4657/comment',
+            "data-repo-id": 'R_kgDOOBvPZQ',
+            "data-category": 'Announcements',
+            "data-category-id": 'DIC_kwDOOBvPZc4Cnef9',
+            "data-mapping": 'pathname',
+            "data-reactions-enabled": '1',
+            "data-emit-metadata": '0',
+            "data-theme": nowTheme,
+            "data-lang": 'zh-CN',
+            crossorigin: "anonymous",
+            async: true
+        }
+        let ele = document.createElement('script')
+        for (let key in config) {
+            ele.setAttribute(key, config[key])
+        }
+        document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin', ele)
+    }
+
+    function changeGiscusTheme() {
+        let theme = document.documentElement.classList.contains('dark') ? '' : ''
+
+        function sendMessage(message) {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe) return;
+            iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+
+        sendMessage({
+            setConfig: {
+                theme: theme
+            }
+        });
+    }
+
+    loadGiscus();
+</script>
+
+
+
+                    <div class="trm-divider footer-divider"></div>
+
+                    <!-- footer -->
+                    <footer class="trm-footer-card trm-scroll-animation">
+
+    
+
+    
+
+    
+        <div class="trm-footer-item">
+            <span>
+                由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0
+            </span>
+            <span class="footer-separator" data-separator=" | "></span>
+            <span> 
+                主题 - 
+                <a rel="noopener" href='https://github.com/MaLuns/hexo-theme-async' target='_blank'>Async</a>
+                v2.2.4
+            </span>
+        </div>
+      
+
+     
+
+     
+</footer>
+                    <!-- footer end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- body end -->
+
+            
+
+            
+<div class="trm-fixed-container">
+    
+    
+        <div class="trm-fixed-btn" data-title="阅读模式" onclick="asyncFun.switchReadMode()">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    
+    
+    <div id="trm-back-top" class="trm-fixed-btn" data-title="回到顶部">
+        <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+    </div>
+</div>
+        </div>
+      </div>
+      <!-- scroll container end -->
+  </div>
+  <!-- app wrapper end -->
+
+  
+  <!-- Plugin -->
+
+
+
+
+    
+    
+<script src="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+    
+
+    
+        <script src="/js/plugins/typing.js?v=2.2.4"></script>
+    
+
+    
+
+    <!-- 数学公式 -->
+    
+
+    <!-- 评论插件 -->
+    
+        
+
+        
+    
+
+		
+
+
+
+
+    <!-- Service Worker -->
+    
+    <!-- baidu push -->
+    
+
+
+<script id="async-script" src="/js/main.js?v=2.2.4"></script>
+
+<!-- CDN -->
+
+
+    
+
+    
+
+    
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="x5-fullscreen" content="true">
+<meta name="full-screen" content="yes">
+<meta name="theme-color" content="#317EFB" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0" name="viewport">
+<meta name="description" content="dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载） 按需加载jdk的spi的配置文件 12org.example.ToyotaCarorg.example.HondaCar  dubbo的spi的配置文件 1234567toyota&#x3D;org.example.ToyotaCarhonda&#x3D;org.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="dubbo的spi">
+<meta property="og:url" content="http://wenzhuo4657.org/2025/01/22/dubbo%E7%9A%84spi/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载） 按需加载jdk的spi的配置文件 12org.example.ToyotaCarorg.example.HondaCar  dubbo的spi的配置文件 1234567toyota&#x3D;org.example.ToyotaCarhonda&#x3D;org.">
+<meta property="og:locale">
+<meta property="og:image" content="http://wenzhuo4657.org/img/404.jpg">
+<meta property="article:published_time" content="2025-01-22T08:47:11.000Z">
+<meta property="article:modified_time" content="2025-04-06T06:23:27.297Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://wenzhuo4657.org/img/404.jpg">
+
+
+<title >dubbo的spi</title>
+
+<!-- Favicon -->
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='16x16' ></link>
+
+
+    <link href='/log.svg?v=2.2.4' rel='icon' type='image/png' sizes='32x32' ></link>
+
+
+    <link href='/apple-touch-icon.png?v=2.2.4' rel='apple-touch-icon' sizes='180x180' ></link>
+
+
+    <link href='/site.webmanifest' rel='manifest' ></link>
+
+
+<!-- Plugin -->
+
+
+
+
+    
+<link rel="stylesheet" href="/css/plugins/bootstrap.row.css">
+
+    
+<link rel="stylesheet" href="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.css">
+
+    
+    
+
+
+
+
+<!-- Icon -->
+
+
+    
+<script src="//at.alicdn.com/t/c/font_4843277_8cs9atfk29g.js"></script>
+
+
+
+<!-- Variable -->
+<script>window.ASYNC_CONFIG = {"hostname":"wenzhuo4657.org","author":"John Doe","root":"/","typed_text":["Web Developer"],"theme_version":"2.2.4","theme":{"switch":true,"default":"style-light"},"favicon":{"logo":"log.svg","icon16":"log.svg","icon32":"log.svg","apple_touch_icon":"apple-touch-icon.png","webmanifest":"/site.webmanifest","visibilitychange":true,"hidden":"failure.ico","show_text":"(/≧▽≦/)咦！又好了！","hide_text":"(●—●)喔哟，崩溃啦！"},"i18n":{"placeholder":"搜索文章...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）","author":"本文作者：","copyright_link":"本文链接：","copyright_license_title":"版权声明：","copyright_license_content":"本博客所有文章除特别声明外，均默认采用 undefined 许可协议。","copy_success":"复制成功","copy_failure":"复制失败","open_read_mode":"进入阅读模式","exit_read_mode":"退出阅读模式","notice_outdate_message":"距离上次更新已经 undefined 天了, 文章内容可能已经过时。","sticky":"置顶","just":"刚刚","min":"分钟前","hour":"小时前","day":"天前","month":"个月前"},"swup":false,"plugin":{"flickr_justified_gallery":"https://npm.elemecdn.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"icon-hupilan","moon":"icon-hupilan","play":"icon-hupilan","email":"icon-hupilan","next":"icon-hupilan","calendar":"icon-hupilan","clock":"icon-hupilan","user":"icon-hupilan","back_top":"icon-hupilan","close":"icon-hupilan","search":"icon-hupilan","reward":"icon-hupilan","toc_tag":"icon-hupilan","read":"icon-hupilan","arrows":"icon-hupilan","double_arrows":"icon-hupilan","copy":"icon-hupilan","user_tag":"icon-hupilan"},"icontype":"symbol","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":false,"title":"mac","height_limit":200},"toc":{"post_title":true},"live_time":{"start_time":"","prefix":"博客已萌萌哒运行 undefined 天"},"danmu":{"enable":false,"el":".trm-banner"}};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2025-04-06 14:23:27"};</script>
+
+<!-- Theme mode css -->
+<link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.2.4" id="trm-switch-style">
+<script>
+    let defaultMode = ASYNC_CONFIG.theme.default !=='auto' ?  ASYNC_CONFIG.theme.default : (window.matchMedia("(prefers-color-scheme: light)").matches ? 'style-light' : 'style-dark')
+    let catchMode = localStorage.getItem('theme-mode') || defaultMode;
+    let type = catchMode === 'style-dark' ? 'add' : 'remove';
+    document.documentElement.classList[type]('dark')
+</script>
+
+<!-- CDN -->
+
+
+    
+    
+
+
+
+<!-- Site Analytics -->
+
+ 
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+<body>
+
+  <!-- app wrapper -->
+  <div class="trm-app-frame">
+
+    <!-- page preloader -->
+    <div class="trm-preloader">
+    <div class="trm-holder">
+        <div class="preloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+    <!-- page preloader end -->
+
+    <!-- change mode preloader -->
+    <div class="trm-mode-swich-animation-frame">
+    <div class="trm-mode-swich-animation">
+        <i class="i-sun"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+        <div class="trm-horizon"></div>
+        <i class="i-moon"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+    </div>
+</div>
+    <!-- change mode preloader end -->
+
+      <!-- scroll container -->
+      <div id="trm-dynamic-content" class="trm-swup-animation">
+        <div id="trm-scroll-container" class="trm-scroll-container" style="opacity: 0">
+            <!-- top bar -->
+            <header class="trm-top-bar">
+	<div class="container">
+		<div class="trm-left-side">
+			<!-- logo -->
+<a href="/" class="trm-logo-frame trm-anima-link">
+    
+        <img alt="logo" src="/log.svg">
+    
+    
+        <div class="trm-logo-text">
+            wenzhuo<span></span>
+        </div>
+    
+</a>
+<!-- logo end -->
+		</div>
+		<div class="trm-right-side">
+			<!-- menu -->
+<div class="trm-menu">
+    <nav>
+        <ul>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/" target="">
+                    首页
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/categories/" target="">
+                    分类
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/archives/" target="">
+                    归档
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/links/" target="">
+                    友链
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/myproject/" target="">
+                    我的项目
+                </a>
+                
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+<!-- menu end -->
+			
+    <!-- mode switcher place -->
+    <div class="trm-mode-switcher-place">
+        <div class="trm-mode-switcher">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+            <input class="tgl tgl-light" id="trm-swich" type="checkbox">
+            <label class="trm-swich" for="trm-swich"></label>
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    </div>
+    <!-- mode switcher place end -->
+
+			
+		</div>
+		<div class="trm-menu-btn">
+			<span></span>
+		</div>
+	</div>
+</header>
+            <!-- top bar end -->
+
+            <!-- body -->
+            
+<div class="trm-content-start">
+    <!-- banner -->
+    <div class="trm-banner">
+    
+    <!-- banner cover -->
+    <img style="object-position:top;object-fit:cover;" alt="banner" class="trm-banner-cover" src="/img/banner.png">
+    <!-- banner cover end -->
+    
+
+    <!-- banner content -->
+    <div class="trm-banner-content trm-overlay">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-4"></div>
+                
+                <div class="col-lg-8">
+
+                    <!-- banner title -->
+                    <div class="trm-banner-text ">
+                        <div class="trm-label trm-mb-20">
+                            NEWS LETTER
+                        </div>
+                        <h1 class="trm-mb-30 trm-hsmb-font">
+                            dubbo的spi
+                        </h1>
+
+                        
+                            <ul class="trm-breadcrumbs trm-label">
+                                <li>
+                                    <a href="/" class="trm-anima-link">Home</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        2025
+                                    </span>
+                                </li>
+                            </ul>
+                        
+                    </div>
+                    <!-- banner title end -->
+
+                    <!-- scroll hint -->
+                    <span id="scroll-triger" class="trm-scroll-hint-frame">
+                        <div class="trm-scroll-hint"></div>
+                        <span class="trm-label">Scroll down</span>
+                    </span>
+                    <!-- scroll hint end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner content end -->
+</div>
+    <!-- banner end -->
+    <div class="container">
+        <div class="row">
+            
+                <div class="trm-page-sidebar col-lg-4 hidden-sm">
+                    <!-- main card -->
+                    <div class="trm-main-card-frame trm-sidebar">
+    <div class="trm-main-card"> 
+        <!-- card header -->
+<div class="trm-mc-header">
+    <div class="trm-avatar-frame trm-mb-20">
+        <img alt="Avatar" class="trm-avatar" src="https://blog.wenzhuo4657.org/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240930172816.jpg">
+    </div>
+    <h5 class="trm-name trm-mb-15">
+        wenzhuo4657
+    </h5>
+    
+        <div class="trm-label">
+            I`m
+            <span class="trm-typed-text">
+                <!-- Words for theme.user.typedText -->
+            </span>
+        </div>
+    
+</div>
+<!-- card header end -->
+        <!-- sidebar social -->
+
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<div class="trm-social">
+    
+        <a href="https://github.com/wenzhuo4657" title="github" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-guibeizhu"></use>
+</svg>
+        </a>
+    
+        <a href="https://wenzhuo4657.org/atom.xml" title="rss" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hehua"></use>
+</svg>
+        </a>
+    
+</div>
+
+<!-- sidebar social end -->
+        <!-- info -->
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<ul class="trm-table trm-mb-20">
+    
+        <li>
+            <div class="trm-label">
+                Residence:
+            </div>
+            <div class="trm-label trm-label-light">
+                Mars
+            </div>
+        </li>
+    
+</ul>
+<!-- info end -->
+
+        
+    <div class="trm-divider trm-mb-40 trm-mt-40"></div>
+    <!-- action button -->
+    <div class="text-center">
+        <a href="mailto:wenzhuo4657@gmail.com" class="trm-btn">
+            联系我
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </a>
+    </div>
+    <!-- action button end -->
+
+    </div>
+</div>
+                    <!-- main card end -->
+                </div>
+            
+            <div class="trm-page-content col-lg-8">
+                <div id="trm-content" class="trm-content">
+                    <div class="trm-post-info row hidden-sm">
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            01/22
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            16:47
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="post-author" class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            John Doe
+        </div>
+    </div>
+</div>
+<div class="trm-card ">
+    <article id="article-container" class="trm-publication">
+    <p>dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载）</p>
+<h2 id="按需加载"><a href="#按需加载" class="headerlink" title="按需加载"></a>按需加载</h2><p>jdk的spi的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">org.example.ToyotaCar</span><br><span class="line">org.example.HondaCar</span><br></pre></td></tr></table></figure>
+
+<p>dubbo的spi的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">toyota=org.example.ToyotaCar</span><br><span class="line">honda=org.example.HondaCar</span><br><span class="line">wrapper=org.example.aop.CarWrapper1</span><br><span class="line">wrapper=org.example.aop.CarWrapper2</span><br><span class="line">Race=org.example.ioc.RaceRes</span><br><span class="line">red=org.example.ioc.PenRes</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>二者的区别在于dubbo中使用键值，可以实现按需加载，请注意，该加载并非指配置文件的加载，而加载配置文件之后的对于<strong>服务对象的实例化</strong>。</p>
+<h3 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h3><h4 id="jdk的spi"><a href="#jdk的spi" class="headerlink" title="jdk的spi"></a>jdk的spi</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">      ServiceLoader&lt;Car&gt; load = ServiceLoader.load(Car.class);</span><br><span class="line"></span><br><span class="line">//        获取迭代器遍历</span><br><span class="line">        Iterator&lt;Car&gt; iterator = load.iterator();</span><br><span class="line">        while (iterator.hasNext())&#123;</span><br><span class="line">            Car registry = iterator.next();</span><br><span class="line">            registry.run();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br></pre></td></tr></table></figure>
+
+<p>追溯源码可以看到迭代器内部。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250122174648892.png" alt="image-20250122174648892"  data-tag='post-image' onload='this.onload=null;this.style.opacity=1;' loading="lazy" onerror='this.onerror=null;this.src="/img/404.jpg"'></p>
+<p>关键成员变量</p>
+<p>Iterator<String> pending ;&#x2F;&#x2F;配置文件读取的数据  <strong>该变量也是迭代器</strong><br>String nextName ;&#x2F;&#x2F;下一个将要读取的配置</p>
+<p>存在关键方法</p>
+<p>hasNextService：用于判断下一个服务名称，即配置文件当中的全限定类名。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">private boolean hasNextService() &#123;</span><br><span class="line">     if (nextName != null) &#123;</span><br><span class="line">         return true;</span><br><span class="line">     &#125;</span><br><span class="line">     if (configs == null) &#123;</span><br><span class="line">         try &#123;</span><br><span class="line">             String fullName = PREFIX + service.getName();</span><br><span class="line">             if (loader == null)</span><br><span class="line">                 configs = ClassLoader.getSystemResources(fullName);</span><br><span class="line">             else</span><br><span class="line">                 configs = loader.getResources(fullName);</span><br><span class="line">         &#125; catch (IOException x) &#123;</span><br><span class="line">             fail(service, &quot;Error locating configuration files&quot;, x);</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line">     while ((pending == null) || !pending.hasNext()) &#123;</span><br><span class="line">         if (!configs.hasMoreElements()) &#123;</span><br><span class="line">             return false;</span><br><span class="line">         &#125;</span><br><span class="line">         pending = parse(service, configs.nextElement());</span><br><span class="line">     &#125;</span><br><span class="line">     nextName = pending.next();//获取下一个元素，</span><br><span class="line">     return true;</span><br><span class="line"> &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>nextService：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">private S nextService() &#123;</span><br><span class="line">        if (!hasNextService())</span><br><span class="line">            throw new NoSuchElementException();</span><br><span class="line">        String cn = nextName;</span><br><span class="line">        nextName = null;</span><br><span class="line">        Class&lt;?&gt; c = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            c = Class.forName(cn, false, loader);//获取类加载器</span><br><span class="line">        &#125; catch (ClassNotFoundException x) &#123;</span><br><span class="line">            fail(service,</span><br><span class="line">                 &quot;Provider &quot; + cn + &quot; not found&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        if (!service.isAssignableFrom(c)) &#123;</span><br><span class="line">            fail(service,</span><br><span class="line">                 &quot;Provider &quot; + cn  + &quot; not a subtype&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            S p = service.cast(c.newInstance());//实例化对象</span><br><span class="line">            providers.put(cn, p);//延迟加载，将其收入到一个map集合当中</span><br><span class="line">            return p;//返回加载元素</span><br><span class="line">        &#125; catch (Throwable x) &#123;</span><br><span class="line">            fail(service,</span><br><span class="line">                 &quot;Provider &quot; + cn + &quot; could not be instantiated&quot;,</span><br><span class="line">                 x);</span><br><span class="line">        &#125;</span><br><span class="line">        throw new Error();          // This cannot happen</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h4 id="dubbo的spi"><a href="#dubbo的spi" class="headerlink" title="dubbo的spi"></a>dubbo的spi</h4><p>dubbo的spi则使用键值加载。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">ExtensionLoader&lt;Car&gt; extensionLoader;</span><br><span class="line">@Before</span><br><span class="line">public void  fi()&#123;</span><br><span class="line">    extensionLoader = ExtensionLoader.getExtensionLoader(Car.class);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> *  @author:wenzhuo4657</span><br><span class="line">    des:</span><br><span class="line">dubbo基本服务发现，和jdk的主要区别在于可以用键去获取指定的扩展实现。</span><br><span class="line">*/</span><br><span class="line">    @Test</span><br><span class="line">    public void test()&#123;</span><br><span class="line">        Car car = extensionLoader.getExtension(&quot;ali&quot;,false);//false表示不进行自动装配等其他配置，默认为true,</span><br><span class="line">        car.run();</span><br><span class="line">        if (car instanceof HondaCar)&#123;</span><br><span class="line">            System.out.println(&quot;true&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br></pre></td></tr></table></figure>
+
+
+
+<p>追溯getExtension方法，可以看到关键实例化对象的createExtension方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">private T createExtension(String name, boolean wrap) &#123;</span><br><span class="line">       Class&lt;?&gt; clazz = getExtensionClasses().get(name);</span><br><span class="line">       if (clazz == null) &#123;</span><br><span class="line">           throw findException(name);</span><br><span class="line">       &#125;</span><br><span class="line">       try &#123;</span><br><span class="line">           T instance = (T) EXTENSION_INSTANCES.get(clazz);</span><br><span class="line">           if (instance == null) &#123;</span><br><span class="line">               EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.newInstance());</span><br><span class="line">               instance = (T) EXTENSION_INSTANCES.get(clazz);</span><br><span class="line">           &#125;</span><br><span class="line">           injectExtension(instance);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">           if (wrap) &#123;</span><br><span class="line"></span><br><span class="line">               List&lt;Class&lt;?&gt;&gt; wrapperClassesList = new ArrayList&lt;&gt;();</span><br><span class="line">               if (cachedWrapperClasses != null) &#123;</span><br><span class="line">                   wrapperClassesList.addAll(cachedWrapperClasses);</span><br><span class="line">                   wrapperClassesList.sort(WrapperComparator.COMPARATOR);</span><br><span class="line">                   Collections.reverse(wrapperClassesList);</span><br><span class="line">               &#125;</span><br><span class="line"></span><br><span class="line">               if (CollectionUtils.isNotEmpty(wrapperClassesList)) &#123;</span><br><span class="line">                   for (Class&lt;?&gt; wrapperClass : wrapperClassesList) &#123;</span><br><span class="line">                       Wrapper wrapper = wrapperClass.getAnnotation(Wrapper.class);</span><br><span class="line">                       if (wrapper == null</span><br><span class="line">                               || (ArrayUtils.contains(wrapper.matches(), name) &amp;&amp; !ArrayUtils.contains(wrapper.mismatches(), name))) &#123;</span><br><span class="line">                           instance = injectExtension((T) wrapperClass.getConstructor(type).newInstance(instance));</span><br><span class="line">                       &#125;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           initExtension(instance);</span><br><span class="line">           return instance;</span><br><span class="line">       &#125; catch (Throwable t) &#123;</span><br><span class="line">           throw new IllegalStateException(&quot;Extension instance (name: &quot; + name + &quot;, class: &quot; +</span><br><span class="line">                   type + &quot;) couldn&#x27;t be instantiated: &quot; + t.getMessage(), t);</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>1，提前获取类加载器，</p>
+<p>Class<?> clazz = getExtensionClasses().get(name);方法内部可以看到有一个成员变量`private final Holder<Map<String, Class<?>&gt;&gt; cachedClasses &#x3D; new Holder&lt;&gt;();&#96;</p>
+<h1 id="DUBBO的扩展点加载"><a href="#DUBBO的扩展点加载" class="headerlink" title="DUBBO的扩展点加载"></a>DUBBO的扩展点加载</h1><p><a target="_blank" rel="noopener" href="https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/spi/">扩展点加载 | Apache Dubbo</a>:该文档旨在对官网翻译，助于理解</p>
+<p>dubbo扩展点加载与单纯的spi不同，会使用Wrapper包装类对服务方法进行扩展，实际上将，这有点像aop。</p>
+<p>包装之后，获取的对象将不是所需要的服务对象，而是包装类对象。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class XxxProtocolWrapper implements Protocol &#123;</span><br><span class="line">    Protocol impl;</span><br><span class="line"> </span><br><span class="line">    public XxxProtocolWrapper(Protocol protocol) &#123; impl = protocol; &#125;</span><br><span class="line"> </span><br><span class="line">    // 接口方法做一个操作后，再调用extension的方法</span><br><span class="line">    public void refer() &#123;</span><br><span class="line">        //... 一些操作</span><br><span class="line">        impl.refer();</span><br><span class="line">        // ... 一些操作</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>可以在加载是通过参数指定是否开启包装类代理。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Car car = extensionLoader.getExtension(&quot;ali&quot;,false);//false表示不进行自动装配等其他配置，默认为true,</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="自动装配"><a href="#自动装配" class="headerlink" title="自动装配"></a>自动装配</h2><p>自动装配对应spring DI自动注入，判断方式为方法名称。</p>
+<p>形如setWheelMaker 方法的 WheelMaker 也是扩展点则会注入 WheelMaker 的实现。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class RaceCarMaker implements CarMaker &#123;</span><br><span class="line">    WheelMaker wheelMaker;</span><br><span class="line"> </span><br><span class="line">    public void setWheelMaker(WheelMaker wheelMaker) &#123;</span><br><span class="line">        this.wheelMaker = wheelMaker;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public Car makeCar() &#123;</span><br><span class="line">        // ...</span><br><span class="line">        Wheel wheel = wheelMaker.makeWheel();</span><br><span class="line">        // ...</span><br><span class="line">        return new RaceCar(wheel, ...);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>但是这种注入无法指定依赖服务的实现，一般为默认实现或者优先级判断使用哪个实现，但无论是哪种都是全局唯一的默认，无法实现特例。</p>
+<h2 id="自适应装配"><a href="#自适应装配" class="headerlink" title="自适应装配"></a>自适应装配</h2><p>该装配利用了包装类和方法参数，实现在扩展时加载服务对象并调用方法。</p>
+<p>（<strong>该方式和自动装配并不冲突，只是并不使用自动装配的服务，并且由于包装类方法执行的缘故，甚至不用判断是否使用默认服务。</strong>）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">public interface CarMaker &#123;</span><br><span class="line">	 @Adaptive(&#123;&quot;CarMaker&quot;&#125;)</span><br><span class="line">    Car makeCar(URL url);</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">public interface WheelMaker &#123;</span><br><span class="line">	 @Adaptive(&#123;&quot;WheelMaker&quot;&#125;)</span><br><span class="line">    Wheel makeWheel(URL url);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class RaceCarMaker implements CarMaker &#123;</span><br><span class="line">    WheelMaker wheelMaker;</span><br><span class="line"> </span><br><span class="line">    public void setWheelMaker(WheelMaker wheelMaker) &#123;</span><br><span class="line">        this.wheelMaker = wheelMaker;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    public Car makeCar(URL url) &#123;</span><br><span class="line">        // ...</span><br><span class="line">        Wheel wheel = wheelMaker.makeWheel(url);</span><br><span class="line">        // ...</span><br><span class="line">        return new RaceCar(wheel, ...);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Pen pen = extensionLoader.getAdaptiveExtension();</span><br><span class="line">URL url = new URL(&quot;dubbo&quot;, &quot;127.0.0.1&quot;, 20880).</span><br><span class="line">        addParameter(&quot;WheelMaker&quot;, &quot;wheel&quot;).</span><br><span class="line">        addParameter(&quot;CarMaker&quot;,&quot;car&quot;);</span><br><span class="line"></span><br><span class="line">// 调用方法</span><br><span class="line">pen.run(url);</span><br></pre></td></tr></table></figure>
+
+<p>使用@Adaptive注解定义包装类实例化服务的key,在url参数中指定，最终实现特定服务调用特定服务。</p>
+<p>深入源码中即可发现这一实现的依赖于包装类。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public java.lang.String queryCountry(org.apache.dubbo.common.URL arg0) &#123;         if (arg0 == null) throw new IllegalArgumentException(&quot;url == null&quot;);         org.apache.dubbo.common.URL url = arg0;         String extName = url.getParameter(&quot;person.service&quot;, &quot;china&quot;);//获取指定扩展服务         if (extName == null)             throw new IllegalStateException(&quot;Failed to get extension (org.dubbo.spi.example.PersonService) name from url (&quot; + url.toString() + &quot;) use keys([person.service])&quot;);         org.dubbo.spi.example.PersonService extension = (org.dubbo.spi.example.PersonService) ExtensionLoader.getExtensionLoader(org.dubbo.spi.example.PersonService.class).getExtension(extName); //扩展服务加载      </span><br><span class="line">return extension.queryCountry(arg0);//扩展服务执行    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>它会在扩展执行时通过url参数中的指定值，加载扩展服务执行。 </p>
+<h1 id="补充要点"><a href="#补充要点" class="headerlink" title="补充要点"></a>补充要点</h1><h2 id="jdk的加载默认使用无参构造器"><a href="#jdk的加载默认使用无参构造器" class="headerlink" title="jdk的加载默认使用无参构造器"></a>jdk的加载默认使用无参构造器</h2><p>这一点可以在ServiceLoader.LazyIterator#nextService()中看到</p>
+<p><code>S p = service.cast(c.newInstance());</code></p>
+<p>而Dubbo可以通过url携带参数实例化。</p>
+
+</article>
+    
+    
+
+</div>
+<div class="trm-post-next-prev row">
+    <div class="col-lg-12">
+        <!-- title -->
+        <h5 class="trm-title-with-divider">
+            其他文章
+            <span data-number="02"></span>
+        </h5>
+    </div>
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/02/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/OS/">
+                    OS
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/02/15/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" class="trm-anima-link">
+                    零拷贝
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/02/15</li>
+                <li>16:23</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/01/21/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF/">
+                    设计思路
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/01/21/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/" class="trm-anima-link">
+                    单路分发和多路分发
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/01/21</li>
+                <li>15:01</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+</div>
+
+    
+
+    <div id="giscus-wrap" class="trm-card trm-scroll-animation comment-container"></div>
+<script data-swup-reload-script>
+    function loadGiscus() {
+        let nowTheme = document.documentElement.classList.contains('dark') ? '' : ''
+        const config = {
+            src: 'https://giscus.app/client.js',
+            "data-repo": 'wenzhuo4657/comment',
+            "data-repo-id": 'R_kgDOOBvPZQ',
+            "data-category": 'Announcements',
+            "data-category-id": 'DIC_kwDOOBvPZc4Cnef9',
+            "data-mapping": 'pathname',
+            "data-reactions-enabled": '1',
+            "data-emit-metadata": '0',
+            "data-theme": nowTheme,
+            "data-lang": 'zh-CN',
+            crossorigin: "anonymous",
+            async: true
+        }
+        let ele = document.createElement('script')
+        for (let key in config) {
+            ele.setAttribute(key, config[key])
+        }
+        document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin', ele)
+    }
+
+    function changeGiscusTheme() {
+        let theme = document.documentElement.classList.contains('dark') ? '' : ''
+
+        function sendMessage(message) {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe) return;
+            iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+
+        sendMessage({
+            setConfig: {
+                theme: theme
+            }
+        });
+    }
+
+    loadGiscus();
+</script>
+
+
+
+                    <div class="trm-divider footer-divider"></div>
+
+                    <!-- footer -->
+                    <footer class="trm-footer-card trm-scroll-animation">
+
+    
+
+    
+
+    
+        <div class="trm-footer-item">
+            <span>
+                由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0
+            </span>
+            <span class="footer-separator" data-separator=" | "></span>
+            <span> 
+                主题 - 
+                <a rel="noopener" href='https://github.com/MaLuns/hexo-theme-async' target='_blank'>Async</a>
+                v2.2.4
+            </span>
+        </div>
+      
+
+     
+
+     
+</footer>
+                    <!-- footer end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- body end -->
+
+            
+
+            
+<div class="trm-fixed-container">
+    
+    
+        <div class="trm-fixed-btn" data-title="阅读模式" onclick="asyncFun.switchReadMode()">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    
+    
+    <div id="trm-back-top" class="trm-fixed-btn" data-title="回到顶部">
+        <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+    </div>
+</div>
+        </div>
+      </div>
+      <!-- scroll container end -->
+  </div>
+  <!-- app wrapper end -->
+
+  
+  <!-- Plugin -->
+
+
+
+
+    
+    
+<script src="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+    
+
+    
+        <script src="/js/plugins/typing.js?v=2.2.4"></script>
+    
+
+    
+
+    <!-- 数学公式 -->
+    
+
+    <!-- 评论插件 -->
+    
+        
+
+        
+    
+
+		
+
+
+
+
+    <!-- Service Worker -->
+    
+    <!-- baidu push -->
+    
+
+
+<script id="async-script" src="/js/main.js?v=2.2.4"></script>
+
+<!-- CDN -->
+
+
+    
+
+    
+
+    
+
+
+
+</body>
+
+</html>
