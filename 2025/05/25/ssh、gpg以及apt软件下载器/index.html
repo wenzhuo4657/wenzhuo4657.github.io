@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta name="x5-fullscreen" content="true">
+<meta name="full-screen" content="yes">
+<meta name="theme-color" content="#317EFB" />
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=0" name="viewport">
+<meta name="description" content="小白级别的理解，勿cue首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。 ssh、gpg对称加密和非堆成加密对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。 但是由于使用相同的密钥进行加密和解密，所以x">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ssh、gpg以及apt软件下载器">
+<meta property="og:url" content="http://wenzhuo4657.org/2025/05/25/ssh%E3%80%81gpg%E4%BB%A5%E5%8F%8Aapt%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%99%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="小白级别的理解，勿cue首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。 ssh、gpg对称加密和非堆成加密对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。 但是由于使用相同的密钥进行加密和解密，所以x">
+<meta property="og:locale">
+<meta property="article:published_time" content="2025-05-25T12:44:43.000Z">
+<meta property="article:modified_time" content="2025-05-26T03:40:17.066Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+
+
+<title >ssh、gpg以及apt软件下载器</title>
+
+<!-- Favicon -->
+
+    <link href='/log.svg?v=2.2.5' rel='icon' type='image/png' sizes='16x16' ></link>
+
+
+    <link href='/log.svg?v=2.2.5' rel='icon' type='image/png' sizes='32x32' ></link>
+
+
+    <link href='/apple-touch-icon.png?v=2.2.5' rel='apple-touch-icon' sizes='180x180' ></link>
+
+
+    <link href='/site.webmanifest' rel='manifest' ></link>
+
+
+<!-- Plugin -->
+
+
+
+
+    
+<link rel="stylesheet" href="/css/plugins/bootstrap.row.css">
+
+    
+<link rel="stylesheet" href="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.css">
+
+    
+    
+
+
+
+
+<!-- Icon -->
+
+
+    
+<script src="//at.alicdn.com/t/c/font_4843277_8cs9atfk29g.js"></script>
+
+
+
+<!-- Variable -->
+<script>window.ASYNC_CONFIG = {"hostname":"wenzhuo4657.org","author":"John Doe","root":"/","typed_text":["Web Developer"],"theme_version":"2.2.5","theme":{"switch":true,"default":"style-light"},"favicon":{"logo":"log.svg","icon16":"log.svg","icon32":"log.svg","apple_touch_icon":"apple-touch-icon.png","webmanifest":"/site.webmanifest","visibilitychange":true,"hidden":"failure.ico","show_text":"(/≧▽≦/)咦！又好了！","hide_text":"(●—●)喔哟，崩溃啦！"},"i18n":{"placeholder":"搜索文章...","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）","author":"本文作者：","copyright_link":"本文链接：","copyright_license_title":"版权声明：","copyright_license_content":"本博客所有文章除特别声明外，均默认采用 undefined 许可协议。","copy_success":"复制成功","copy_failure":"复制失败","open_read_mode":"进入阅读模式","exit_read_mode":"退出阅读模式","notice_outdate_message":"距离上次更新已经 undefined 天了, 文章内容可能已经过时。","sticky":"置顶","just":"刚刚","min":"分钟前","hour":"小时前","day":"天前","month":"个月前"},"swup":false,"plugin":{"flickr_justified_gallery":"https://npm.elemecdn.com/flickr-justified-gallery@latest/dist/fjGallery.min.js"},"icons":{"sun":"icon-hupilan","moon":"icon-hupilan","play":"icon-hupilan","email":"icon-hupilan","next":"icon-hupilan","calendar":"icon-hupilan","clock":"icon-hupilan","user":"icon-hupilan","back_top":"icon-hupilan","close":"icon-hupilan","search":"icon-hupilan","reward":"icon-hupilan","toc_tag":"icon-hupilan","read":"icon-hupilan","arrows":"icon-hupilan","double_arrows":"icon-hupilan","copy":"icon-hupilan","user_tag":"icon-hupilan"},"icontype":"symbol","highlight":{"plugin":"highlighjs","theme":true,"copy":true,"lang":false,"title":"mac","height_limit":200},"toc":{"post_title":true},"live_time":{"start_time":"","prefix":"博客已萌萌哒运行 undefined 天"},"danmu":{"enable":false,"el":".trm-banner"}};</script>
+<script id="async-page-config">window.PAGE_CONFIG = {"isPost":true,"isHome":false,"postUpdate":"2025-05-26 11:40:17"};</script>
+
+<!-- Theme mode css -->
+<link data-swup-theme rel="stylesheet" href="/css/index.css?v=2.2.5" id="trm-switch-style">
+<script>
+    let defaultMode = ASYNC_CONFIG.theme.default !=='auto' ?  ASYNC_CONFIG.theme.default : (window.matchMedia("(prefers-color-scheme: light)").matches ? 'style-light' : 'style-dark')
+    let catchMode = localStorage.getItem('theme-mode') || defaultMode;
+    let type = catchMode === 'style-dark' ? 'add' : 'remove';
+    document.documentElement.classList[type]('dark')
+</script>
+
+<!-- CDN -->
+
+
+    
+    
+
+
+
+<!-- Site Analytics -->
+
+ 
+<meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+</head>
+
+<body>
+
+  <!-- app wrapper -->
+  <div class="trm-app-frame">
+
+    <!-- page preloader -->
+    <div class="trm-preloader">
+    <div class="trm-holder">
+        <div class="preloader">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+</div>
+    <!-- page preloader end -->
+
+    <!-- change mode preloader -->
+    <div class="trm-mode-swich-animation-frame">
+    <div class="trm-mode-swich-animation">
+        <i class="i-sun"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+        <div class="trm-horizon"></div>
+        <i class="i-moon"><svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg></i>
+    </div>
+</div>
+    <!-- change mode preloader end -->
+
+      <!-- scroll container -->
+      <div id="trm-dynamic-content" class="trm-swup-animation">
+        <div id="trm-scroll-container" class="trm-scroll-container" style="opacity: 0">
+            <!-- top bar -->
+            <header class="trm-top-bar">
+	<div class="container">
+		<div class="trm-left-side">
+			<!-- logo -->
+<a href="/" class="trm-logo-frame trm-anima-link">
+    
+        <img alt="logo" src="/log.svg">
+    
+    
+        <div class="trm-logo-text">
+            wenzhuo<span></span>
+        </div>
+    
+</a>
+<!-- logo end -->
+		</div>
+		<div class="trm-right-side">
+			<!-- menu -->
+<div class="trm-menu">
+    <nav>
+        <ul>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/" target="">
+                    首页
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/categories/" target="">
+                    分类
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/archives/" target="">
+                    归档
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/links/" target="">
+                    友链
+                </a>
+                
+            </li>
+            
+            <li class="menu-item-has-children ">
+                <a  href="/myproject/" target="">
+                    我的项目
+                </a>
+                
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+<!-- menu end -->
+			
+    <!-- mode switcher place -->
+    <div class="trm-mode-switcher-place">
+        <div class="trm-mode-switcher">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+            <input class="tgl tgl-light" id="trm-swich" type="checkbox">
+            <label class="trm-swich" for="trm-swich"></label>
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    </div>
+    <!-- mode switcher place end -->
+
+			
+		</div>
+		<div class="trm-menu-btn">
+			<span></span>
+		</div>
+	</div>
+</header>
+            <!-- top bar end -->
+
+            <!-- body -->
+            
+<div class="trm-content-start">
+    <!-- banner -->
+    <div class="trm-banner">
+    
+    <!-- banner cover -->
+    <img style="object-position:top;object-fit:cover;" alt="banner" class="trm-banner-cover" src="/img/banner.png">
+    <!-- banner cover end -->
+    
+
+    <!-- banner content -->
+    <div class="trm-banner-content trm-overlay">
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-lg-4"></div>
+                
+                <div class="col-lg-8">
+
+                    <!-- banner title -->
+                    <div class="trm-banner-text ">
+                        <div class="trm-label trm-mb-20">
+                            NEWS LETTER
+                        </div>
+                        <h1 class="trm-mb-30 trm-hsmb-font">
+                            ssh、gpg以及apt软件下载器
+                        </h1>
+
+                        
+                            <ul class="trm-breadcrumbs trm-label">
+                                <li>
+                                    <a href="/" class="trm-anima-link">Home</a>
+                                </li>
+                                <li>
+                                    <span>
+                                        2025
+                                    </span>
+                                </li>
+                            </ul>
+                        
+                    </div>
+                    <!-- banner title end -->
+
+                    <!-- scroll hint -->
+                    <span id="scroll-triger" class="trm-scroll-hint-frame">
+                        <div class="trm-scroll-hint"></div>
+                        <span class="trm-label">Scroll down</span>
+                    </span>
+                    <!-- scroll hint end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- banner content end -->
+</div>
+    <!-- banner end -->
+    <div class="container">
+        <div class="row">
+            
+                <div class="trm-page-sidebar col-lg-4 hidden-sm">
+                    <!-- main card -->
+                    <div class="trm-main-card-frame trm-sidebar">
+    <div class="trm-main-card"> 
+        <!-- card header -->
+<div class="trm-mc-header">
+    <div class="trm-avatar-frame trm-mb-20">
+        <img alt="Avatar" class="trm-avatar" src="https://blog.wenzhuo4657.org/img/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20240930172816.jpg">
+    </div>
+    <h5 class="trm-name trm-mb-15">
+        wenzhuo4657
+    </h5>
+    
+        <div class="trm-label">
+            I`m
+            <span class="trm-typed-text">
+                <!-- Words for theme.user.typedText -->
+            </span>
+        </div>
+    
+</div>
+<!-- card header end -->
+        <!-- sidebar social -->
+
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<div class="trm-social">
+    
+        <a href="https://github.com/wenzhuo4657" title="github" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-guibeizhu"></use>
+</svg>
+        </a>
+    
+        <a href="https://wenzhuo4657.org/atom.xml" title="rss" rel="nofollow" target="_blank">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hehua"></use>
+</svg>
+        </a>
+    
+</div>
+
+<!-- sidebar social end -->
+        <!-- info -->
+<div class="trm-divider trm-mb-40 trm-mt-40"></div>
+<ul class="trm-table trm-mb-20">
+    
+        <li>
+            <div class="trm-label">
+                Residence:
+            </div>
+            <div class="trm-label trm-label-light">
+                Mars
+            </div>
+        </li>
+    
+</ul>
+<!-- info end -->
+
+        
+    <div class="trm-divider trm-mb-40 trm-mt-40"></div>
+    <!-- action button -->
+    <div class="text-center">
+        <a href="mailto:wenzhuo4657@gmail.com" class="trm-btn">
+            联系我
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </a>
+    </div>
+    <!-- action button end -->
+
+    </div>
+</div>
+                    <!-- main card end -->
+                </div>
+            
+            <div class="trm-page-content col-lg-8">
+                <div id="trm-content" class="trm-content">
+                    <div class="trm-post-info row hidden-sm">
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            05/25
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            20:44
+        </div>
+    </div>
+    <div class="col-sm-4">
+        <div id="post-author" class="trm-card trm-label trm-label-light text-center">
+            <svg class="symbol-icon trm-icon" aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg><br>
+            John Doe
+        </div>
+    </div>
+</div>
+<div class="trm-card ">
+    <article id="article-container" class="trm-publication">
+    <h1 id="小白级别的理解，勿cue"><a href="#小白级别的理解，勿cue" class="headerlink" title="小白级别的理解，勿cue"></a>小白级别的理解，勿cue</h1><p>首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。</p>
+<h2 id="ssh、gpg"><a href="#ssh、gpg" class="headerlink" title="ssh、gpg"></a>ssh、gpg</h2><h3 id="对称加密和非堆成加密"><a href="#对称加密和非堆成加密" class="headerlink" title="对称加密和非堆成加密"></a>对称加密和非堆成加密</h3><p>对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。</p>
+<p>但是由于使用相同的密钥进行加密和解密，所以x速度比较快。</p>
+<p>而非对称加密算法将密钥分为私钥和公钥，其中私钥用于解密，公钥用于加密。所以相比于同级别的对称加密，非对称加密速度更慢，但安全性更高，我们只需要将公钥发布到任意服务器上即可实现通信（例如 keyserver）</p>
+<h3 id="ssh和gpg的区别？"><a href="#ssh和gpg的区别？" class="headerlink" title="ssh和gpg的区别？"></a>ssh和gpg的区别？</h3><p>ssh： 常用于服务器加密（实时交互，需要处理动态数据），强度相当于钥匙。</p>
+<p>gpg： 常用于文件加密（静态数据），强度相当于保险箱。</p>
+<h3 id="pgp、gpg、OpenPGP"><a href="#pgp、gpg、OpenPGP" class="headerlink" title="pgp、gpg、OpenPGP"></a>pgp、gpg、OpenPGP</h3><p><a target="_blank" rel="noopener" href="https://www.rmnof.com/article/openpgp-gnupg-introduction/">OpenPGP（PGP&#x2F;GPG）深入浅出，完全入门指南</a>、</p>
+<ul>
+<li>PGP：由Phil Zimmermann开发，最终被赛门铁克收购，是一个商业软件，需要付费。</li>
+<li>OpenPGP：一种协议，定义了加密消息、签名、私钥和用于交换公钥的证书统一标准。</li>
+<li>GPG（GnuPG）：符合OpenPGP标准的开源加密软件，PGP的开源实现。</li>
+</ul>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="创建密钥"><a href="#创建密钥" class="headerlink" title="创建密钥"></a>创建密钥</h3><p>官方推荐的工具</p>
+<p>ssh：<a target="_blank" rel="noopener" href="https://www.openssh.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN">OpenSSH</a></p>
+<p>gpg： <a target="_blank" rel="noopener" href="https://gnupg.org/index.html">GnuPG</a></p>
+<h3 id="公钥服务器"><a href="#公钥服务器" class="headerlink" title="公钥服务器"></a>公钥服务器</h3><p><a target="_blank" rel="noopener" href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
+<p><a target="_blank" rel="noopener" href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
+<h3 id="使用gpg密钥"><a href="#使用gpg密钥" class="headerlink" title="使用gpg密钥"></a>使用gpg密钥</h3><p>对于ssh直接进行服务器链接等操作即可，但是gpg密钥是令人迷惑的，因为他是属于静态文件的加密，这意味着灵活性低、安全性高，而这样的加密特性势必要求一个符合的场景，例如：通信的双方必须信任对方，否则没有进行交换文件的必要。</p>
+<p><a target="_blank" rel="noopener" href="https://ulyc.github.io/2021/01/26/2021%E5%B9%B4-%E7%94%A8%E6%9B%B4%E7%8E%B0%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8PGP-%E4%B8%8B/">2021年，用更现代的方法使用PGP（下） - C的博客 |UlyC</a></p>
+<p>ps： 这篇文章中说的漏洞已经被解决了，需要注意的是里面所提到的交换公钥的方式</p>
+<h4 id="gpg的特征"><a href="#gpg的特征" class="headerlink" title="gpg的特征"></a>gpg的特征</h4><p>这里的特征是指gpg密钥上的签名、指纹等名词，他们在很长一段时间一直困扰我。</p>
+<h5 id="1，-创建"><a href="#1，-创建" class="headerlink" title="1，  创建"></a>1，  创建</h5><p><code> gpg   --full-generate-key</code> 该选项表示功能齐全的密钥生成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\25370&gt; gpg  --full-generate-key</span><br><span class="line">gpg (GnuPG) 2.4.3; Copyright (C) 2023 g10 Code GmbH</span><br><span class="line">This is free software: you are free to change and redistribute it.</span><br><span class="line">There is NO WARRANTY, to the extent permitted by law.</span><br><span class="line"></span><br><span class="line">Please select what kind of key you want:</span><br><span class="line">   (1) RSA and RSA</span><br><span class="line">   (2) DSA and Elgamal</span><br><span class="line">   (3) DSA (sign only)</span><br><span class="line">   (4) RSA (sign only)</span><br><span class="line">   (9) ECC (sign and encrypt) *default*</span><br><span class="line">  (10) ECC (sign only)</span><br><span class="line">  (14) Existing key from card</span><br><span class="line">Your selection? 1</span><br><span class="line">RSA keys may be between 1024 and 4096 bits long.</span><br><span class="line">What keysize do you want? (3072) 2048</span><br><span class="line">Requested keysize is 2048 bits</span><br><span class="line">Please specify how long the key should be valid.</span><br><span class="line">         0 = key does not expire</span><br><span class="line">      &lt;n&gt;  = key expires in n days</span><br><span class="line">      &lt;n&gt;w = key expires in n weeks</span><br><span class="line">      &lt;n&gt;m = key expires in n months</span><br><span class="line">      &lt;n&gt;y = key expires in n years</span><br><span class="line">Key is valid for? (0) 1y</span><br><span class="line">Key expires at 2026/5/25 21:39:55 �й���׼ʱ��</span><br><span class="line">Is this correct? (y/N) y</span><br><span class="line"></span><br><span class="line">GnuPG needs to construct a user ID to identify your key.</span><br><span class="line"></span><br><span class="line">Real name: wenzhuo4657</span><br><span class="line">Email address: 14783149521@163.com</span><br><span class="line">Comment: test</span><br><span class="line">You selected this USER-ID:</span><br><span class="line">    &quot;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&quot;</span><br><span class="line"></span><br><span class="line">Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? q</span><br><span class="line">gpg: Key generation canceled.</span><br><span class="line">PS C:\Users\25370&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>这一部分定义了uid： wenzhuo4657 (test) <a href="mailto:&#x31;&#x34;&#x37;&#x38;&#x33;&#x31;&#x34;&#57;&#53;&#50;&#49;&#64;&#x31;&#x36;&#x33;&#46;&#x63;&#111;&#x6d;">14783149521@163.com</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Real name: wenzhuo4657</span><br><span class="line">Email address: 14783149521@163.com</span><br><span class="line">Comment: test</span><br><span class="line">You selected this USER-ID:</span><br><span class="line">    &quot;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&quot;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h5 id="2，指纹"><a href="#2，指纹" class="headerlink" title="2，指纹"></a>2，指纹</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\25370&gt; gpg --fingerprint 14783149521@163.com</span><br><span class="line">pub   rsa2048 2025-04-30 [SC] [expires: 2028-04-30]   </span><br><span class="line">      BDB8 0382 F6A8 9F91 BB32  686F 9C3D 67F6 22CD 65C3</span><br><span class="line">uid           [ultimate] WENZHUO HOU &lt;14783149521@163.com&gt;</span><br><span class="line">sub   rsa2048 2025-04-30 [E] [expires: 2028-04-30]</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<p>pub： 表示公钥，用于交换。</p>
+<p>sub：表示私钥，不可泄露</p>
+<p><code>rsa2048 2025-04-30 [SC] [expires: 2028-04-30] </code> ：对密钥的描述，值得注意的是描述符号[SC]、[E]</p>
+<table>
+<thead>
+<tr>
+<th>标志</th>
+<th>含义</th>
+<th>用途说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>S</code></td>
+<td>Sign</td>
+<td>签名文件或提交（如 Git 提交签名）</td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td>Certify</td>
+<td>认证 UID 或签名其他密钥（主密钥才有）</td>
+</tr>
+<tr>
+<td><code>E</code></td>
+<td>Encrypt</td>
+<td>加密文件或消息</td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td>Authenticate</td>
+<td>用于身份认证（如 SSH 登录替代）</td>
+</tr>
+</tbody></table>
+<p><code>BDB8 0382 F6A8 9F91 BB32  686F 9C3D 67F6 22CD 65C3</code>: 指纹，唯一标识密钥、验证身份、构建信任链</p>
+<h5 id="3，子钥和公钥、签名和验签"><a href="#3，子钥和公钥、签名和验签" class="headerlink" title="3，子钥和公钥、签名和验签"></a>3，子钥和公钥、签名和验签</h5><p>这里需要强调： </p>
+<ul>
+<li><p>gpg的公钥!&#x3D;密钥当中的公钥！gpg公钥是公开的，其中包含所有附带的公钥以及<em>私钥的描述信息</em>，也就是说他并不包含真正私钥！</p>
+</li>
+<li><p>主公钥是描述一般是[SC],其中包含了对加密文件进行签名的功能，但真正执行签名的私钥！</p>
+</li>
+<li><p>对gpg密钥的修改（添加、删除子密钥等操作）都需要重新发布gpg公钥</p>
+</li>
+</ul>
+<h4 id="管理gpg密钥"><a href="#管理gpg密钥" class="headerlink" title="管理gpg密钥"></a>管理gpg密钥</h4><p>除去正常的私钥和公钥的管理，gpg在面对多用户场景下，还支持密钥的溯源，毕竟一个用户不可能只使用一个密钥，也有可能是一个组织下有多个密钥，最终指向一个具备公信力的指纹！</p>
+<h3 id="使用ssh密钥"><a href="#使用ssh密钥" class="headerlink" title="使用ssh密钥"></a>使用ssh密钥</h3><p>ssh的描述信息只有一个邮箱，而gpg拥有uid的唯一表示，且注意，对于gpg而言，他需要面临的时多用户场景，uid可以快速区分，而指纹可以唯一标识一个密钥。</p>
+<p>由于场景单一、简单，没啥好说的，基本就是两个端点进行加密通信，一个加密一个解密。</p>
+<h1 id="apt"><a href="#apt" class="headerlink" title="apt"></a>apt</h1><p>呃呃，实际上apt才是这篇博文的出发点，但是没想到拓展了这么，甚至对于gpg密钥的管理还有很多没有了解、实操，hhhh</p>
+<p>apt是ubuntu默认的软件安装器，并且默认添加了官方源。从使用上来说相当简单，基本就是<code>apt install``apt remove</code>等简单的api。</p>
+<p>值得注意的是apt添加第三方软件源时，使用到gpg公钥进行加密传输！</p>
+<h2 id="软件源的添加"><a href="#软件源的添加" class="headerlink" title="软件源的添加"></a>软件源的添加</h2><p>1， 查看软件源</p>
+<ul>
+<li>官方软件源<br>-  cat   &#x2F;etc&#x2F;apt&#x2F;sources.list</li>
+<li>第三方软件源<br> -  ls &#x2F;etc&#x2F;apt&#x2F;sources.list.d&#x2F;<br> -  该目录下的软件源单独存放在 <code>名称.list</code>文件中，格式同官方软件源</li>
+</ul>
+<p>命令查看<br><code>apt-cache policy | grep http | awk &#39;&#123;print $2 $3&#125;&#39; | sort | uniq</code></p>
+<p>2，添加软件源</p>
+<p>软件源的定义<br><code>类型 [选项] 仓库URL 发行版代号 组件1 [组件2 ...]</code></p>
+<p>对于第三方软件源通常需要使用gpt密钥验证安全性，<br>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1,adoptium软件源定义</span><br><span class="line">deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://mirrors.tuna.tsinghua.edu.cn/Adoptium/deb jammy main</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">ps： 其中signed-by代表gpt密钥的位置，通常使用curl命令下载到本地</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p>（1），前置准备<br><code>apt-get update &amp;&amp; apt-get install -y wget apt-transport-https</code><br>或<br><code>apt update &amp;&amp; apt install -y wget apt-transport-https</code></p>
+<p>wegt： 下载工具</p>
+<p>apt-transport-https： 允许 APT 使用 HTTPS 协议访问仓库源</p>
+<p>（2）下载gpt密钥<br><code>wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc</code></p>
+<p>下载gpg文件  <code>wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public </code></p>
+<p>写入文件 &#96;tee &#x2F;etc&#x2F;apt&#x2F;keyrings&#x2F;adoptium.asc&#96;&#96;</p>
+<p>(3)添加第三方软件源</p>
+<p>ps： 如果是添加官方软件源，直接写入&#x2F;etc&#x2F;apt&#x2F;sources.list即可</p>
+<p>软件源定义 <code>deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://mirrors.tuna.tsinghua.edu.cn/Adoptium/deb jammy main</code></p>
+<p>完整命令<br><code>echo &quot;deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://mirrors.tuna.tsinghua.edu.cn/Adoptium/deb jammy main&quot; | tee  /etc/apt/sources.list.d/adoptium.list </code></p>
+<p>(4) 更新索引，就可以正常使用了<br>&#96;apt update</p>
+<h2 id="apt的基本操作"><a href="#apt的基本操作" class="headerlink" title="apt的基本操作"></a>apt的基本操作</h2><p>这一部分主要是我的日常记录的命令，因为很不方便，例如安装的软件经常找不到或者忘记了名称，难以删除。</p>
+<p>apt和apt-get的区别<br>功能上无区别，apt是apt-get的新版本</p>
+<p>查看已安装软件版本<br><code>apt show </code></p>
+<p>查看软件安装的位置<br><code> dpkg -L  软件名称</code></p>
+<p>搜想相关软件包<br><code>apt search  软件包名称/相关单词</code><br>例如： <code>apt search jdk </code></p>
+<p>查看软件版本<br><code>apt-cache madison maven</code></p>
+<p>安装指定版本<br><code>sudo apt-get install maven=3.6.0-1~18.04.1</code><br>也可不指定，默认安装最新版本<br>&#96;sudo apt-get install maven</p>
+
+</article>
+    
+    
+
+</div>
+<div class="trm-post-next-prev row">
+    <div class="col-lg-12">
+        <!-- title -->
+        <h5 class="trm-title-with-divider">
+            其他文章
+            <span data-number="02"></span>
+        </h5>
+    </div>
+    
+    
+        <div class="col-lg-6">
+    <div class="trm-blog-card trm-scroll-animation">
+        <a href="/2025/05/14/logback%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/" class="trm-cover-frame trm-anima-link">
+            
+            
+                <img alt="cover" class="no-fancybox" src="https://blog.wenzhuo4657.org/img/5EF56D28784FFECD065716736A0E7D19.jpg">
+            
+        </a>
+        
+        <div class="trm-card-descr">
+            <div class="trm-label trm-category trm-mb-20">
+                <a href=" /categories/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/">
+                    源码阅读
+                </a>
+            </div>
+            <h5>
+                <a href="/2025/05/14/logback%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB%EF%BC%88%E4%B8%80%EF%BC%89/" class="trm-anima-link">
+                    logback官方文档阅读（一）
+                </a>
+            </h5>
+            <div class="trm-divider trm-mb-20 trm-mt-20"></div>
+            <ul class="trm-card-data trm-label">
+                <li>25/05/14</li>
+                <li>08:18</li>
+                
+                
+            </ul>
+        </div>
+    </div>
+</div>
+    
+</div>
+
+    
+
+    <div id="giscus-wrap" class="trm-card trm-scroll-animation comment-container"></div>
+<script data-swup-reload-script>
+    function loadGiscus() {
+        let nowTheme = document.documentElement.classList.contains('dark') ? '' : ''
+        const config = {
+            src: 'https://giscus.app/client.js',
+            "data-repo": 'wenzhuo4657/comment',
+            "data-repo-id": 'R_kgDOOBvPZQ',
+            "data-category": 'Announcements',
+            "data-category-id": 'DIC_kwDOOBvPZc4Cnef9',
+            "data-mapping": 'pathname',
+            "data-reactions-enabled": '1',
+            "data-emit-metadata": '0',
+            "data-theme": nowTheme,
+            "data-lang": 'zh-CN',
+            crossorigin: "anonymous",
+            async: true
+        }
+        let ele = document.createElement('script')
+        for (let key in config) {
+            ele.setAttribute(key, config[key])
+        }
+        document.getElementById('giscus-wrap').insertAdjacentElement('afterbegin', ele)
+    }
+
+    function changeGiscusTheme() {
+        let theme = document.documentElement.classList.contains('dark') ? '' : ''
+
+        function sendMessage(message) {
+            const iframe = document.querySelector('iframe.giscus-frame');
+            if (!iframe) return;
+            iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+
+        sendMessage({
+            setConfig: {
+                theme: theme
+            }
+        });
+    }
+
+    loadGiscus();
+</script>
+
+
+
+                    <div class="trm-divider footer-divider"></div>
+
+                    <!-- footer -->
+                    <footer class="trm-footer-card trm-scroll-animation">
+
+    
+
+    
+
+    
+        <div class="trm-footer-item">
+            <span>
+                由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v7.3.0
+            </span>
+            <span class="footer-separator" data-separator=" | "></span>
+            <span> 
+                主题 - 
+                <a rel="noopener" href='https://github.com/MaLuns/hexo-theme-async' target='_blank'>Async</a>
+                v2.2.5
+            </span>
+        </div>
+      
+
+     
+
+     
+</footer>
+                    <!-- footer end -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+            <!-- body end -->
+
+            
+
+            
+<div class="trm-fixed-container">
+    
+    
+        <div class="trm-fixed-btn" data-title="阅读模式" onclick="asyncFun.switchReadMode()">
+            <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+        </div>
+    
+    
+    <div id="trm-back-top" class="trm-fixed-btn" data-title="回到顶部">
+        <svg class="symbol-icon " aria-hidden="true">
+    <use xlink:href="#icon-hupilan"></use>
+</svg>
+    </div>
+</div>
+        </div>
+      </div>
+      <!-- scroll container end -->
+  </div>
+  <!-- app wrapper end -->
+
+  
+  <!-- Plugin -->
+
+
+
+
+    
+    
+<script src="https://npm.elemecdn.com/@fancyapps/ui@4.0/dist/fancybox.umd.js"></script>
+
+    
+
+    
+        <script src="/js/plugins/typing.js?v=2.2.5"></script>
+    
+
+    
+
+    <!-- 数学公式 -->
+    
+
+    <!-- 评论插件 -->
+    
+        
+
+        
+    
+
+		
+
+
+
+
+    <!-- Service Worker -->
+    
+    <!-- baidu push -->
+    
+
+
+<script id="async-script" src="/js/main.js?v=2.2.5"></script>
+
+<!-- CDN -->
+
+
+    
+
+    
+
+    
+
+
+
+</body>
+
+</html>
