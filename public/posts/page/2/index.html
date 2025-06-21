@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="index, follow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+    
+      <link href="/posts/index.xml" rel="alternate" type="application/rss+xml" title="wenzhuo4657" />
+      <link href="/posts/index.xml" rel="feed" type="application/rss+xml" title="wenzhuo4657" />
+      
+    
+
+    
+      <link rel="canonical" href="https://example.org/posts/">
+    
+
+    <meta property="og:url" content="https://example.org/posts/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="Posts">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="website">
+
+  <meta itemprop="name" content="Posts">
+  <meta itemprop="datePublished" content="2025-06-19T15:03:33+00:00">
+  <meta itemprop="dateModified" content="2025-06-19T15:03:33+00:00">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Posts">
+
+      
+    
+	
+  </head><body class="ma0 avenir bg-near-white production">
+
+    
+
+  <header>
+    <div class="pb3-m pb6-l bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv3 ph3 ph4-ns">
+        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
+          Posts
+        </h1>
+        
+      </div>
+    </div>
+  </header>
+
+
+    <main class="pb7" role="main">
+      
+  <article class="pa3 pa4-ns nested-copy-line-height">
+    <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links mid-gray"></section>
+    <section class="flex-ns mt5 flex-wrap justify-around">
+      
+        <div class="w-100 w-30-l mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" class="link black dim">
+        零拷贝
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <p>首先说结论，零拷贝技术是针对与磁盘中数据到网卡发送数据的一个简化，是系统函数级别的优化，与程序编程无关，在使用中我们只需要调用即可。</p>
+<h2 id="系统拷贝-readwrite">系统拷贝 read/write</h2>
+<p>前置概念：</p>
+<ul>
+<li>页缓存（内核缓冲区）：该区域是为了提升磁盘数据的读写速度所设立的一个区域，处于（主存）内存当中。</li>
+<li>socket缓冲区：是内核为每个 Socket 分配的内存区域，用于临时存储发送和接收的数据，处于（主存）内存当中。</li>
+</ul>
+<p>os系统的加载，学过操作系统的都知道，内存当中的区域分为内核态和用户态。</p>
+<p>在操作系统启动时，cpu会根据cs:ip表示的地址进行寻址，找到位于磁盘当中的操作系统程序部分，最终结果可以认为将系统代码搬进了ram主存当中，并且设置了一些列安全手段，除此之外则还为用户态提供了一系列系统函数。</p>
+<p><strong>磁盘== “外设”</strong>：</p>
+<p>对于cpu来说，磁盘相当于外设，它会通过外设上的寄存器来管理，此处衍生出的技术为dma。</p>
+<ul>
+<li>dma:为了避免cpu的重复性的移动地址等的操作，进行的一项优化，具体来说，读取数据到缓冲区等重复性劳动可以交给dma设备。</li>
+</ul>
+<p>但是dma拷贝也并非万能，在某些场景下它不能使用</p>
+<ul>
+<li>用户空间和内核空间之间的数据拷贝：内核不能直接访问用户态内存</li>
+<li>调试和诊断：dma是硬件自动完成，难以插入调试逻辑。</li>
+</ul>
+<p><img src="http://blog.wenzhuo4657.org/img/image-20250215171022865.png" alt="image-20250215171022865"></p>
+<h1 id="系统函数">系统函数</h1>
+<h2 id="mmapwrite">mmap+write</h2>
+<p>将page buffer和程序工作缓存空间进行映射，减少page-buffer-&gt;程序缓存的cpu拷贝，但是对于程序工作缓存-》socket buffer这一部分仍然需要cpu拷贝。</p>
+<p><strong>为什么仍然是cpu拷贝？</strong></p>
+<p>这里将其理解为，我们仅仅是做到了在用户态可以看到page buffer,但是并没有打破用户态和内核态的内存空间限制，所以此处的拷贝仍然是cpu拷贝，而并非dma拷贝。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250215172019525.png" alt="image-20250215172019525"></p>
+<h2 id="sendfile">sendfile</h2>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250215172632051.png" alt="image-20250215172632051"></p>
+<p>如图，sendfile使page buff直接拷贝到socket buffer。</p>
+<p><strong>为什么使用的使cpu拷贝，而非DMA拷贝？</strong></p>
+<p>ds给我的答案使，DMA通常用于外设和主存之间，</p>
+<h2 id="网卡支持sg-dma技术的sendfile">网卡支持SG-DMA技术的sendfile</h2>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250215173227238.png" alt="image-20250215173227238"></p>
+<p>如图，该函数实际上是外设功能的调用，原本socket buffer的功能被网卡认为多余，获取可以被替代之类的，提出直接从page buffer中拷贝。</p>
+<h1 id="总结">总结</h1>
+<p>实际应用：</p>
+<p>普通的文件读写：read/write,有利于提高系统速度，但这是非具体场景的随机读取。</p>
+<p>rocketmq: mmap+write，适合小文件并行，因为该区域用户缓存都可以看到。</p>
+<p>kafka:sendfile,适合大文件，或者说对于小文件并行支持不好，因为为了安全性，通常会对page buffer进行锁定，避免并发问题。</p>
+<p>ps:上述总结可以喂给ds，会得到更加优质的回答！</p>
+    </div>
+    <a href="/posts/%E9%9B%B6%E6%8B%B7%E8%B4%9D/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="w-100 w-30-l mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/dubbo%E7%9A%84spi/" class="link black dim">
+        dubbo的spi
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <p>dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载）</p>
+<h2 id="按需加载">按需加载</h2>
+<p>jdk的spi的配置文件</p>
+<pre tabindex="0"><code>org.example.ToyotaCar
+org.example.HondaCar
+</code></pre><p>dubbo的spi的配置文件</p>
+<pre tabindex="0"><code>toyota=org.example.ToyotaCar
+honda=org.example.HondaCar
+wrapper=org.example.aop.CarWrapper1
+wrapper=org.example.aop.CarWrapper2
+Race=org.example.ioc.RaceRes
+red=org.example.ioc.PenRes
+</code></pre><p>二者的区别在于dubbo中使用键值，可以实现按需加载，请注意，该加载并非指配置文件的加载，而加载配置文件之后的对于<strong>服务对象的实例化</strong>。</p>
+<h3 id="示例">示例</h3>
+<h4 id="jdk的spi">jdk的spi</h4>
+<pre tabindex="0"><code>      ServiceLoader&lt;Car&gt; load = ServiceLoader.load(Car.class);
+
+//        获取迭代器遍历
+        Iterator&lt;Car&gt; iterator = load.iterator();
+        while (iterator.hasNext()){
+            Car registry = iterator.next();
+            registry.run();
+        }
+        
+</code></pre><p>追溯源码可以看到迭代器内部。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250122174648892.png" alt="image-20250122174648892"></p>
+<p>关键成员变量</p>
+<p>Iterator<!-- raw HTML omitted --> pending ;//配置文件读取的数据  <strong>该变量也是迭代器</strong>
+String nextName ;//下一个将要读取的配置</p>
+<p>存在关键方法</p>
+<p>hasNextService：用于判断下一个服务名称，即配置文件当中的全限定类名。</p>
+<pre tabindex="0"><code>       private boolean hasNextService() {
+            if (nextName != null) {
+                return true;
+            }
+            if (configs == null) {
+                try {
+                    String fullName = PREFIX + service.getName();
+                    if (loader == null)
+                        configs = ClassLoader.getSystemResources(fullName);
+                    else
+                        configs = loader.getResources(fullName);
+                } catch (IOException x) {
+                    fail(service, &#34;Error locating configuration files&#34;, x);
+                }
+            }
+            while ((pending == null) || !pending.hasNext()) {
+                if (!configs.hasMoreElements()) {
+                    return false;
+                }
+                pending = parse(service, configs.nextElement());
+            }
+            nextName = pending.next();//获取下一个元素，
+            return true;
+        }
+</code></pre><p>nextService：</p>
+    </div>
+    <a href="/posts/dubbo%E7%9A%84spi/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="w-100 w-30-l mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/" class="link black dim">
+        单路分发和多路分发
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="单路分发">单路分发</h1>
+<p>前置概念：
+接收者对象：方法调用的目标对象
+动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在<strong>class文件的常量池</strong>里。
+引用类型/静态类型：java对象的声明类型
+运行类型：jvm中对象的实际类型，是堆区数据的对象类型。</p>
+<p>java对象的多态性导致其引用类型和运行类型两者的区分，且各自的方法可能出现重写的现象，因而在对象执行过程中需要找到正确的方法。jvm只有在运行阶段才会创建对象，调用方法时根据动态链接找到堆区的方法实现。。</p>
+<p>java单路分发：接收者对象（实际上是指堆区创建的对象，也就是运行类型）调用方法时根据动态链接找到方法区的真正实现。</p>
+<p>单路分发定义：查找方法只能根据接收者对象判断，而不考虑方法参数的实际类型。</p>
+<p>例如：<code>string.valueof(bi)</code> 接收者对象为string,单路分发只会考虑方法参数的引用类型，而非实际类型。</p>
+<p>注意：我们说java方法调用是单路分发，不考虑方法参数的<strong>实际类型</strong>。其中对于实际类型的理解需要和重载相区分，因为重载是从参数的引用类型进行选择。而我们所说的单路分发、多路分发实际上是根据方法的实际运行类型进行选择方法的具体实现（动态链接），而java的机制仅仅只支持根据接受者对象来选择方法的动态链接，因此java的分发机制是单路分发。</p>
+<ul>
+<li>方法重载的匹配：编译器在编译时根据参数类型选择最匹配的方法。</li>
+<li>编译器生成的字节码：编译器将方法调用转换为字节码指令，这些指令包含了方法调用的具体信息。</li>
+<li>动态链接：在类加载时，方法引用被解析为具体的方法地址。在方法调用时，JVM 根据接收者对象的实际类型选择具体的方法实现。</li>
+</ul>
+<h1 id="两路分发和多路分发">两路分发和多路分发</h1>
+<p>参考;<a href="https://www.cnblogs.com/Yee-Q/p/14035322.html">Java 枚举 enum 详解 - 低吟不作语 - 博客园</a></p>
+<p>java实现两路分发实际上就是在方法调用中再次触发方法调用，根据方法参数的实际类型进行选择方法。</p>
+<p>硬编码实现</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">##</span> 可以使用枚举<span style="color:#960050;background-color:#1e0010">、</span>swich简化代码实现
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@Override</span> <span style="color:#66d9ef">public</span> Outcome <span style="color:#a6e22e">compete</span>(Item it) 
+</span></span><span style="display:flex;"><span>{ <span style="color:#66d9ef">return</span> 
+</span></span><span style="display:flex;"><span>it.<span style="color:#a6e22e">eval</span>(<span style="color:#66d9ef">this</span>); 
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>且注意，只有<code>it.eveal(this)</code>找到的方法才是期望的方法，第一次执行找到compete方法是实现两路分发的过程。</p>
+<p>EnumMap 实现：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">package</span> enums;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.util.*;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import static</span> enums.Outcome.*;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">enum</span> RoShamBo5 <span style="color:#66d9ef">implements</span> Competitor<span style="color:#f92672">&lt;</span>RoShamBo5<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    PAPER, SCISSORS, ROCK;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> EnumMap<span style="color:#f92672">&lt;</span>RoShamBo5,EnumMap<span style="color:#f92672">&lt;</span>RoShamBo5,Outcome<span style="color:#f92672">&gt;&gt;</span>
+</span></span><span style="display:flex;"><span>            table <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> EnumMap<span style="color:#f92672">&lt;&gt;</span>(RoShamBo5.<span style="color:#a6e22e">class</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span>(RoShamBo5 it : RoShamBo5.<span style="color:#a6e22e">values</span>())
+</span></span><span style="display:flex;"><span>            table.<span style="color:#a6e22e">put</span>(it, <span style="color:#66d9ef">new</span> EnumMap<span style="color:#f92672">&lt;&gt;</span>(RoShamBo5.<span style="color:#a6e22e">class</span>));
+</span></span><span style="display:flex;"><span>        initRow(PAPER, DRAW, LOSE, WIN);
+</span></span><span style="display:flex;"><span>        initRow(SCISSORS, WIN, DRAW, LOSE);
+</span></span><span style="display:flex;"><span>        initRow(ROCK, LOSE, WIN, DRAW);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initRow</span>(RoShamBo5 it,
+</span></span><span style="display:flex;"><span>                        Outcome vPAPER, Outcome vSCISSORS, Outcome vROCK) {
+</span></span><span style="display:flex;"><span>        EnumMap<span style="color:#f92672">&lt;</span>RoShamBo5,Outcome<span style="color:#f92672">&gt;</span> row <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>                RoShamBo5.<span style="color:#a6e22e">table</span>.<span style="color:#a6e22e">get</span>(it);
+</span></span><span style="display:flex;"><span>        row.<span style="color:#a6e22e">put</span>(RoShamBo5.<span style="color:#a6e22e">PAPER</span>, vPAPER);
+</span></span><span style="display:flex;"><span>        row.<span style="color:#a6e22e">put</span>(RoShamBo5.<span style="color:#a6e22e">SCISSORS</span>, vSCISSORS);
+</span></span><span style="display:flex;"><span>        row.<span style="color:#a6e22e">put</span>(RoShamBo5.<span style="color:#a6e22e">ROCK</span>, vROCK);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Outcome <span style="color:#a6e22e">compete</span>(RoShamBo5 it) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> table.<span style="color:#a6e22e">get</span>(<span style="color:#66d9ef">this</span>).<span style="color:#a6e22e">get</span>(it);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span>(String<span style="color:#f92672">[]</span> args) {
+</span></span><span style="display:flex;"><span>        RoShamBo.<span style="color:#a6e22e">play</span>(RoShamBo5.<span style="color:#a6e22e">class</span>, 20);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>实际上依旧是二次选择，只是没有触发方法的动态链接机制，而是通过map类型手动填充了一张表格进行分发。</p>
+    </div>
+    <a href="/posts/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+    </section>
+    <ul class="pagination pagination-default">
+      <li class="page-item">
+        <a href="/posts/" aria-label="First" class="page-link" role="button"><span aria-hidden="true">&laquo;&laquo;</span></a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/" aria-label="Previous" class="page-link" role="button"><span aria-hidden="true">&laquo;</span></a>
+      </li>
+      <li class="page-item">
+        <a href="/posts/" aria-label="Page 1" class="page-link" role="button">1</a>
+      </li>
+      <li class="page-item active">
+        <a aria-current="page" aria-label="Page 2" class="page-link" role="button">2</a>
+      </li>
+      <li class="page-item disabled">
+        <a aria-disabled="true" aria-label="Next" class="page-link" role="button" tabindex="-1"><span aria-hidden="true">&raquo;</span></a>
+      </li>
+      <li class="page-item disabled">
+        <a aria-disabled="true" aria-label="Last" class="page-link" role="button" tabindex="-1"><span aria-hidden="true">&raquo;&raquo;</span></a>
+      </li>
+    </ul></article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

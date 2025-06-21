@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>ssh、gpg以及apt软件下载器 | wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="小白级别的理解，勿cue
+首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。
+ssh、gpg
+对称加密和非堆成加密
+对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。
+但是由于使用相同的密钥进行加密和解密，所以x速度比较快。
+而非对称加密算法将密钥分为私钥和公钥，其中私钥用于解密，公钥用于加密。所以相比于同级别的对称加密，非对称加密速度更慢，但安全性更高，我们只需要将公钥发布到任意服务器上即可实现通信（例如 keyserver）
+ssh和gpg的区别？
+ssh： 常用于服务器加密（实时交互，需要处理动态数据），强度相当于钥匙。
+gpg： 常用于文件加密（静态数据），强度相当于保险箱。
+pgp、gpg、OpenPGP
+OpenPGP（PGP/GPG）深入浅出，完全入门指南、
+
+PGP：由Phil Zimmermann开发，最终被赛门铁克收购，是一个商业软件，需要付费。
+OpenPGP：一种协议，定义了加密消息、签名、私钥和用于交换公钥的证书统一标准。
+GPG（GnuPG）：符合OpenPGP标准的开源加密软件，PGP的开源实现。
+
+使用
+创建密钥
+官方推荐的工具
+ssh：OpenSSH
+gpg： GnuPG
+公钥服务器
+OpenPGP 密钥服务器
+OpenPGP 密钥服务器
+使用gpg密钥
+对于ssh直接进行服务器链接等操作即可，但是gpg密钥是令人迷惑的，因为他是属于静态文件的加密，这意味着灵活性低、安全性高，而这样的加密特性势必要求一个符合的场景，例如：通信的双方必须信任对方，否则没有进行交换文件的必要。
+2021年，用更现代的方法使用PGP（下） - C的博客 |UlyC
+ps： 这篇文章中说的漏洞已经被解决了，需要注意的是里面所提到的交换公钥的方式
+gpg的特征
+这里的特征是指gpg密钥上的签名、指纹等名词，他们在很长一段时间一直困扰我。
+1，  创建
+ gpg   --full-generate-key 该选项表示功能齐全的密钥生成
+PS C:\Users\25370&gt; gpg  --full-generate-key
+gpg (GnuPG) 2.4.3; Copyright (C) 2023 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+   (9) ECC (sign and encrypt) *default*
+  (10) ECC (sign only)
+  (14) Existing key from card
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (3072) 2048
+Requested keysize is 2048 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) 1y
+Key expires at 2026/5/25 21:39:55 �й���׼ʱ��
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: wenzhuo4657
+Email address: 14783149521@163.com
+Comment: test
+You selected this USER-ID:
+    &#34;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&#34;
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? q
+gpg: Key generation canceled.
+PS C:\Users\25370&gt;
+这一部分定义了uid： wenzhuo4657 (test) 14783149521@163.com">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="index, follow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://example.org/posts/sshgpg%E4%BB%A5%E5%8F%8Aapt%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%99%A8/">
+    
+
+    <meta property="og:url" content="https://example.org/posts/sshgpg%E4%BB%A5%E5%8F%8Aapt%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%99%A8/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="ssh、gpg以及apt软件下载器">
+  <meta property="og:description" content="小白级别的理解，勿cue 首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。
+ssh、gpg 对称加密和非堆成加密 对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。
+但是由于使用相同的密钥进行加密和解密，所以x速度比较快。
+而非对称加密算法将密钥分为私钥和公钥，其中私钥用于解密，公钥用于加密。所以相比于同级别的对称加密，非对称加密速度更慢，但安全性更高，我们只需要将公钥发布到任意服务器上即可实现通信（例如 keyserver）
+ssh和gpg的区别？ ssh： 常用于服务器加密（实时交互，需要处理动态数据），强度相当于钥匙。
+gpg： 常用于文件加密（静态数据），强度相当于保险箱。
+pgp、gpg、OpenPGP OpenPGP（PGP/GPG）深入浅出，完全入门指南、
+PGP：由Phil Zimmermann开发，最终被赛门铁克收购，是一个商业软件，需要付费。 OpenPGP：一种协议，定义了加密消息、签名、私钥和用于交换公钥的证书统一标准。 GPG（GnuPG）：符合OpenPGP标准的开源加密软件，PGP的开源实现。 使用 创建密钥 官方推荐的工具
+ssh：OpenSSH
+gpg： GnuPG
+公钥服务器 OpenPGP 密钥服务器
+OpenPGP 密钥服务器
+使用gpg密钥 对于ssh直接进行服务器链接等操作即可，但是gpg密钥是令人迷惑的，因为他是属于静态文件的加密，这意味着灵活性低、安全性高，而这样的加密特性势必要求一个符合的场景，例如：通信的双方必须信任对方，否则没有进行交换文件的必要。
+2021年，用更现代的方法使用PGP（下） - C的博客 |UlyC
+ps： 这篇文章中说的漏洞已经被解决了，需要注意的是里面所提到的交换公钥的方式
+gpg的特征 这里的特征是指gpg密钥上的签名、指纹等名词，他们在很长一段时间一直困扰我。
+1， 创建 gpg --full-generate-key 该选项表示功能齐全的密钥生成
+PS C:\Users\25370&gt; gpg --full-generate-key gpg (GnuPG) 2.4.3; Copyright (C) 2023 g10 Code GmbH This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law. Please select what kind of key you want: (1) RSA and RSA (2) DSA and Elgamal (3) DSA (sign only) (4) RSA (sign only) (9) ECC (sign and encrypt) *default* (10) ECC (sign only) (14) Existing key from card Your selection? 1 RSA keys may be between 1024 and 4096 bits long. What keysize do you want? (3072) 2048 Requested keysize is 2048 bits Please specify how long the key should be valid. 0 = key does not expire &lt;n&gt; = key expires in n days &lt;n&gt;w = key expires in n weeks &lt;n&gt;m = key expires in n months &lt;n&gt;y = key expires in n years Key is valid for? (0) 1y Key expires at 2026/5/25 21:39:55 �й���׼ʱ�� Is this correct? (y/N) y GnuPG needs to construct a user ID to identify your key. Real name: wenzhuo4657 Email address: 14783149521@163.com Comment: test You selected this USER-ID: &#34;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&#34; Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? q gpg: Key generation canceled. PS C:\Users\25370&gt; 这一部分定义了uid： wenzhuo4657 (test) 14783149521@163.com">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-05-25T20:44:43+00:00">
+    <meta property="article:modified_time" content="2025-05-25T20:44:43+00:00">
+
+  <meta itemprop="name" content="ssh、gpg以及apt软件下载器">
+  <meta itemprop="description" content="小白级别的理解，勿cue 首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。
+ssh、gpg 对称加密和非堆成加密 对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。
+但是由于使用相同的密钥进行加密和解密，所以x速度比较快。
+而非对称加密算法将密钥分为私钥和公钥，其中私钥用于解密，公钥用于加密。所以相比于同级别的对称加密，非对称加密速度更慢，但安全性更高，我们只需要将公钥发布到任意服务器上即可实现通信（例如 keyserver）
+ssh和gpg的区别？ ssh： 常用于服务器加密（实时交互，需要处理动态数据），强度相当于钥匙。
+gpg： 常用于文件加密（静态数据），强度相当于保险箱。
+pgp、gpg、OpenPGP OpenPGP（PGP/GPG）深入浅出，完全入门指南、
+PGP：由Phil Zimmermann开发，最终被赛门铁克收购，是一个商业软件，需要付费。 OpenPGP：一种协议，定义了加密消息、签名、私钥和用于交换公钥的证书统一标准。 GPG（GnuPG）：符合OpenPGP标准的开源加密软件，PGP的开源实现。 使用 创建密钥 官方推荐的工具
+ssh：OpenSSH
+gpg： GnuPG
+公钥服务器 OpenPGP 密钥服务器
+OpenPGP 密钥服务器
+使用gpg密钥 对于ssh直接进行服务器链接等操作即可，但是gpg密钥是令人迷惑的，因为他是属于静态文件的加密，这意味着灵活性低、安全性高，而这样的加密特性势必要求一个符合的场景，例如：通信的双方必须信任对方，否则没有进行交换文件的必要。
+2021年，用更现代的方法使用PGP（下） - C的博客 |UlyC
+ps： 这篇文章中说的漏洞已经被解决了，需要注意的是里面所提到的交换公钥的方式
+gpg的特征 这里的特征是指gpg密钥上的签名、指纹等名词，他们在很长一段时间一直困扰我。
+1， 创建 gpg --full-generate-key 该选项表示功能齐全的密钥生成
+PS C:\Users\25370&gt; gpg --full-generate-key gpg (GnuPG) 2.4.3; Copyright (C) 2023 g10 Code GmbH This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law. Please select what kind of key you want: (1) RSA and RSA (2) DSA and Elgamal (3) DSA (sign only) (4) RSA (sign only) (9) ECC (sign and encrypt) *default* (10) ECC (sign only) (14) Existing key from card Your selection? 1 RSA keys may be between 1024 and 4096 bits long. What keysize do you want? (3072) 2048 Requested keysize is 2048 bits Please specify how long the key should be valid. 0 = key does not expire &lt;n&gt; = key expires in n days &lt;n&gt;w = key expires in n weeks &lt;n&gt;m = key expires in n months &lt;n&gt;y = key expires in n years Key is valid for? (0) 1y Key expires at 2026/5/25 21:39:55 �й���׼ʱ�� Is this correct? (y/N) y GnuPG needs to construct a user ID to identify your key. Real name: wenzhuo4657 Email address: 14783149521@163.com Comment: test You selected this USER-ID: &#34;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&#34; Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? q gpg: Key generation canceled. PS C:\Users\25370&gt; 这一部分定义了uid： wenzhuo4657 (test) 14783149521@163.com">
+  <meta itemprop="datePublished" content="2025-05-25T20:44:43+00:00">
+  <meta itemprop="dateModified" content="2025-05-25T20:44:43+00:00">
+  <meta itemprop="wordCount" content="498">
+  <meta itemprop="keywords" content="教程">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="ssh、gpg以及apt软件下载器">
+  <meta name="twitter:description" content="小白级别的理解，勿cue 首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。
+ssh、gpg 对称加密和非堆成加密 对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。
+但是由于使用相同的密钥进行加密和解密，所以x速度比较快。
+而非对称加密算法将密钥分为私钥和公钥，其中私钥用于解密，公钥用于加密。所以相比于同级别的对称加密，非对称加密速度更慢，但安全性更高，我们只需要将公钥发布到任意服务器上即可实现通信（例如 keyserver）
+ssh和gpg的区别？ ssh： 常用于服务器加密（实时交互，需要处理动态数据），强度相当于钥匙。
+gpg： 常用于文件加密（静态数据），强度相当于保险箱。
+pgp、gpg、OpenPGP OpenPGP（PGP/GPG）深入浅出，完全入门指南、
+PGP：由Phil Zimmermann开发，最终被赛门铁克收购，是一个商业软件，需要付费。 OpenPGP：一种协议，定义了加密消息、签名、私钥和用于交换公钥的证书统一标准。 GPG（GnuPG）：符合OpenPGP标准的开源加密软件，PGP的开源实现。 使用 创建密钥 官方推荐的工具
+ssh：OpenSSH
+gpg： GnuPG
+公钥服务器 OpenPGP 密钥服务器
+OpenPGP 密钥服务器
+使用gpg密钥 对于ssh直接进行服务器链接等操作即可，但是gpg密钥是令人迷惑的，因为他是属于静态文件的加密，这意味着灵活性低、安全性高，而这样的加密特性势必要求一个符合的场景，例如：通信的双方必须信任对方，否则没有进行交换文件的必要。
+2021年，用更现代的方法使用PGP（下） - C的博客 |UlyC
+ps： 这篇文章中说的漏洞已经被解决了，需要注意的是里面所提到的交换公钥的方式
+gpg的特征 这里的特征是指gpg密钥上的签名、指纹等名词，他们在很长一段时间一直困扰我。
+1， 创建 gpg --full-generate-key 该选项表示功能齐全的密钥生成
+PS C:\Users\25370&gt; gpg --full-generate-key gpg (GnuPG) 2.4.3; Copyright (C) 2023 g10 Code GmbH This is free software: you are free to change and redistribute it. There is NO WARRANTY, to the extent permitted by law. Please select what kind of key you want: (1) RSA and RSA (2) DSA and Elgamal (3) DSA (sign only) (4) RSA (sign only) (9) ECC (sign and encrypt) *default* (10) ECC (sign only) (14) Existing key from card Your selection? 1 RSA keys may be between 1024 and 4096 bits long. What keysize do you want? (3072) 2048 Requested keysize is 2048 bits Please specify how long the key should be valid. 0 = key does not expire &lt;n&gt; = key expires in n days &lt;n&gt;w = key expires in n weeks &lt;n&gt;m = key expires in n months &lt;n&gt;y = key expires in n years Key is valid for? (0) 1y Key expires at 2026/5/25 21:39:55 �й���׼ʱ�� Is this correct? (y/N) y GnuPG needs to construct a user ID to identify your key. Real name: wenzhuo4657 Email address: 14783149521@163.com Comment: test You selected this USER-ID: &#34;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&#34; Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? q gpg: Key generation canceled. PS C:\Users\25370&gt; 这一部分定义了uid： wenzhuo4657 (test) 14783149521@163.com">
+
+      
+    
+	
+  </head><body class="ma0 avenir bg-near-white production">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  
+  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">ssh、gpg以及apt软件下载器</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-05-25T20:44:43Z">May 25, 2025</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="小白级别的理解勿cue">小白级别的理解，勿cue</h1>
+<p>首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。</p>
+<h2 id="sshgpg">ssh、gpg</h2>
+<h3 id="对称加密和非堆成加密">对称加密和非堆成加密</h3>
+<p>对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。</p>
+<p>但是由于使用相同的密钥进行加密和解密，所以x速度比较快。</p>
+<p>而非对称加密算法将密钥分为私钥和公钥，其中私钥用于解密，公钥用于加密。所以相比于同级别的对称加密，非对称加密速度更慢，但安全性更高，我们只需要将公钥发布到任意服务器上即可实现通信（例如 keyserver）</p>
+<h3 id="ssh和gpg的区别">ssh和gpg的区别？</h3>
+<p>ssh： 常用于服务器加密（实时交互，需要处理动态数据），强度相当于钥匙。</p>
+<p>gpg： 常用于文件加密（静态数据），强度相当于保险箱。</p>
+<h3 id="pgpgpgopenpgp">pgp、gpg、OpenPGP</h3>
+<p><a href="https://www.rmnof.com/article/openpgp-gnupg-introduction/">OpenPGP（PGP/GPG）深入浅出，完全入门指南</a>、</p>
+<ul>
+<li>PGP：由Phil Zimmermann开发，最终被赛门铁克收购，是一个商业软件，需要付费。</li>
+<li>OpenPGP：一种协议，定义了加密消息、签名、私钥和用于交换公钥的证书统一标准。</li>
+<li>GPG（GnuPG）：符合OpenPGP标准的开源加密软件，PGP的开源实现。</li>
+</ul>
+<h2 id="使用">使用</h2>
+<h3 id="创建密钥">创建密钥</h3>
+<p>官方推荐的工具</p>
+<p>ssh：<a href="https://www.openssh.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN">OpenSSH</a></p>
+<p>gpg： <a href="https://gnupg.org/index.html">GnuPG</a></p>
+<h3 id="公钥服务器">公钥服务器</h3>
+<p><a href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
+<p><a href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
+<h3 id="使用gpg密钥">使用gpg密钥</h3>
+<p>对于ssh直接进行服务器链接等操作即可，但是gpg密钥是令人迷惑的，因为他是属于静态文件的加密，这意味着灵活性低、安全性高，而这样的加密特性势必要求一个符合的场景，例如：通信的双方必须信任对方，否则没有进行交换文件的必要。</p>
+<p><a href="https://ulyc.github.io/2021/01/26/2021%E5%B9%B4-%E7%94%A8%E6%9B%B4%E7%8E%B0%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8PGP-%E4%B8%8B/">2021年，用更现代的方法使用PGP（下） - C的博客 |UlyC</a></p>
+<p>ps： 这篇文章中说的漏洞已经被解决了，需要注意的是里面所提到的交换公钥的方式</p>
+<h4 id="gpg的特征">gpg的特征</h4>
+<p>这里的特征是指gpg密钥上的签名、指纹等名词，他们在很长一段时间一直困扰我。</p>
+<h5 id="1--创建">1，  创建</h5>
+<p><code> gpg   --full-generate-key</code> 该选项表示功能齐全的密钥生成</p>
+<pre tabindex="0"><code>PS C:\Users\25370&gt; gpg  --full-generate-key
+gpg (GnuPG) 2.4.3; Copyright (C) 2023 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+   (9) ECC (sign and encrypt) *default*
+  (10) ECC (sign only)
+  (14) Existing key from card
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (3072) 2048
+Requested keysize is 2048 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) 1y
+Key expires at 2026/5/25 21:39:55 �й���׼ʱ��
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: wenzhuo4657
+Email address: 14783149521@163.com
+Comment: test
+You selected this USER-ID:
+    &#34;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&#34;
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? q
+gpg: Key generation canceled.
+PS C:\Users\25370&gt;
+</code></pre><p>这一部分定义了uid： wenzhuo4657 (test) <a href="mailto:14783149521@163.com">14783149521@163.com</a></p>
+<pre tabindex="0"><code>Real name: wenzhuo4657
+Email address: 14783149521@163.com
+Comment: test
+You selected this USER-ID:
+    &#34;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&#34;
+</code></pre><h5 id="2指纹">2，指纹</h5>
+<pre tabindex="0"><code>PS C:\Users\25370&gt; gpg --fingerprint 14783149521@163.com
+pub   rsa2048 2025-04-30 [SC] [expires: 2028-04-30]   
+      BDB8 0382 F6A8 9F91 BB32  686F 9C3D 67F6 22CD 65C3
+uid           [ultimate] WENZHUO HOU &lt;14783149521@163.com&gt;
+sub   rsa2048 2025-04-30 [E] [expires: 2028-04-30]
+</code></pre><p>pub： 表示公钥，用于交换。</p>
+<p>sub：表示私钥，不可泄露</p>
+<p><code>rsa2048 2025-04-30 [SC] [expires: 2028-04-30] </code> ：对密钥的描述，值得注意的是描述符号[SC]、[E]</p>
+<table>
+  <thead>
+      <tr>
+          <th>标志</th>
+          <th>含义</th>
+          <th>用途说明</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>S</code></td>
+          <td>Sign</td>
+          <td>签名文件或提交（如 Git 提交签名）</td>
+      </tr>
+      <tr>
+          <td><code>C</code></td>
+          <td>Certify</td>
+          <td>认证 UID 或签名其他密钥（主密钥才有）</td>
+      </tr>
+      <tr>
+          <td><code>E</code></td>
+          <td>Encrypt</td>
+          <td>加密文件或消息</td>
+      </tr>
+      <tr>
+          <td><code>A</code></td>
+          <td>Authenticate</td>
+          <td>用于身份认证（如 SSH 登录替代）</td>
+      </tr>
+  </tbody>
+</table>
+<p><code>BDB8 0382 F6A8 9F91 BB32  686F 9C3D 67F6 22CD 65C3</code>: 指纹，唯一标识密钥、验证身份、构建信任链</p>
+<h5 id="3子钥和公钥签名和验签">3，子钥和公钥、签名和验签</h5>
+<p>这里需要强调：</p>
+<ul>
+<li>
+<p>gpg的公钥!=密钥当中的公钥！gpg公钥是公开的，其中包含所有附带的公钥以及<em>私钥的描述信息</em>，也就是说他并不包含真正私钥！</p>
+</li>
+<li>
+<p>主公钥是描述一般是[SC],其中包含了对加密文件进行签名的功能，但真正执行签名的私钥！</p>
+</li>
+<li>
+<p>对gpg密钥的修改（添加、删除子密钥等操作）都需要重新发布gpg公钥</p>
+</li>
+</ul>
+<h4 id="管理gpg密钥">管理gpg密钥</h4>
+<p>除去正常的私钥和公钥的管理，gpg在面对多用户场景下，还支持密钥的溯源，毕竟一个用户不可能只使用一个密钥，也有可能是一个组织下有多个密钥，最终指向一个具备公信力的指纹！</p>
+<h3 id="使用ssh密钥">使用ssh密钥</h3>
+<p>ssh的描述信息只有一个邮箱，而gpg拥有uid的唯一表示，且注意，对于gpg而言，他需要面临的时多用户场景，uid可以快速区分，而指纹可以唯一标识一个密钥。</p>
+<p>由于场景单一、简单，没啥好说的，基本就是两个端点进行加密通信，一个加密一个解密。</p>
+<h1 id="apt">apt</h1>
+<p>呃呃，实际上apt才是这篇博文的出发点，但是没想到拓展了这么多，甚至对于gpg密钥的管理还有很多没有了解、实操，hhhh</p>
+<p>apt是ubuntu默认的软件安装器，并且默认添加了官方源。从使用上来说相当简单，基本就是<code>apt install``apt remove</code>等简单的api。</p>
+<p>值得注意的是apt添加第三方软件源时，使用到gpg公钥进行加密传输！</p>
+<h2 id="软件源的添加">软件源的添加</h2>
+<p>1， 查看软件源</p>
+<ul>
+<li>官方软件源
+-  cat   /etc/apt/sources.list</li>
+<li>第三方软件源
+-  ls /etc/apt/sources.list.d/
+-  该目录下的软件源单独存放在 <code>名称.list</code>文件中，格式同官方软件源</li>
+</ul>
+<p>命令查看
+<code>apt-cache policy | grep http | awk '{print $2 $3}' | sort | uniq</code></p>
+<p>2，添加软件源</p>
+<p>软件源的定义
+<code>类型 [选项] 仓库URL 发行版代号 组件1 [组件2 ...]</code></p>
+<p>对于第三方软件源通常需要使用gpt密钥验证安全性，
+例如：</p>
+<pre tabindex="0"><code>1,adoptium软件源定义
+deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://mirrors.tuna.tsinghua.edu.cn/Adoptium/deb jammy main
+
+
+ps： 其中signed-by代表gpt密钥的位置，通常使用curl命令下载到本地
+</code></pre><p>（1），前置准备
+<code>apt-get update &amp;&amp; apt-get install -y wget apt-transport-https</code>
+或
+<code>apt update &amp;&amp; apt install -y wget apt-transport-https</code></p>
+<p>wegt： 下载工具</p>
+<p>apt-transport-https： 允许 APT 使用 HTTPS 协议访问仓库源</p>
+<p>（2）下载gpt密钥
+<code>wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public | tee /etc/apt/keyrings/adoptium.asc</code></p>
+<p>下载gpg文件  <code>wget -O - https://packages.adoptium.net/artifactory/api/gpg/key/public </code></p>
+<p>写入文件 `tee /etc/apt/keyrings/adoptium.asc``</p>
+<p>(3)添加第三方软件源</p>
+<p>ps： 如果是添加官方软件源，直接写入/etc/apt/sources.list即可</p>
+<p>软件源定义 <code>deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://mirrors.tuna.tsinghua.edu.cn/Adoptium/deb jammy main</code></p>
+<p>完整命令<br>
+<code>echo &quot;deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://mirrors.tuna.tsinghua.edu.cn/Adoptium/deb jammy main&quot; | tee  /etc/apt/sources.list.d/adoptium.list </code></p>
+<p>(4) 更新索引，就可以正常使用了
+`apt update</p>
+<h2 id="apt的基本操作">apt的基本操作</h2>
+<p>这一部分主要是我的日常记录的命令，因为很不方便，例如安装的软件经常找不到或者忘记了名称，难以删除。</p>
+<p>apt和apt-get的区别
+功能上无区别，apt是apt-get的新版本</p>
+<p>查看已安装软件版本
+<code>apt show </code></p>
+<p>查看软件安装的位置
+<code> dpkg -L  软件名称</code></p>
+<p>搜想相关软件包
+<code>apt search  软件包名称/相关单词</code>
+例如： <code>apt search jdk </code></p>
+<p>查看软件版本
+<code>apt-cache madison maven</code></p>
+<p>安装指定版本
+<code>sudo apt-get install maven=3.6.0-1~18.04.1</code>
+也可不指定，默认安装最新版本
+`sudo apt-get install maven</p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>rocketmq源码阅读（一）：生产者初识 | wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="源码阅读（一）
+搭建环境
+rocketmq的java-sdk并没有什么特殊的构建的，直接加载maven即可。
+节点部署：
+Docker 部署 RocketMQ | RocketMQ
+面板部署：
+apache/rocketmq-dashboard
+hhh，遵从官网部署，点点点就可以了。
+生产者初识
+阅读源码首先要明确的目标，或者说我们想要了解什么？
+在我看来生产者的职责分为以下几个
+
+1,与namesrv沟通，维护本地的broker通信队列
+2,发送topic消息到远程broker
+3,根据响应结果判断是否发送成功，以及失败情况下的策略
+
+每一个生产者对于broker节点来说是消息的来源，但是broker并不关心究竟有多少个生产者在为它提供服务，对于消费者来说同样如此！
+首先定位到源码示例
+
+示例的逻辑并不复杂，但问题是怎么处理的？尝试追溯DefaultMQProducer,找到客户端的sdk模块rocketmq-client
+观察DefaultMQProducer的父类路径发现extends ClientConfig implements MQProducer,对于MQProducer没啥好说的，定义了生产者方法规范，而且没有注释。小白一只的我将目光对准ClientConfig,
+private String clientIP = NetworkUtil.getLocalAddress();  寻找ip的方法。
+private String instanceName = System.getProperty(&quot;rocketmq.client.name&quot;, &quot;DEFAULT&quot;);  生产者名称
+    # 客户端id，这个要注意与生产者名称区分，在我看来是类似与多元组一样的， ip&#43;instanceName&#43;......
+   
+    public String buildMQClientId() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getClientIP());
+
+        sb.append(&#34;@&#34;);
+        sb.append(this.getInstanceName());
+        if (!UtilAll.isBlank(this.unitName)) {
+            sb.append(&#34;@&#34;);
+            sb.append(this.unitName);
+        }
+
+        if (enableStreamRequestType) {
+            sb.append(&#34;@&#34;);
+            sb.append(RequestType.STREAM);
+        }
+
+        return sb.toString();
+    }
+    
+需要注意的是对于修改clentIP可以直接通过producer.setClientIP(DEFAULT_NAMESRVADDR);,clientID则并没有这个字段，他是在生产者启动时自动生成的的一个标识符，或许可以这么说 ip&#43;instanceName表示了这个主机上的所有rocketmq的消费者和生产者。
+追溯buildMQClientId即可发现，start的调用链路中存在这个方法。">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="index, follow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://example.org/posts/rocketmq%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80%E7%94%9F%E4%BA%A7%E8%80%85%E5%88%9D%E8%AF%86/">
+    
+
+    <meta property="og:url" content="https://example.org/posts/rocketmq%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80%E7%94%9F%E4%BA%A7%E8%80%85%E5%88%9D%E8%AF%86/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="rocketmq源码阅读（一）：生产者初识">
+  <meta property="og:description" content="源码阅读（一） 搭建环境 rocketmq的java-sdk并没有什么特殊的构建的，直接加载maven即可。
+节点部署： Docker 部署 RocketMQ | RocketMQ
+面板部署： apache/rocketmq-dashboard
+hhh，遵从官网部署，点点点就可以了。
+生产者初识 阅读源码首先要明确的目标，或者说我们想要了解什么？
+在我看来生产者的职责分为以下几个
+1,与namesrv沟通，维护本地的broker通信队列 2,发送topic消息到远程broker 3,根据响应结果判断是否发送成功，以及失败情况下的策略 每一个生产者对于broker节点来说是消息的来源，但是broker并不关心究竟有多少个生产者在为它提供服务，对于消费者来说同样如此！
+首先定位到源码示例
+示例的逻辑并不复杂，但问题是怎么处理的？尝试追溯DefaultMQProducer,找到客户端的sdk模块rocketmq-client
+观察DefaultMQProducer的父类路径发现extends ClientConfig implements MQProducer,对于MQProducer没啥好说的，定义了生产者方法规范，而且没有注释。小白一只的我将目光对准ClientConfig,
+private String clientIP = NetworkUtil.getLocalAddress(); 寻找ip的方法。
+private String instanceName = System.getProperty(&#34;rocketmq.client.name&#34;, &#34;DEFAULT&#34;); 生产者名称
+# 客户端id，这个要注意与生产者名称区分，在我看来是类似与多元组一样的， ip&#43;instanceName&#43;...... public String buildMQClientId() { StringBuilder sb = new StringBuilder(); sb.append(this.getClientIP()); sb.append(&#34;@&#34;); sb.append(this.getInstanceName()); if (!UtilAll.isBlank(this.unitName)) { sb.append(&#34;@&#34;); sb.append(this.unitName); } if (enableStreamRequestType) { sb.append(&#34;@&#34;); sb.append(RequestType.STREAM); } return sb.toString(); } 需要注意的是对于修改clentIP可以直接通过producer.setClientIP(DEFAULT_NAMESRVADDR);,clientID则并没有这个字段，他是在生产者启动时自动生成的的一个标识符，或许可以这么说 ip&#43;instanceName表示了这个主机上的所有rocketmq的消费者和生产者。
+追溯buildMQClientId即可发现，start的调用链路中存在这个方法。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-04-16T19:28:54+00:00">
+    <meta property="article:modified_time" content="2025-04-16T19:28:54+00:00">
+
+  <meta itemprop="name" content="rocketmq源码阅读（一）：生产者初识">
+  <meta itemprop="description" content="源码阅读（一） 搭建环境 rocketmq的java-sdk并没有什么特殊的构建的，直接加载maven即可。
+节点部署： Docker 部署 RocketMQ | RocketMQ
+面板部署： apache/rocketmq-dashboard
+hhh，遵从官网部署，点点点就可以了。
+生产者初识 阅读源码首先要明确的目标，或者说我们想要了解什么？
+在我看来生产者的职责分为以下几个
+1,与namesrv沟通，维护本地的broker通信队列 2,发送topic消息到远程broker 3,根据响应结果判断是否发送成功，以及失败情况下的策略 每一个生产者对于broker节点来说是消息的来源，但是broker并不关心究竟有多少个生产者在为它提供服务，对于消费者来说同样如此！
+首先定位到源码示例
+示例的逻辑并不复杂，但问题是怎么处理的？尝试追溯DefaultMQProducer,找到客户端的sdk模块rocketmq-client
+观察DefaultMQProducer的父类路径发现extends ClientConfig implements MQProducer,对于MQProducer没啥好说的，定义了生产者方法规范，而且没有注释。小白一只的我将目光对准ClientConfig,
+private String clientIP = NetworkUtil.getLocalAddress(); 寻找ip的方法。
+private String instanceName = System.getProperty(&#34;rocketmq.client.name&#34;, &#34;DEFAULT&#34;); 生产者名称
+# 客户端id，这个要注意与生产者名称区分，在我看来是类似与多元组一样的， ip&#43;instanceName&#43;...... public String buildMQClientId() { StringBuilder sb = new StringBuilder(); sb.append(this.getClientIP()); sb.append(&#34;@&#34;); sb.append(this.getInstanceName()); if (!UtilAll.isBlank(this.unitName)) { sb.append(&#34;@&#34;); sb.append(this.unitName); } if (enableStreamRequestType) { sb.append(&#34;@&#34;); sb.append(RequestType.STREAM); } return sb.toString(); } 需要注意的是对于修改clentIP可以直接通过producer.setClientIP(DEFAULT_NAMESRVADDR);,clientID则并没有这个字段，他是在生产者启动时自动生成的的一个标识符，或许可以这么说 ip&#43;instanceName表示了这个主机上的所有rocketmq的消费者和生产者。
+追溯buildMQClientId即可发现，start的调用链路中存在这个方法。">
+  <meta itemprop="datePublished" content="2025-04-16T19:28:54+00:00">
+  <meta itemprop="dateModified" content="2025-04-16T19:28:54+00:00">
+  <meta itemprop="wordCount" content="698">
+  <meta itemprop="keywords" content="源码">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="rocketmq源码阅读（一）：生产者初识">
+  <meta name="twitter:description" content="源码阅读（一） 搭建环境 rocketmq的java-sdk并没有什么特殊的构建的，直接加载maven即可。
+节点部署： Docker 部署 RocketMQ | RocketMQ
+面板部署： apache/rocketmq-dashboard
+hhh，遵从官网部署，点点点就可以了。
+生产者初识 阅读源码首先要明确的目标，或者说我们想要了解什么？
+在我看来生产者的职责分为以下几个
+1,与namesrv沟通，维护本地的broker通信队列 2,发送topic消息到远程broker 3,根据响应结果判断是否发送成功，以及失败情况下的策略 每一个生产者对于broker节点来说是消息的来源，但是broker并不关心究竟有多少个生产者在为它提供服务，对于消费者来说同样如此！
+首先定位到源码示例
+示例的逻辑并不复杂，但问题是怎么处理的？尝试追溯DefaultMQProducer,找到客户端的sdk模块rocketmq-client
+观察DefaultMQProducer的父类路径发现extends ClientConfig implements MQProducer,对于MQProducer没啥好说的，定义了生产者方法规范，而且没有注释。小白一只的我将目光对准ClientConfig,
+private String clientIP = NetworkUtil.getLocalAddress(); 寻找ip的方法。
+private String instanceName = System.getProperty(&#34;rocketmq.client.name&#34;, &#34;DEFAULT&#34;); 生产者名称
+# 客户端id，这个要注意与生产者名称区分，在我看来是类似与多元组一样的， ip&#43;instanceName&#43;...... public String buildMQClientId() { StringBuilder sb = new StringBuilder(); sb.append(this.getClientIP()); sb.append(&#34;@&#34;); sb.append(this.getInstanceName()); if (!UtilAll.isBlank(this.unitName)) { sb.append(&#34;@&#34;); sb.append(this.unitName); } if (enableStreamRequestType) { sb.append(&#34;@&#34;); sb.append(RequestType.STREAM); } return sb.toString(); } 需要注意的是对于修改clentIP可以直接通过producer.setClientIP(DEFAULT_NAMESRVADDR);,clientID则并没有这个字段，他是在生产者启动时自动生成的的一个标识符，或许可以这么说 ip&#43;instanceName表示了这个主机上的所有rocketmq的消费者和生产者。
+追溯buildMQClientId即可发现，start的调用链路中存在这个方法。">
+
+      
+    
+	
+  </head><body class="ma0 avenir bg-near-white production">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  
+  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">rocketmq源码阅读（一）：生产者初识</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-04-16T19:28:54Z">April 16, 2025</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="源码阅读一">源码阅读（一）</h1>
+<h2 id="搭建环境">搭建环境</h2>
+<p>rocketmq的java-sdk并没有什么特殊的构建的，直接加载maven即可。</p>
+<p>节点部署：
+<a href="https://rocketmq.apache.org/zh/docs/quickStart/02quickstartWithDocker">Docker 部署 RocketMQ | RocketMQ</a></p>
+<p>面板部署：
+<a href="https://github.com/apache/rocketmq-dashboard">apache/rocketmq-dashboard</a></p>
+<p>hhh，遵从官网部署，点点点就可以了。</p>
+<h2 id="生产者初识">生产者初识</h2>
+<p>阅读源码首先要明确的目标，或者说我们想要了解什么？</p>
+<p>在我看来生产者的职责分为以下几个</p>
+<ul>
+<li>1,与<code>namesrv</code>沟通，维护本地的<code>broker</code>通信队列</li>
+<li>2,发送<code>topic</code>消息到远程<code>broker</code></li>
+<li>3,根据响应结果判断是否发送成功，以及失败情况下的策略</li>
+</ul>
+<p>每一个生产者对于<code>broker</code>节点来说是消息的来源，但是<code>broker</code>并不关心究竟有多少个生产者在为它提供服务，对于消费者来说同样如此！</p>
+<p>首先定位到源码示例</p>
+<p><img src="%5Bhttps://blog.wenzhuo4657.org/img/2025/04/ce5a9ce6d095400e1dfefe77486c2729.png" alt=""></p>
+<p>示例的逻辑并不复杂，但问题是怎么处理的？尝试追溯<code>DefaultMQProducer</code>,找到客户端的sdk模块<code>rocketmq-client</code></p>
+<p>观察<code>DefaultMQProducer</code>的父类路径发现<code>extends ClientConfig implements MQProducer</code>,对于<code>MQProducer</code>没啥好说的，定义了生产者方法规范，而且没有注释。小白一只的我将目光对准<code>ClientConfig</code>,</p>
+<p><code>private String clientIP = NetworkUtil.getLocalAddress();</code>  寻找ip的方法。</p>
+<p><code>private String instanceName = System.getProperty(&quot;rocketmq.client.name&quot;, &quot;DEFAULT&quot;);</code>  生产者名称</p>
+<pre tabindex="0"><code>    # 客户端id，这个要注意与生产者名称区分，在我看来是类似与多元组一样的， ip+instanceName+......
+   
+    public String buildMQClientId() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getClientIP());
+
+        sb.append(&#34;@&#34;);
+        sb.append(this.getInstanceName());
+        if (!UtilAll.isBlank(this.unitName)) {
+            sb.append(&#34;@&#34;);
+            sb.append(this.unitName);
+        }
+
+        if (enableStreamRequestType) {
+            sb.append(&#34;@&#34;);
+            sb.append(RequestType.STREAM);
+        }
+
+        return sb.toString();
+    }
+    
+</code></pre><p>需要注意的是对于修改<code>clentIP</code>可以直接通过<code>producer.setClientIP(DEFAULT_NAMESRVADDR);</code>,<code>clientID</code>则并没有这个字段，他是在生产者启动时自动生成的的一个标识符，或许可以这么说 <code>ip+instanceName</code>表示了这个主机上的所有rocketmq的消费者和生产者。</p>
+<p>追溯<code>buildMQClientId</code>即可发现，start的调用链路中存在这个方法。</p>
+<h3 id="与namesrv沟通维护本地的broker通信队列">与<code>namesrv</code>沟通，维护本地的<code>broker</code>通信队列</h3>
+<p><code>DefaultMQProducer#start() -&gt; DefaultMQProducerImpl#start() -&gt; MQClientManager.getInstance().getOrCreateMQClientInstance(this.defaultMQProducer, rpcHoo)  -&gt; MQClientInstance # new MQClientInstance(ClientConfig clientConfig, int instanceIndex, String clientId, RPCHook rpcHook)</code></p>
+<p>追溯到<code>MQClientInstance</code>的初始化，在这里类中可以看到非常重要的几个属性</p>
+<pre tabindex="0"><code>
+## broker节点列表 ket为id,value为 ip地址
+private final ConcurrentMap&lt;String, HashMap&lt;Long, String&gt;&gt; brokerAddrTable = new ConcurrentHashMap&lt;&gt;();
+
+## 心跳检查开关，源码中显示用于管理broker节点的连接是否实效
+private boolean enableHeartbeatChannelEventListener = true;
+
+##  消费者状态代理
+this.consumerStatsManager
+
+##  netty连接客户端配置
+private final NettyClientConfig nettyClientConfig;
+</code></pre><p>断点查看参数后发现<code>new MQClientInstance(ClientConfig clientConfig, int instanceIndex, String clientId, RPCHook rpcHook)</code>初始化的是远程namesrv的客户端。
+![[Pasted image 20250409182100.png]]</p>
+<h4 id="namesrv的配置">namesrv的配置</h4>
+<p>结论： 存在不一致则直接覆盖更新，</p>
+<pre tabindex="0"><code>NettyRemotingClient{
+private final AtomicReference&lt;List&lt;String&gt;&gt; namesrvAddrList = new AtomicReference&lt;&gt;();//这个原子引用在方法中充当了互斥锁
+
+ public void updateNameServerAddressList(List&lt;String&gt; addrs) {  
+        List&lt;String&gt; old = this.namesrvAddrList.get();  
+        boolean update = false;  
+  
+  
+//        1,如果存在不一致，则全部更新  
+        if (!addrs.isEmpty()) {  
+            if (null == old) {//olg不存在  
+                update = true;  
+            } else if (addrs.size() != old.size()) {//数量不一致  
+                update = true;  
+            } else {  
+                for (String addr : addrs) {  
+                    if (!old.contains(addr)) {//存在差异  
+                        update = true;  
+                        break;                    }  
+                }  
+            }  
+  
+            if (update) {  
+            this.namesrvAddrList.set(addrs);
+            } 
+        }  
+    }
+
+
+}
+</code></pre><p>此处引申出两个新问题,
+1,如何复用<code>MQClientInstance </code>?
+调用链路中直接上级是
+<code>MQClientManager</code>,关键成员变量为</p>
+<pre tabindex="0"><code>    private ConcurrentMap&lt;String/* clientId */, MQClientInstance&gt; factoryTable =
+        new ConcurrentHashMap&lt;&gt;();
+</code></pre><p>2,<code>namesrv</code>存在更新，看上去是MQClientInstance 重新初始化的缘故？那么为什么会重新初始化？<code>namesrv</code>应当写死在配置文件当中，但此处似乎允许动态更新？</p>
+<p>追溯<code>ClientConfig</code>信息的来源发现在<code>DefaultMQProducerImpl</code>成员变量</p>
+<pre tabindex="0"><code>    private final DefaultMQProducer defaultMQProducer;
+public class DefaultMQProducer extends ClientConfig implements MQProducer {
+....
+}
+</code></pre><p>从接口角度上来说，DefaultMQProducer确实是生产者实现，但可以将<code>DefaultMQProducerImpl</code>理解为生产者的启动类，而并非实现类。</p>
+<p>此外这个实现类会默认使用环境变量（或者是其他配置），然后使用编码角度的上层配置覆盖，这也是常规的编码&gt;环境变量的实现。</p>
+<h4 id="维护broker队列">维护broker队列</h4>
+<p>追溯发送消息的方法找到关键方法<code>sendKernelImpl</code></p>
+<pre tabindex="0"><code>class DefaultMQProducerImpl{
+ private SendResult sendKernelImpl(。。。 ) {
+        
+String brokerName = this.mQClientFactory.getBrokerNameFromMessageQueue(mq);
+String brokerAddr = this.mQClientFactory.findBrokerAddressInPublish(brokerName);
+
+        if (null == brokerAddr) {
+            tryToFindTopicPublishInfo(mq.getTopic());
+            brokerName = this.mQClientFactory.getBrokerNameFromMessageQueue(mq);
+            brokerAddr = this.mQClientFactory.findBrokerAddressInPublish(brokerName);
+            }
+        
+}
+</code></pre><p>1,获取brokerAddr地址时并不会检验是否有效，只要有对应缓存即可
+2,<code> tryToFindTopicPublishInfo(mq.getTopic());</code> 会在本地没有对应topic条目时更新</p>
+<p>基于以上两点可以看出，默认实现里对于broker的维护似乎是通过发送消息错误时重新拉取实现的？</p>
+<pre tabindex="0"><code>DefaultMQProducerImpl#sendKernelImpl  -》
+this.mQClientFactory.getMQClientAPIImpl().sendMessage   -》
+</code></pre><p>在<code>sendmessgae</code>中发送消息有三种走向，通过<code>switch</code>区分</p>
+<pre tabindex="0"><code>   switch (communicationMode) {
+            case ONEWAY:  //单向发送
+                this.remotingClient.invokeOneway(addr, request, timeoutMillis);
+
+            case ASYNC:  //异步发送
+            
+                this.sendMessageAsync(addr, brokerName, msg, timeoutMillis - costTimeAsync, request, sendCallback, topicPublishInfo, instance,
+                    retryTimesWhenSendFailed, times, context, producer);
+    
+            case SYNC:   //同步发送
+            
+                return this.sendMessageSync(addr, brokerName, msg, timeoutMillis - costTimeSync, request);
+            default:
+                assert false;
+                break;
+        }
+</code></pre><p>单向发送： 不会判断是否发送成功
+异步发送/同步发送：会根据ack或者响应超时等其他指标判断消息是否发送成功</p>
+<p>因此需要注意，假设使用了单向发送，那么先前的推论<code>根据相应判断broker是否有效</code>就不成立，或者说不会单单根据这个判断broker是否有效。</p>
+<h5 id="心跳模式">心跳模式</h5>
+<p>重新阅读源码，追溯<code>brokerAddrTable</code>调用发现心跳模式，</p>
+<pre tabindex="0"><code> if (clientConfig.isEnableHeartbeatChannelEventListener()) {
+            channelEventListener = new ChannelEventListener() {
+                
+                private final ConcurrentMap&lt;String, HashMap&lt;Long, String&gt;&gt; brokerAddrTable = MQClientInstance.this.brokerAddrTable;
+
+                @Override
+                public void onChannelActive(String remoteAddr, Channel channel) {
+                    for (Map.Entry&lt;String, HashMap&lt;Long, String&gt;&gt; addressEntry : brokerAddrTable.entrySet()) {
+                        for (Map.Entry&lt;Long, String&gt; entry : addressEntry.getValue().entrySet()) {
+                            String addr = entry.getValue();
+                            if (addr.equals(remoteAddr)) {
+                                long id = entry.getKey();
+                                String brokerName = addressEntry.getKey();
+                                if (sendHeartbeatToBroker(id, brokerName, addr, false)) {
+                                    rebalanceImmediately();
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+</code></pre><p>核心判断<code> if (addr.equals(remoteAddr)) {。。。  break;}</code></p>
+<p>结合心跳模式的判断，
+1,此处应当为borker地址的监听判断，或者说维护。
+2,这里仍然不是拉去broker的地址</p>
+<h5 id="定时任务-清除离线broker">定时任务： 清除离线broker</h5>
+<p>再一次追溯调用找到定时任务，每秒执行一次</p>
+<pre tabindex="0"><code>MQClientInstance#startScheduledTask
+		this.scheduledExecutorService.scheduleAtFixedRate(() -&gt; {
+            try {
+                MQClientInstance.this.cleanOfflineBroker();
+                MQClientInstance.this.sendHeartbeatToAllBrokerWithLock();
+            } catch (Throwable t) {
+                log.error(&#34;ScheduledTask sendHeartbeatToAllBroker exception&#34;, t);
+            }
+        }, 1000, this.clientConfig.getHeartbeatBrokerInterval(), TimeUnit.MILLISECONDS);
+</code></pre><pre tabindex="0"><code>MQClientInstance.this.cleanOfflineBroker();  -》
+this.isBrokerAddrExistInTopicRouteTable(addr)
+</code></pre><p>该方法内部依赖<code>TopicRouteData</code>的维护，并且仅仅判断是否存在对应的<code>broker</code>地址，而不关心是否有对应topic</p>
+<pre tabindex="0"><code> private boolean isBrokerAddrExistInTopicRouteTable(final String addr) {
+        for (Entry&lt;String, TopicRouteData&gt; entry : this.topicRouteTable.entrySet()) {
+            TopicRouteData topicRouteData = entry.getValue();
+            List&lt;BrokerData&gt; bds = topicRouteData.getBrokerDatas();
+            for (BrokerData bd : bds) {
+                if (bd.getBrokerAddrs() != null) {
+                    boolean exist = bd.getBrokerAddrs().containsValue(addr);
+                    if (exist)
+                        return true;
+                }
+            }
+        }
+</code></pre><p>根据方法的注释，可以判断<code>TopicRouteData</code>的数据是需要作为依据存在，准确性要比<code>brokerAddrTable</code> 高。</p>
+<h5 id="updatetopicrouteinfofromnameserver">updateTopicRouteInfoFromNameServer</h5>
+<p>更新路由拉区信息，无同步</p>
+<pre tabindex="0"><code>（final String topic, boolean isDefault,
+        DefaultMQProducer defaultMQProducer)
+</code></pre><p>因此该方法用于更新指定生产者下的topic的地址，</p>
+<p>调用时机：</p>
+<ul>
+<li>1, sendKernelImpl下没有topic对应的<code>MASTER_ID</code>的节点时。</li>
+<li></li>
+</ul>
+<p>阅读源码发现，生产者作用似乎仅仅是指定了队列数量，但是其他数量都使用了当前MQClientInstance实例的数据，那么就引申出一个新问题，就是生产者和实例的对应关系？MQClientInstance似乎可以复用，在前面的方法调用当中存在<code>getOrCreateMQClientInstance</code>，仅仅从方法名称中也可以发现似乎存在某个变量维护着一个公共的`MQClientInstance``？</p>
+<h5 id="mqclientmanager和mqclientinstance">MQClientManager和MQClientInstance</h5>
+<p>首先说结论，这两对象都是能复用就复用，不会做额外的判断。</p>
+<p>MQClientManager在调用时，直接使用的是静态成员变量
+<code>   private static MQClientManager instance = new MQClientManager();</code></p>
+<p>MQClientInstance通过上面的静态成员变量维护了一个成员变量，</p>
+<pre tabindex="0"><code>   private ConcurrentMap&lt;String/* clientId */, MQClientInstance&gt; factoryTable =
+        new ConcurrentHashMap&lt;&gt;();
+</code></pre><p>回顾clientiD的创建方法</p>
+<pre tabindex="0"><code>    public String buildMQClientId() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getClientIP());
+
+        sb.append(&#34;@&#34;);
+        sb.append(this.getInstanceName());
+        if (!UtilAll.isBlank(this.unitName)) {
+            sb.append(&#34;@&#34;);
+            sb.append(this.unitName);
+        }
+
+        if (enableStreamRequestType) {
+            sb.append(&#34;@&#34;);
+            sb.append(RequestType.STREAM);
+        }
+
+        return sb.toString();
+    }
+</code></pre><p>四元组为： ip： 实例名称: 单元名称： 流式请求</p>
+<p>尝试使用相同clientId后成功启动。</p>
+<h5 id="topicrouteinfo">TopicRouteInfo</h5>
+<p>目前来讲brokerAddrTable有只有一个直接来源<code>topicRouteTable</code></p>
+<p>追溯调用找到关键方法<code>MQClientInstance#updateTopicRouteInfoFromNameServer</code></p>
+<pre tabindex="0"><code>public boolean updateTopicRouteInfoFromNameServer(，，，）{
+ topicRouteData = this.mQClientAPIImpl.getDefaultTopicRouteInfoFromNameServer(clientConfig.getMqClientApiTimeout());
+ // 中间省略的操作大致作用为old、young合并
+this.topicRouteTable.put(topic, cloneTopicRouteData);
+}
+</code></pre><pre tabindex="0"><code>追溯找到路由信息的请求定义
+InterruptedException, RemotingTimeoutException, RemotingSendRequestException, RemotingConnectException {  
+    GetRouteInfoRequestHeader requestHeader = new GetRouteInfoRequestHeader();  
+    requestHeader.setTopic(topic);  
+    RemotingCommand request = RemotingCommand.createRequestCommand(RequestCode.GET_ROUTEINFO_BY_TOPIC, requestHeader);
+</code></pre><p>注意核心请求code</p>
+<pre tabindex="0"><code>RequestCode.GET_ROUTEINFO_BY_TOPIC,
+
+public static final int GET_ROUTEINFO_BY_TOPIC = 105;
+</code></pre><h5 id="发送消息失败">发送消息失败</h5>
+<p>发送消息失败，会抛出自定义错误<code>RemotingException e</code> 交给<code>DefaultMQProducerImpl#sendDefaultImpl</code>的catch处理，断点查看得知，在默认情况下，会尝试隔离broker</p>
+<pre tabindex="0"><code>} catch (RemotingException e) {  
+    endTimestamp = System.currentTimeMillis();  
+    if (this.mqFaultStrategy.isStartDetectorEnable()) {  
+        // Set this broker unreachable when detecting schedule task is running for RemotingException.  
+        this.updateFaultItem(mq.getBrokerName(), endTimestamp - beginTimestampPrev, true, false);  
+    } else {  
+        // Otherwise, isolate this broker.  
+        在内部方法的调用链路中，发现他会重新检测broker的状态，
+        this.updateFaultItem(mq.getBrokerName(), endTimestamp - beginTimestampPrev, true, true);  
+    }
+</code></pre><h3 id="总结">总结</h3>
+<p>生产者网络通信： <code>remotingClient</code>
+生产者通信api封装： <code>MQClientAPIImpl</code>
+生产者动态信息保存： <code>MQClientInstance</code>
+生产者动态信息- 经理：<code>MQClientManager</code>
+默认生产者实现：<code>DefaultMQProducerImpl</code>
+默认生产者的定义： <code>DefaultMQProducer</code></p>
+<p>初始化<code>remotingClient</code>会以当前编码配置为主。</p>
+<pre tabindex="0"><code>//        1,如果存在不一致，则全部更新  
+        if (!addrs.isEmpty()) {  
+            if (null == old) {//olg不存在  
+                update = true;  
+            } else if (addrs.size() != old.size()) {//数量不一致  
+                update = true;  
+            } else {  
+                for (String addr : addrs) {  
+                    if (!old.contains(addr)) {//存在差异  
+                        update = true;  
+                        break;                    }  
+                }  
+            }
+</code></pre><p>broker的更新和维护</p>
+<p>1,心跳模式
+2,定时任务根据路由信息更新
+3,不存在对应的topic信息时，会发送code为105的请求到namesrv中
+4,默认情况下，发送消息失败会尝试隔离对应的broker</p>
+<p><img src="https://blog.wenzhuo4657.org/img/2025/04/20244c5203f9570357a426db7ebc3a23.png" alt=""></p>
+<p>客户端所用的code类
+<code>org.apache.rocketmq.remoting.protocol.RequestCode</code></p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

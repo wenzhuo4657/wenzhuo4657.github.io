@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>八大排序算法梳理 | wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="本篇blog的语言为java实现，介意请划走
+八大排序算法
+
+冒泡排序
+选择排序
+插入排序
+希尔排序
+快速排序
+归并排序
+桶排序
+堆排序
+
+上述排序值得注意的是堆排序，他利用顺序二叉树实现了对堆元素的随机存取，而他所操作的虽然是数组结构，但本质上我们将其视为一个二叉树。
+基本排序算法（并不复杂，甚至称不上算法，理解即可）
+冒泡
+
+public static void bubble_sort(int[] arr) {
+		int i, j, temp, len = arr.length;
+		for (i = 0; i &lt; len - 1; i&#43;&#43;)
+			for (j = 0; j &lt; len - 1 - i; j&#43;&#43;)
+				if (arr[j] &gt; arr[j &#43; 1]) {
+					temp = arr[j];
+					arr[j] = arr[j &#43; 1];
+					arr[j &#43; 1] = temp;
+				}
+}
+时间复杂度（n^2）
+每次排序将最大值放入末尾，且注意，该算法的核心在于逐步排序，内层循环将较小或者较大的值下沉。
+选择排序
+在冒泡排序中，我们逐步将最大或最小值后移，而选择排序优化了这个过程，比较过程并不移动数组元素，而是先找到将要移动的坐标。
+/**
+ * Description: 选择排序
+ *
+ * @param array
+ * @return void
+ * @author JourWon
+ * @date 2019/7/11 23:31
+ */
+public static void selectionSort(int[] array) {
+	if (array == null || array.length &lt;= 1) {
+		return;
+	}
+
+	int length = array.length;
+
+	for (int i = 0; i &lt; length - 1; i&#43;&#43;) {
+		// 保存最小数的索引
+		int minIndex = i;
+
+		for (int j = i &#43; 1; j &lt; length; j&#43;&#43;) {
+			// 找到最小的数
+			if (array[j] &lt; array[minIndex]) {
+				minIndex = j;
+			}
+		}
+
+		// 交换元素位置
+		if (i != minIndex) {
+			swap(array, minIndex, i);
+		}
+	}
+
+}
+
+/**
+ * Description: 交换元素位置
+ *
+ * @param array
+ * @param a
+ * @param b
+ * @return void
+ * @author JourWon
+ * @date 2019/7/11 17:57
+ */
+private static void swap(int[] array, int a, int b) {
+	int temp = array[a];
+	array[a] = array[b];
+	array[b] = temp;
+}
+插入排序
+该思想和动态规划有点像，即我们假定要将插入某个元素插入一个有序数组，那么我们只需要从数组起点或者某位逐步比较即可。">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="index, follow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://example.org/posts/%E5%85%AB%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%A2%B3%E7%90%86/">
+    
+
+    <meta property="og:url" content="https://example.org/posts/%E5%85%AB%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%A2%B3%E7%90%86/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="八大排序算法梳理">
+  <meta property="og:description" content="本篇blog的语言为java实现，介意请划走
+八大排序算法 冒泡排序 选择排序 插入排序 希尔排序 快速排序 归并排序 桶排序 堆排序 上述排序值得注意的是堆排序，他利用顺序二叉树实现了对堆元素的随机存取，而他所操作的虽然是数组结构，但本质上我们将其视为一个二叉树。
+基本排序算法（并不复杂，甚至称不上算法，理解即可） 冒泡 public static void bubble_sort(int[] arr) { int i, j, temp, len = arr.length; for (i = 0; i &lt; len - 1; i&#43;&#43;) for (j = 0; j &lt; len - 1 - i; j&#43;&#43;) if (arr[j] &gt; arr[j &#43; 1]) { temp = arr[j]; arr[j] = arr[j &#43; 1]; arr[j &#43; 1] = temp; } } 时间复杂度（n^2）
+每次排序将最大值放入末尾，且注意，该算法的核心在于逐步排序，内层循环将较小或者较大的值下沉。
+选择排序 在冒泡排序中，我们逐步将最大或最小值后移，而选择排序优化了这个过程，比较过程并不移动数组元素，而是先找到将要移动的坐标。
+/** * Description: 选择排序 * * @param array * @return void * @author JourWon * @date 2019/7/11 23:31 */ public static void selectionSort(int[] array) { if (array == null || array.length &lt;= 1) { return; } int length = array.length; for (int i = 0; i &lt; length - 1; i&#43;&#43;) { // 保存最小数的索引 int minIndex = i; for (int j = i &#43; 1; j &lt; length; j&#43;&#43;) { // 找到最小的数 if (array[j] &lt; array[minIndex]) { minIndex = j; } } // 交换元素位置 if (i != minIndex) { swap(array, minIndex, i); } } } /** * Description: 交换元素位置 * * @param array * @param a * @param b * @return void * @author JourWon * @date 2019/7/11 17:57 */ private static void swap(int[] array, int a, int b) { int temp = array[a]; array[a] = array[b]; array[b] = temp; } 插入排序 该思想和动态规划有点像，即我们假定要将插入某个元素插入一个有序数组，那么我们只需要从数组起点或者某位逐步比较即可。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-03-18T09:42:18+00:00">
+    <meta property="article:modified_time" content="2025-03-18T09:42:18+00:00">
+
+  <meta itemprop="name" content="八大排序算法梳理">
+  <meta itemprop="description" content="本篇blog的语言为java实现，介意请划走
+八大排序算法 冒泡排序 选择排序 插入排序 希尔排序 快速排序 归并排序 桶排序 堆排序 上述排序值得注意的是堆排序，他利用顺序二叉树实现了对堆元素的随机存取，而他所操作的虽然是数组结构，但本质上我们将其视为一个二叉树。
+基本排序算法（并不复杂，甚至称不上算法，理解即可） 冒泡 public static void bubble_sort(int[] arr) { int i, j, temp, len = arr.length; for (i = 0; i &lt; len - 1; i&#43;&#43;) for (j = 0; j &lt; len - 1 - i; j&#43;&#43;) if (arr[j] &gt; arr[j &#43; 1]) { temp = arr[j]; arr[j] = arr[j &#43; 1]; arr[j &#43; 1] = temp; } } 时间复杂度（n^2）
+每次排序将最大值放入末尾，且注意，该算法的核心在于逐步排序，内层循环将较小或者较大的值下沉。
+选择排序 在冒泡排序中，我们逐步将最大或最小值后移，而选择排序优化了这个过程，比较过程并不移动数组元素，而是先找到将要移动的坐标。
+/** * Description: 选择排序 * * @param array * @return void * @author JourWon * @date 2019/7/11 23:31 */ public static void selectionSort(int[] array) { if (array == null || array.length &lt;= 1) { return; } int length = array.length; for (int i = 0; i &lt; length - 1; i&#43;&#43;) { // 保存最小数的索引 int minIndex = i; for (int j = i &#43; 1; j &lt; length; j&#43;&#43;) { // 找到最小的数 if (array[j] &lt; array[minIndex]) { minIndex = j; } } // 交换元素位置 if (i != minIndex) { swap(array, minIndex, i); } } } /** * Description: 交换元素位置 * * @param array * @param a * @param b * @return void * @author JourWon * @date 2019/7/11 17:57 */ private static void swap(int[] array, int a, int b) { int temp = array[a]; array[a] = array[b]; array[b] = temp; } 插入排序 该思想和动态规划有点像，即我们假定要将插入某个元素插入一个有序数组，那么我们只需要从数组起点或者某位逐步比较即可。">
+  <meta itemprop="datePublished" content="2025-03-18T09:42:18+00:00">
+  <meta itemprop="dateModified" content="2025-03-18T09:42:18+00:00">
+  <meta itemprop="wordCount" content="566">
+  <meta itemprop="keywords" content="数据结构与算法">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="八大排序算法梳理">
+  <meta name="twitter:description" content="本篇blog的语言为java实现，介意请划走
+八大排序算法 冒泡排序 选择排序 插入排序 希尔排序 快速排序 归并排序 桶排序 堆排序 上述排序值得注意的是堆排序，他利用顺序二叉树实现了对堆元素的随机存取，而他所操作的虽然是数组结构，但本质上我们将其视为一个二叉树。
+基本排序算法（并不复杂，甚至称不上算法，理解即可） 冒泡 public static void bubble_sort(int[] arr) { int i, j, temp, len = arr.length; for (i = 0; i &lt; len - 1; i&#43;&#43;) for (j = 0; j &lt; len - 1 - i; j&#43;&#43;) if (arr[j] &gt; arr[j &#43; 1]) { temp = arr[j]; arr[j] = arr[j &#43; 1]; arr[j &#43; 1] = temp; } } 时间复杂度（n^2）
+每次排序将最大值放入末尾，且注意，该算法的核心在于逐步排序，内层循环将较小或者较大的值下沉。
+选择排序 在冒泡排序中，我们逐步将最大或最小值后移，而选择排序优化了这个过程，比较过程并不移动数组元素，而是先找到将要移动的坐标。
+/** * Description: 选择排序 * * @param array * @return void * @author JourWon * @date 2019/7/11 23:31 */ public static void selectionSort(int[] array) { if (array == null || array.length &lt;= 1) { return; } int length = array.length; for (int i = 0; i &lt; length - 1; i&#43;&#43;) { // 保存最小数的索引 int minIndex = i; for (int j = i &#43; 1; j &lt; length; j&#43;&#43;) { // 找到最小的数 if (array[j] &lt; array[minIndex]) { minIndex = j; } } // 交换元素位置 if (i != minIndex) { swap(array, minIndex, i); } } } /** * Description: 交换元素位置 * * @param array * @param a * @param b * @return void * @author JourWon * @date 2019/7/11 17:57 */ private static void swap(int[] array, int a, int b) { int temp = array[a]; array[a] = array[b]; array[b] = temp; } 插入排序 该思想和动态规划有点像，即我们假定要将插入某个元素插入一个有序数组，那么我们只需要从数组起点或者某位逐步比较即可。">
+
+      
+    
+	
+  </head><body class="ma0 avenir bg-near-white production">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  
+  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">八大排序算法梳理</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-03-18T09:42:18Z">March 18, 2025</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>本篇blog的语言为java实现，介意请划走</p>
+<h1 id="八大排序算法">八大排序算法</h1>
+<ul>
+<li>冒泡排序</li>
+<li>选择排序</li>
+<li>插入排序</li>
+<li>希尔排序</li>
+<li>快速排序</li>
+<li>归并排序</li>
+<li>桶排序</li>
+<li>堆排序</li>
+</ul>
+<p>上述排序值得注意的是堆排序，他利用顺序二叉树实现了对堆元素的随机存取，而他所操作的虽然是数组结构，但本质上我们将其视为一个二叉树。</p>
+<h2 id="基本排序算法并不复杂甚至称不上算法理解即可">基本排序算法（并不复杂，甚至称不上算法，理解即可）</h2>
+<h3 id="冒泡">冒泡</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">bubble_sort</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> i, j, temp, len <span style="color:#f92672">=</span> arr.<span style="color:#a6e22e">length</span>;
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> len <span style="color:#f92672">-</span> 1; i<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">for</span> (j <span style="color:#f92672">=</span> 0; j <span style="color:#f92672">&lt;</span> len <span style="color:#f92672">-</span> 1 <span style="color:#f92672">-</span> i; j<span style="color:#f92672">++</span>)
+</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">if</span> (arr<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> arr<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span>) {
+</span></span><span style="display:flex;"><span>					temp <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>					arr<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>					arr<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> temp;
+</span></span><span style="display:flex;"><span>				}
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>时间复杂度（n^2）</p>
+<p>每次排序将最大值放入末尾，且注意，该算法的核心在于逐步排序，内层循环将较小或者较大的值下沉。</p>
+<h3 id="选择排序">选择排序</h3>
+<p>在冒泡排序中，我们逐步将最大或最小值后移，而选择排序优化了这个过程，比较过程并不移动数组元素，而是先找到将要移动的坐标。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Description: 选择排序
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return void
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author JourWon
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @date 2019/7/11 23:31
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">selectionSort</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> array) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (array <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> array.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;=</span> 1) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> array.<span style="color:#a6e22e">length</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> length <span style="color:#f92672">-</span> 1; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 保存最小数的索引</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> minIndex <span style="color:#f92672">=</span> i;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1; j <span style="color:#f92672">&lt;</span> length; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// 找到最小的数</span>
+</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> (array<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> array<span style="color:#f92672">[</span>minIndex<span style="color:#f92672">]</span>) {
+</span></span><span style="display:flex;"><span>				minIndex <span style="color:#f92672">=</span> j;
+</span></span><span style="display:flex;"><span>			}
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 交换元素位置</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (i <span style="color:#f92672">!=</span> minIndex) {
+</span></span><span style="display:flex;"><span>			swap(array, minIndex, i);
+</span></span><span style="display:flex;"><span>		}
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Description: 交换元素位置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param a
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param b
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return void
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author JourWon
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @date 2019/7/11 17:57
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> array, <span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> temp <span style="color:#f92672">=</span> array<span style="color:#f92672">[</span>a<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>	array<span style="color:#f92672">[</span>a<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> array<span style="color:#f92672">[</span>b<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>	array<span style="color:#f92672">[</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> temp;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="插入排序">插入排序</h3>
+<p>该思想和动态规划有点像，即我们假定要将插入某个元素插入一个有序数组，那么我们只需要从数组起点或者某位逐步比较即可。</p>
+<p>注意：<strong>数组元素的比较必须满足a&gt;=b,b&gt;=c,一定能推出a&gt;=c。</strong></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/* 插入排序 */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insertionSort</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 外循环：已排序区间为 [0, i-1]</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1; i <span style="color:#f92672">&lt;</span> nums.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> base <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>, j <span style="color:#f92672">=</span> i <span style="color:#f92672">-</span> 1;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 内循环：将 base 插入到已排序区间 [0, i-1] 中的正确位置</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (j <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> nums<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> base) {
+</span></span><span style="display:flex;"><span>            nums<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>; <span style="color:#75715e">// 将 nums[j] 向右移动一位</span>
+</span></span><span style="display:flex;"><span>            j<span style="color:#f92672">--</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        nums<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> base;        <span style="color:#75715e">// 将 base 赋值到正确位置</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="较为复杂的排序">较为复杂的排序</h2>
+<h3 id="希尔排序">希尔排序</h3>
+<p>核心思想：通过步长指定分组，将每次分组内的数据变得有序。这样当我们减少步长时，虽然数组元素并不会因此有序，但是会变得相对容易排序。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span>  <span style="color:#66d9ef">static</span>  <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">shellsort</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr){
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> h<span style="color:#f92672">=</span>arr.<span style="color:#a6e22e">length</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">true</span>){
+</span></span><span style="display:flex;"><span>            h<span style="color:#f92672">=</span>h<span style="color:#f92672">/</span>2;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span>(h<span style="color:#f92672">==</span>0){
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i<span style="color:#f92672">=</span>h;i<span style="color:#f92672">&lt;</span> arr.<span style="color:#a6e22e">length</span>;i<span style="color:#f92672">++</span>){<span style="color:#75715e">//插入排序</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">int</span> j<span style="color:#f92672">=</span>i;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">int</span> m<span style="color:#f92672">=</span>arr<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">while</span> (j<span style="color:#f92672">-</span>h<span style="color:#f92672">&gt;=</span>0<span style="color:#f92672">&amp;&amp;</span>arr<span style="color:#f92672">[</span>j<span style="color:#f92672">-</span>h<span style="color:#f92672">]&gt;</span>m){<span style="color:#75715e">//注意这里的坐标转换，根据步长找到了上一个分组位置。</span>
+</span></span><span style="display:flex;"><span>                    arr<span style="color:#f92672">[</span>j<span style="color:#f92672">]=</span>arr<span style="color:#f92672">[</span>j<span style="color:#f92672">-</span>h<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>                    j<span style="color:#f92672">-=</span>h;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                arr<span style="color:#f92672">[</span>j<span style="color:#f92672">]=</span>m;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span></code></pre></div><h3 id="快速排序">快速排序</h3>
+<p>核心思想：使用基准将数据进行分组，当极限状态只剩下两个数字时，也就是完成了排序。</p>
+<p>他和希尔排序不同的地方在于，他的分组的依据是基准，并不保证分组范围。</p>
+<pre tabindex="0"><code>    /**
+     *  @author:wenzhuo4657
+        des:  错位交换处理基准数据，最终使其变成两个区间的边界
+     */
+    public static void example(int[] arr, int left, int right) {
+        if (left &gt;= right) {//越界处理
+            return;
+        }
+        int l = left;
+        int r = right;
+
+        int mid = arr[l];//1，作为基准，
+
+//        2,错位处理，解决了基准数据移动，即便是极端情况下，也会由于while循环条件只会到达l==r,而这个位置的交换是无效的，最后再将错位的arr[l]填充
+//        使基准数据也参与到排序中变动位置。
+        while (l &lt; r) {
+
+            while (l &lt; r &amp;&amp; arr[r] &gt;= mid) {
+                r--;
+            }
+            arr[l] = arr[r];
+            while (l &lt; r &amp;&amp; arr[l] &lt; mid) {
+                l++;
+            }
+            arr[r] = arr[l];
+        }
+        arr[l] = mid;
+
+        example(arr, left, l-1);
+
+        example(arr, l+1, right);
+    }
+</code></pre><h3 id="归并排序">归并排序</h3>
+<p>核心思想：递归找到两个数字的分组进行排序（其实按照递归是找到一个数字的分组，只是它的排序无效）</p>
+<p>逐层向上将两个有序分组合并。</p>
+<pre tabindex="0"><code>    public static void example(int  []arr,int left,int right,int[] temp){
+
+//        该函数主要用于实现递归调用的流程
+
+        if(left&lt;right){
+            int min=(left+right)/2;
+            example(arr,left,min,temp);
+            example(arr,min+1,right,temp);
+
+            merge(arr,left,min,right,temp);//基于归并排序的递归流程，该方法所得到的数组均是局部有序，极限情况，为两个元素的区间，例如 [0,1]
+        }
+
+
+    }
+
+    /**
+     *  @author:wenzhuo4657
+        des: 该排序生效的数组必须是局部有序的数组，或者说，[left,min]升序，[min+1,right]升序
+    */
+    private static void merge(int[] arr, int left, int min, int right, int[] temp) {
+        int i=left;
+        int j=min+1;
+        int t=0;
+//        1,两个有序区间[left,min] [min+1,right]
+        while (i&lt;=min&amp;&amp;j&lt;=right){
+            if (arr[i]&lt;=arr[j]){
+                temp[t]=arr[i];
+                i++;
+            }else {
+                temp[t]=arr[j];
+                j++;
+            }
+            t++;
+        }
+
+
+//       2, 基于上述while循环特点，最终只剩下一边数据没有填充，并且由于区间局部有序可知，此时省下的数据可以直接顺序填充
+        while (i&lt;=min){
+            temp[t]=arr[i];
+            i++;
+            t++;
+        }
+        while (j&lt;=right){
+            temp[t]=arr[j];
+            j++;
+            t++;
+        }
+
+//        3,填充完毕，将结果复制到原本数组的区间
+        t=0;
+        for(int h=left;h&lt;=right;h++){
+            arr[h]=temp[t];
+            t++;
+        }
+    }
+</code></pre><h3 id="桶排序">桶排序</h3>
+<p>按照数字位数进行一次排序。</p>
+<p>待补充</p>
+<h3 id="堆排序">堆排序</h3>
+<p>利用顺序二叉树将树结构扁平化处理，实现随机存取，并且使用大顶堆或小顶堆结构获取某个范围内的最大值或者最小值。</p>
+<p>值得注意的是该算法对于如何将一个树调整为堆结构的方式：假设某个树除了根节点，其余节点均符合这个条件，如何为这个根节点找到合适位置进行交换？这样做了之后他也一定能够变成大顶堆或者小顶堆结构。</p>
+<pre tabindex="0"><code>/**
+ *  @author:wenzhuo4657
+    des:  要将root下沉到合适的地方，且需要注意，以root为跟节点的这个子树（可能是0，就是这棵树本身），除了根节点以外，都符合大顶堆定义。
+         arr:顺序二叉树，
+         root: 某个节点，这里将其视为数组在该子树中找到合适位置的节点
+         length;排序范围
+*/
+
+public  static  void heap1(int arr[] ,int root,int length){
+    int temp=arr[root];//临时存储根节点
+
+    for (int k=root*2+1;k&lt;length;k=k*2+1){
+        if (k+1&lt;length&amp;&amp;arr[k]&lt;arr[k+1]){//1,找到左右较大的那个
+            k++;
+        }
+        if (temp&lt;arr[k]){//判断三元组 节点root和节点root的左右节点的最大值
+            arr[root]=arr[k];//这一步相当于是移位交换，交换目标为，root和k
+            root=k;//不断更新root节点，
+        }else {
+            break;
+        }
+    }
+    arr[root]=temp;//完成下沉
+
+}
+
+    public static void heap2(int []arr){
+        int temp=0;
+//转换顺序二叉树为大顶堆，arr.length/2-1==（(arr.length-1)末尾节点-1）/2 ，从最底层开始逐渐完成大顶堆定义，换言之，他的每一个子树都符合大顶堆。
+        for (int i=arr.length/2-1;i&gt;=0;i--){
+            heap1(arr,i, arr.length);
+        }
+        System.out.println(Arrays.toString(arr));
+
+        //堆排序
+        for (int j= arr.length-1;j&gt;0;j--){
+            temp=arr[j];
+            arr[j]=arr[0];
+            arr[0]=temp;
+            heap1(arr,0, j);
+        }
+    }
+</code></pre><p>如图的关键方法为heap1,再传入一个未知结构的树时，他通过从最后一个非叶子节点开始逐层将子树变为堆结构（通过heap1方法），最终使整个树称为堆结构。</p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

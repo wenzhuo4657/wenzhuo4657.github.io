@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>maven插件新手解惑 | wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="maven插件的定义
+maven插件的定义是在pom文件下的
+&lt;plugins&gt;
+    &lt;plugin&gt;
+    		&lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.6.0&lt;/version&gt;   
+     &lt;/plugin&gt;
+ &lt;/plugins&gt;
+与常规的依赖定位一致，而插件的配置则是在、等标签下定义的，他们或许是环境变量或许是在maven生命周期的插入点。
+简单来说maven插件的两个用途
+1,融入maven生命周期，增加外挂式的功能
+2,不参入maven生周期，直接使用（例如，在微服务领域下，将服务的定义IDL文件编译为特定语言的接口文件。）
+maven插件的原理
+Maven 是一个意第绪语单词，意为 知识的积累者，最初是为了简化 Jakarta Turbine 项目的构建过程而创建的。当时有多个项目，每个项目都有自己的 Ant 构建文件，而且每个文件都略有不同。JAR 被签入 CVS。我们希望有一种标准的方法来构建项目，明确定义项目包含的内容，一种发布项目信息的简便方法，以及一种在多个项目之间共享 JAR 的方法。
+这段话取自官网对于maven的定义,可以看出maven的核心在于管理jar文件，便于多个不同的项目去引入相同的jar。
+“Maven” 实际上只是一组 Maven 插件的核心框架。换句话说，插件是执行大部分实际操作的地方，插件用于：创建 jar 文件、创建 war 文件、编译代码、单元测试代码、创建项目文档等等。您能想到的在项目上执行的几乎所有操作都是作为 Maven 插件实现的。
+这段话取自插件开发简介,也就是说maven的插件的目标是生命周期，而生命周期在官方术语中被称为Mojo.
+进而去查看maven插件开发的示例即可发现，插件实际上就是依托与maven这个框架所提供的扩展点所构建出来的可执行jar文件。
+至此对于maven插件的和依赖的之间的关系就已经很明确了，他们实际上是一样，都可以作为依赖去使用，实际上更准确的说法是，可以融入maven生命周期的依赖被称为maven插件。
+如果想要学习maven插件开发，就一定要仔细查看maven的官方文档
+maven插件示例解读
+spring-boot-maven-plugin
+前置知识
+什么是springboot?通常我们说springboot是对于各种依赖自动配置的boot工具，便于快速开发，避免依赖的困扰，这种方式目前已经不止是springboot的独有，只是它依托与spring生态最为出名而已。
+springboot与spring最大的区别在我这个小白看来则是注解开发，@SpringBootApplication定义程序的启动入口，所有的程序都需要依托于这个主类进行加载，而传统的spring项目则需要依托与web容器启动servlet配置，也就WebApplicationInitializer（简单来说是用于将项目中所有的servlet加载到web容器当中，参如http请求当中的rest控制器部分）。
+无论如何我们需要明白一个jar包的执行是需要一个入口！而不同项目的入口是不一样！
+对于普通jar包来说，他只需要将当前项目的class文件打包即可，而一个可执行的jar包则额外的需要依赖、入口、引导器。（如果稍微了解一点jvm知识就应该明白，java程序并不会在加载阶段去校验import是否存在，至于执行更是需要一个明确的入口。）
+可执行jar:
+
+将依赖引入jar包当中
+META-INF/MANIFEST.MF文件中存在启动类等配置
+使用命令java -jar 执行
+
+不可执行jar:
+
+内部只有项目的class文件
+META-INF/MANIFEST.MF文件中不存在启动类等配置
+不能使用java -jar 执行。
+
+java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找到程序的入口点（即主类），然后开始执行该类的main方法">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="index, follow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="https://example.org/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/">
+    
+
+    <meta property="og:url" content="https://example.org/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="maven插件新手解惑">
+  <meta property="og:description" content="maven插件的定义 maven插件的定义是在pom文件下的
+&lt;plugins&gt; &lt;plugin&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt; &lt;version&gt;2.6.0&lt;/version&gt; &lt;/plugin&gt; &lt;/plugins&gt; 与常规的依赖定位一致，而插件的配置则是在、等标签下定义的，他们或许是环境变量或许是在maven生命周期的插入点。
+简单来说maven插件的两个用途
+1,融入maven生命周期，增加外挂式的功能
+2,不参入maven生周期，直接使用（例如，在微服务领域下，将服务的定义IDL文件编译为特定语言的接口文件。）
+maven插件的原理 Maven 是一个意第绪语单词，意为 知识的积累者，最初是为了简化 Jakarta Turbine 项目的构建过程而创建的。当时有多个项目，每个项目都有自己的 Ant 构建文件，而且每个文件都略有不同。JAR 被签入 CVS。我们希望有一种标准的方法来构建项目，明确定义项目包含的内容，一种发布项目信息的简便方法，以及一种在多个项目之间共享 JAR 的方法。
+这段话取自官网对于maven的定义,可以看出maven的核心在于管理jar文件，便于多个不同的项目去引入相同的jar。
+“Maven” 实际上只是一组 Maven 插件的核心框架。换句话说，插件是执行大部分实际操作的地方，插件用于：创建 jar 文件、创建 war 文件、编译代码、单元测试代码、创建项目文档等等。您能想到的在项目上执行的几乎所有操作都是作为 Maven 插件实现的。
+这段话取自插件开发简介,也就是说maven的插件的目标是生命周期，而生命周期在官方术语中被称为Mojo.
+进而去查看maven插件开发的示例即可发现，插件实际上就是依托与maven这个框架所提供的扩展点所构建出来的可执行jar文件。
+至此对于maven插件的和依赖的之间的关系就已经很明确了，他们实际上是一样，都可以作为依赖去使用，实际上更准确的说法是，可以融入maven生命周期的依赖被称为maven插件。
+如果想要学习maven插件开发，就一定要仔细查看maven的官方文档
+maven插件示例解读 spring-boot-maven-plugin 前置知识 什么是springboot?通常我们说springboot是对于各种依赖自动配置的boot工具，便于快速开发，避免依赖的困扰，这种方式目前已经不止是springboot的独有，只是它依托与spring生态最为出名而已。
+springboot与spring最大的区别在我这个小白看来则是注解开发，@SpringBootApplication定义程序的启动入口，所有的程序都需要依托于这个主类进行加载，而传统的spring项目则需要依托与web容器启动servlet配置，也就WebApplicationInitializer（简单来说是用于将项目中所有的servlet加载到web容器当中，参如http请求当中的rest控制器部分）。
+无论如何我们需要明白一个jar包的执行是需要一个入口！而不同项目的入口是不一样！
+对于普通jar包来说，他只需要将当前项目的class文件打包即可，而一个可执行的jar包则额外的需要依赖、入口、引导器。（如果稍微了解一点jvm知识就应该明白，java程序并不会在加载阶段去校验import是否存在，至于执行更是需要一个明确的入口。）
+可执行jar:
+将依赖引入jar包当中 META-INF/MANIFEST.MF文件中存在启动类等配置 使用命令java -jar 执行 不可执行jar:
+内部只有项目的class文件 META-INF/MANIFEST.MF文件中不存在启动类等配置 不能使用java -jar 执行。 java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找到程序的入口点（即主类），然后开始执行该类的main方法">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-04-06T16:44:01+00:00">
+    <meta property="article:modified_time" content="2025-04-06T16:44:01+00:00">
+
+  <meta itemprop="name" content="maven插件新手解惑">
+  <meta itemprop="description" content="maven插件的定义 maven插件的定义是在pom文件下的
+&lt;plugins&gt; &lt;plugin&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt; &lt;version&gt;2.6.0&lt;/version&gt; &lt;/plugin&gt; &lt;/plugins&gt; 与常规的依赖定位一致，而插件的配置则是在、等标签下定义的，他们或许是环境变量或许是在maven生命周期的插入点。
+简单来说maven插件的两个用途
+1,融入maven生命周期，增加外挂式的功能
+2,不参入maven生周期，直接使用（例如，在微服务领域下，将服务的定义IDL文件编译为特定语言的接口文件。）
+maven插件的原理 Maven 是一个意第绪语单词，意为 知识的积累者，最初是为了简化 Jakarta Turbine 项目的构建过程而创建的。当时有多个项目，每个项目都有自己的 Ant 构建文件，而且每个文件都略有不同。JAR 被签入 CVS。我们希望有一种标准的方法来构建项目，明确定义项目包含的内容，一种发布项目信息的简便方法，以及一种在多个项目之间共享 JAR 的方法。
+这段话取自官网对于maven的定义,可以看出maven的核心在于管理jar文件，便于多个不同的项目去引入相同的jar。
+“Maven” 实际上只是一组 Maven 插件的核心框架。换句话说，插件是执行大部分实际操作的地方，插件用于：创建 jar 文件、创建 war 文件、编译代码、单元测试代码、创建项目文档等等。您能想到的在项目上执行的几乎所有操作都是作为 Maven 插件实现的。
+这段话取自插件开发简介,也就是说maven的插件的目标是生命周期，而生命周期在官方术语中被称为Mojo.
+进而去查看maven插件开发的示例即可发现，插件实际上就是依托与maven这个框架所提供的扩展点所构建出来的可执行jar文件。
+至此对于maven插件的和依赖的之间的关系就已经很明确了，他们实际上是一样，都可以作为依赖去使用，实际上更准确的说法是，可以融入maven生命周期的依赖被称为maven插件。
+如果想要学习maven插件开发，就一定要仔细查看maven的官方文档
+maven插件示例解读 spring-boot-maven-plugin 前置知识 什么是springboot?通常我们说springboot是对于各种依赖自动配置的boot工具，便于快速开发，避免依赖的困扰，这种方式目前已经不止是springboot的独有，只是它依托与spring生态最为出名而已。
+springboot与spring最大的区别在我这个小白看来则是注解开发，@SpringBootApplication定义程序的启动入口，所有的程序都需要依托于这个主类进行加载，而传统的spring项目则需要依托与web容器启动servlet配置，也就WebApplicationInitializer（简单来说是用于将项目中所有的servlet加载到web容器当中，参如http请求当中的rest控制器部分）。
+无论如何我们需要明白一个jar包的执行是需要一个入口！而不同项目的入口是不一样！
+对于普通jar包来说，他只需要将当前项目的class文件打包即可，而一个可执行的jar包则额外的需要依赖、入口、引导器。（如果稍微了解一点jvm知识就应该明白，java程序并不会在加载阶段去校验import是否存在，至于执行更是需要一个明确的入口。）
+可执行jar:
+将依赖引入jar包当中 META-INF/MANIFEST.MF文件中存在启动类等配置 使用命令java -jar 执行 不可执行jar:
+内部只有项目的class文件 META-INF/MANIFEST.MF文件中不存在启动类等配置 不能使用java -jar 执行。 java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找到程序的入口点（即主类），然后开始执行该类的main方法">
+  <meta itemprop="datePublished" content="2025-04-06T16:44:01+00:00">
+  <meta itemprop="dateModified" content="2025-04-06T16:44:01+00:00">
+  <meta itemprop="wordCount" content="173">
+  <meta itemprop="keywords" content="教程">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="maven插件新手解惑">
+  <meta name="twitter:description" content="maven插件的定义 maven插件的定义是在pom文件下的
+&lt;plugins&gt; &lt;plugin&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt; &lt;version&gt;2.6.0&lt;/version&gt; &lt;/plugin&gt; &lt;/plugins&gt; 与常规的依赖定位一致，而插件的配置则是在、等标签下定义的，他们或许是环境变量或许是在maven生命周期的插入点。
+简单来说maven插件的两个用途
+1,融入maven生命周期，增加外挂式的功能
+2,不参入maven生周期，直接使用（例如，在微服务领域下，将服务的定义IDL文件编译为特定语言的接口文件。）
+maven插件的原理 Maven 是一个意第绪语单词，意为 知识的积累者，最初是为了简化 Jakarta Turbine 项目的构建过程而创建的。当时有多个项目，每个项目都有自己的 Ant 构建文件，而且每个文件都略有不同。JAR 被签入 CVS。我们希望有一种标准的方法来构建项目，明确定义项目包含的内容，一种发布项目信息的简便方法，以及一种在多个项目之间共享 JAR 的方法。
+这段话取自官网对于maven的定义,可以看出maven的核心在于管理jar文件，便于多个不同的项目去引入相同的jar。
+“Maven” 实际上只是一组 Maven 插件的核心框架。换句话说，插件是执行大部分实际操作的地方，插件用于：创建 jar 文件、创建 war 文件、编译代码、单元测试代码、创建项目文档等等。您能想到的在项目上执行的几乎所有操作都是作为 Maven 插件实现的。
+这段话取自插件开发简介,也就是说maven的插件的目标是生命周期，而生命周期在官方术语中被称为Mojo.
+进而去查看maven插件开发的示例即可发现，插件实际上就是依托与maven这个框架所提供的扩展点所构建出来的可执行jar文件。
+至此对于maven插件的和依赖的之间的关系就已经很明确了，他们实际上是一样，都可以作为依赖去使用，实际上更准确的说法是，可以融入maven生命周期的依赖被称为maven插件。
+如果想要学习maven插件开发，就一定要仔细查看maven的官方文档
+maven插件示例解读 spring-boot-maven-plugin 前置知识 什么是springboot?通常我们说springboot是对于各种依赖自动配置的boot工具，便于快速开发，避免依赖的困扰，这种方式目前已经不止是springboot的独有，只是它依托与spring生态最为出名而已。
+springboot与spring最大的区别在我这个小白看来则是注解开发，@SpringBootApplication定义程序的启动入口，所有的程序都需要依托于这个主类进行加载，而传统的spring项目则需要依托与web容器启动servlet配置，也就WebApplicationInitializer（简单来说是用于将项目中所有的servlet加载到web容器当中，参如http请求当中的rest控制器部分）。
+无论如何我们需要明白一个jar包的执行是需要一个入口！而不同项目的入口是不一样！
+对于普通jar包来说，他只需要将当前项目的class文件打包即可，而一个可执行的jar包则额外的需要依赖、入口、引导器。（如果稍微了解一点jvm知识就应该明白，java程序并不会在加载阶段去校验import是否存在，至于执行更是需要一个明确的入口。）
+可执行jar:
+将依赖引入jar包当中 META-INF/MANIFEST.MF文件中存在启动类等配置 使用命令java -jar 执行 不可执行jar:
+内部只有项目的class文件 META-INF/MANIFEST.MF文件中不存在启动类等配置 不能使用java -jar 执行。 java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找到程序的入口点（即主类），然后开始执行该类的main方法">
+
+      
+    
+	
+  </head><body class="ma0 avenir bg-near-white production">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+    <main class="pb7" role="main">
+      
+  
+  
+  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        Posts
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">maven插件新手解惑</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-04-06T16:44:01Z">April 6, 2025</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h2 id="maven插件的定义">maven插件的定义</h2>
+<p>maven插件的定义是在pom文件下的</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>plugins<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;</span>plugin<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    		<span style="color:#f92672">&lt;</span>groupId<span style="color:#f92672">&gt;</span>org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">boot</span><span style="color:#f92672">&lt;/</span>groupId<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;</span>artifactId<span style="color:#f92672">&gt;</span>spring<span style="color:#f92672">-</span>boot<span style="color:#f92672">-</span>maven<span style="color:#f92672">-</span>plugin<span style="color:#f92672">&lt;/</span>artifactId<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;</span>version<span style="color:#f92672">&gt;</span>2.<span style="color:#a6e22e">6</span>.<span style="color:#a6e22e">0</span><span style="color:#f92672">&lt;/</span>version<span style="color:#f92672">&gt;</span>   
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">&lt;/</span>plugin<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#f92672">&lt;/</span>plugins<span style="color:#f92672">&gt;</span>
+</span></span></code></pre></div><p>与常规的依赖定位一致，而插件的配置则是在<!-- raw HTML omitted -->、<!-- raw HTML omitted -->等标签下定义的，他们或许是环境变量或许是在maven生命周期的插入点。</p>
+<p>简单来说maven插件的两个用途</p>
+<p>1,融入maven生命周期，增加外挂式的功能</p>
+<p>2,不参入maven生周期，直接使用（例如，在微服务领域下，将服务的定义IDL文件编译为特定语言的接口文件。）</p>
+<h2 id="maven插件的原理">maven插件的原理</h2>
+<p><strong>Maven 是一个意第绪语单词，意为 知识的积累者，最初是为了简化 Jakarta Turbine 项目的构建过程而创建的。当时有多个项目，每个项目都有自己的 Ant 构建文件，而且每个文件都略有不同。JAR 被签入 CVS。我们希望有一种标准的方法来构建项目，明确定义项目包含的内容，一种发布项目信息的简便方法，以及一种在多个项目之间共享 JAR 的方法。</strong></p>
+<p>这段话取自<a href="https://maven.apache.org/what-is-maven.html">官网</a>对于maven的定义,可以看出maven的核心在于管理jar文件，便于多个不同的项目去引入相同的jar。</p>
+<p><strong>“Maven” 实际上只是一组 Maven 插件的核心框架。换句话说，插件是执行大部分实际操作的地方，插件用于：创建 jar 文件、创建 war 文件、编译代码、单元测试代码、创建项目文档等等。您能想到的在项目上执行的几乎所有操作都是作为 Maven 插件实现的。</strong></p>
+<p>这段话取自<a href="https://maven.apache.org/guides/introduction/introduction-to-plugins.html">插件开发简介</a>,也就是说maven的插件的目标是生命周期，而生命周期在官方术语中被称为<code>Mojo</code>.</p>
+<p>进而去查看maven插件开发的示例即可发现，插件实际上就是依托与maven这个框架所提供的扩展点所构建出来的可执行jar文件。</p>
+<p>至此对于maven插件的和依赖的之间的关系就已经很明确了，他们实际上是一样，都可以作为依赖去使用，实际上更准确的说法是，可以融入maven生命周期的依赖被称为maven插件。</p>
+<p><em>如果想要学习maven插件开发，就一定要仔细查看maven的<a href="https://maven.apache.org/plugin-developers/index.html">官方文档</a></em></p>
+<h2 id="maven插件示例解读">maven插件示例解读</h2>
+<h3 id="spring-boot-maven-plugin">spring-boot-maven-plugin</h3>
+<h4 id="前置知识">前置知识</h4>
+<p>什么是springboot?通常我们说springboot是对于各种依赖自动配置的boot工具，便于快速开发，避免依赖的困扰，这种方式目前已经不止是springboot的独有，只是它依托与spring生态最为出名而已。</p>
+<p>springboot与spring最大的区别在我这个小白看来则是注解开发，@SpringBootApplication定义程序的启动入口，所有的程序都需要依托于这个主类进行加载，而传统的spring项目则需要依托与web容器启动servlet配置，也就WebApplicationInitializer（简单来说是用于将项目中所有的servlet加载到web容器当中，参如http请求当中的rest控制器部分）。</p>
+<p>无论如何我们需要明白一个jar包的执行是需要一个入口！而不同项目的入口是不一样！</p>
+<p>对于普通jar包来说，他只需要将当前项目的class文件打包即可，而一个可执行的jar包则额外的需要依赖、入口、引导器。（如果稍微了解一点jvm知识就应该明白，java程序并不会在加载阶段去校验import是否存在，至于执行更是需要一个明确的入口。）</p>
+<p>可执行jar:</p>
+<ul>
+<li>将依赖引入jar包当中</li>
+<li>META-INF/MANIFEST.MF文件中存在启动类等配置</li>
+<li>使用命令<code>java -jar</code> 执行</li>
+</ul>
+<p>不可执行jar:</p>
+<ul>
+<li>内部只有项目的class文件</li>
+<li>META-INF/MANIFEST.MF文件中不存在启动类等配置</li>
+<li>不能使用<code>java -jar</code> 执行。</li>
+</ul>
+<p>java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找到程序的入口点（即主类），然后开始执行该类的main方法</p>
+<p>注意： 我找不到2.6的文档，凑和看<a href="https://docs.spring.io/spring-boot/maven-plugin/getting-started.html">spring官方文档</a>的最新版本解说。</p>
+<h4 id="spring-boot-maven-pluginrepackage">spring-boot-maven-plugin:repackage</h4>
+<p><em>该repackage目标不应在命令行上单独使用，因为它会对 阶段生成的源jar（或）进行操作</em></p>
+<p>翻译成人话就是他需要在maven生命周期的打包阶段之后执行，并且无法单独执行，只能绑定在该打包阶段伴随执行。</p>
+<pre tabindex="0"><code>           &lt;plugin&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.6.0&lt;/version&gt;
+
+                &lt;executions&gt;
+&lt;!--                    每一个&lt;execution&gt;都是一个归档包的定义 --&gt;
+&lt;!--                    可执行jar包配置--&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;repackage&lt;/id&gt;
+                        &lt;goals&gt;
+&lt;!--                            绑定生命周期在package后--&gt;
+                            &lt;goal&gt;repackage&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+&lt;!--                            为可执行jar包新增后缀名，避免和普通jar包冲突--&gt;
+                            &lt;classifier&gt;exec&lt;/classifier&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+        &lt;/plugin&gt;
+</code></pre><p>classifier: 分类器。官网的解释很绕口，总之实现结果就是给重新打包的jar增加后缀，否则，就会替换普通jar，普通jar最终也只会在构建的target中出现。</p>
+<p>该配置定义了一个将普通jar包重新打包、新增后缀exec的可执行jar包，且需要注意的是，他并不能影响原有的生命周期，具体来说则是maven仓库中依赖的存储，在仓库中依旧只有原本的普通jar的路径，无法将这个新增的jar引入其他项目当中。</p>
+<p>如果我们想要引入可执行的jar包（无论处何种目的，总之如果有这种需求的话）</p>
+<p>attach：将要安装到本地 Maven 存储库或部署到远程存储库的重新打包的存档附加到其中。如果未配置分类器，它将替换普通 jar。如果classifier已配置，使得普通 jar 和重新打包的 jar 不同，它将与普通 jar 一起附加</p>
+<pre tabindex="0"><code>       &lt;plugin&gt;
+            &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.6.0&lt;/version&gt;
+
+                &lt;executions&gt;
+&lt;!--                    每一个&lt;execution&gt;都是一个归档包的定义 --&gt;
+&lt;!--                    可执行jar包配置--&gt;
+                    &lt;execution&gt;
+                        &lt;id&gt;repackage&lt;/id&gt;
+                        &lt;goals&gt;
+&lt;!--                            绑定生命周期在package后--&gt;
+                            &lt;goal&gt;repackage&lt;/goal&gt;
+                        &lt;/goals&gt;
+                        &lt;configuration&gt;
+      
+                 			&lt;attach&gt;true&lt;/attach&gt;
+                        &lt;/configuration&gt;
+                    &lt;/execution&gt;
+        &lt;/plugin&gt;
+       
+</code></pre><p>这样配置之后，在仓库中存在的就是可执行的jar。而普通jar只会在target构建目录中出现。</p>
+<h4 id="spring-boot-maven-pluginbuild-image">spring-boot-maven-plugin:build-image</h4>
+<p>构建镜像用的，默认使用本地docker,远程docker要配置额外的东西，总之很麻烦，只在本地尝试了以下。</p>
+<h4 id="spring-boot-maven-pluginhelp">spring-boot-maven-plugin:help</h4>
+<p>插件各个功能的简单介绍。</p>
+<p>除此之外还有一些，新版插件新增了aot提前编译功能，有机会可以自行尝试。</p>
+<h2 id="maven官方插件与非官方插件">maven官方插件与非官方插件</h2>
+<p>官方：maven-${prefix}-plugin
+第三方：${prefix}-maven-plugin</p>
+<p>官方可用插件：<a href="https://maven.apache.org/plugins/index.html">Available Plugins – Maven</a>
+非官方可用插件：<a href="https://github.com/mojohaus">MojoHaus · GitHub</a></p>
+<p>参考文档：</p>
+<p><a href="https://www.spring-doc.cn/spring-boot/3.4.0/maven-plugin_packaging.html">打包可执行存档文件 (Packaging Executable Archives) | Spring Boot3.4.0中文文档|Spring官方文档|SpringBoot 教程|Spring中文网</a></p>
+<p><a href="https://blog.csdn.net/weixin_45760137/article/details/118725697">Spring Boot 打包成的 jar 和普通jar有什么区别_spring boot 打成的 jar 和普通的 jar 有什么区别-CSDN博客</a></p>
+<p><a href="https://juejin.cn/post/7055598592999817253">Maven-插件使用与配置什么是插件 插件可以理解为一组任务的集合，用户可以通过命令行直接运行指定插件的任务，也可以将插 - 掘金</a></p>
+<p><a href="https://maven.apache.org/guides/introduction/introduction-to-plugins.html">https://maven.apache.org/guides/introduction/introduction-to-plugins.html</a></p>
+<h2 id="结语">结语</h2>
+<p>插件这东西吧，最开始总是搞不懂，一直都是复制粘贴别人的配置，经过这次学习，倒不是说技术成长了多少，哈哈，其实甚至没有技术，只是看文档尝试功能而已。</p>
+<p>没错，就是看文档，一定学会看官方文档！！！</p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

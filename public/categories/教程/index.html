@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="index, follow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+    
+      <link href="/categories/%E6%95%99%E7%A8%8B/index.xml" rel="alternate" type="application/rss+xml" title="wenzhuo4657" />
+      <link href="/categories/%E6%95%99%E7%A8%8B/index.xml" rel="feed" type="application/rss+xml" title="wenzhuo4657" />
+      
+    
+
+    
+      <link rel="canonical" href="https://example.org/categories/%E6%95%99%E7%A8%8B/">
+    
+
+    <meta property="og:url" content="https://example.org/categories/%E6%95%99%E7%A8%8B/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="教程">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="website">
+
+  <meta itemprop="name" content="教程">
+  <meta itemprop="datePublished" content="2025-05-25T20:44:43+00:00">
+  <meta itemprop="dateModified" content="2025-05-25T20:44:43+00:00">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="教程">
+
+      
+    
+	
+  </head><body class="ma0 avenir bg-near-white production">
+
+    
+
+  <header>
+    <div class="pb3-m pb6-l bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv3 ph3 ph4-ns">
+        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
+          教程
+        </h1>
+        
+      </div>
+    </div>
+  </header>
+
+
+    <main class="pb7" role="main">
+      
+  <article class="cf pa3 pa4-m pa4-l">
+    <div class="measure-wide-l center f4 lh-copy nested-copy-line-height nested-links mid-gray">
+      <p>Below you will find pages that utilize the taxonomy term “教程”</p>
+    </div>
+  </article>
+  <div class="mw8 center">
+    <section class="flex-ns mt5 flex-wrap justify-around">
+      
+        <div class="w-100 mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/sshgpg%E4%BB%A5%E5%8F%8Aapt%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%99%A8/" class="link black dim">
+        ssh、gpg以及apt软件下载器
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="小白级别的理解勿cue">小白级别的理解，勿cue</h1>
+<p>首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。</p>
+<h2 id="sshgpg">ssh、gpg</h2>
+<h3 id="对称加密和非堆成加密">对称加密和非堆成加密</h3>
+<p>对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。</p>
+<p>但是由于使用相同的密钥进行加密和解密，所以x速度比较快。</p>
+<p>而非对称加密算法将密钥分为私钥和公钥，其中私钥用于解密，公钥用于加密。所以相比于同级别的对称加密，非对称加密速度更慢，但安全性更高，我们只需要将公钥发布到任意服务器上即可实现通信（例如 keyserver）</p>
+<h3 id="ssh和gpg的区别">ssh和gpg的区别？</h3>
+<p>ssh： 常用于服务器加密（实时交互，需要处理动态数据），强度相当于钥匙。</p>
+<p>gpg： 常用于文件加密（静态数据），强度相当于保险箱。</p>
+<h3 id="pgpgpgopenpgp">pgp、gpg、OpenPGP</h3>
+<p><a href="https://www.rmnof.com/article/openpgp-gnupg-introduction/">OpenPGP（PGP/GPG）深入浅出，完全入门指南</a>、</p>
+<ul>
+<li>PGP：由Phil Zimmermann开发，最终被赛门铁克收购，是一个商业软件，需要付费。</li>
+<li>OpenPGP：一种协议，定义了加密消息、签名、私钥和用于交换公钥的证书统一标准。</li>
+<li>GPG（GnuPG）：符合OpenPGP标准的开源加密软件，PGP的开源实现。</li>
+</ul>
+<h2 id="使用">使用</h2>
+<h3 id="创建密钥">创建密钥</h3>
+<p>官方推荐的工具</p>
+<p>ssh：<a href="https://www.openssh.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN">OpenSSH</a></p>
+<p>gpg： <a href="https://gnupg.org/index.html">GnuPG</a></p>
+<h3 id="公钥服务器">公钥服务器</h3>
+<p><a href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
+<p><a href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
+<h3 id="使用gpg密钥">使用gpg密钥</h3>
+<p>对于ssh直接进行服务器链接等操作即可，但是gpg密钥是令人迷惑的，因为他是属于静态文件的加密，这意味着灵活性低、安全性高，而这样的加密特性势必要求一个符合的场景，例如：通信的双方必须信任对方，否则没有进行交换文件的必要。</p>
+<p><a href="https://ulyc.github.io/2021/01/26/2021%E5%B9%B4-%E7%94%A8%E6%9B%B4%E7%8E%B0%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8PGP-%E4%B8%8B/">2021年，用更现代的方法使用PGP（下） - C的博客 |UlyC</a></p>
+<p>ps： 这篇文章中说的漏洞已经被解决了，需要注意的是里面所提到的交换公钥的方式</p>
+<h4 id="gpg的特征">gpg的特征</h4>
+<p>这里的特征是指gpg密钥上的签名、指纹等名词，他们在很长一段时间一直困扰我。</p>
+<h5 id="1--创建">1，  创建</h5>
+<p><code> gpg   --full-generate-key</code> 该选项表示功能齐全的密钥生成</p>
+<pre tabindex="0"><code>PS C:\Users\25370&gt; gpg  --full-generate-key
+gpg (GnuPG) 2.4.3; Copyright (C) 2023 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+   (9) ECC (sign and encrypt) *default*
+  (10) ECC (sign only)
+  (14) Existing key from card
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (3072) 2048
+Requested keysize is 2048 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) 1y
+Key expires at 2026/5/25 21:39:55 �й���׼ʱ��
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: wenzhuo4657
+Email address: 14783149521@163.com
+Comment: test
+You selected this USER-ID:
+    &#34;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&#34;
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? q
+gpg: Key generation canceled.
+PS C:\Users\25370&gt;
+</code></pre><p>这一部分定义了uid： wenzhuo4657 (test) <a href="mailto:14783149521@163.com">14783149521@163.com</a></p>
+    </div>
+    <a href="/posts/sshgpg%E4%BB%A5%E5%8F%8Aapt%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%99%A8/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="w-100 mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/" class="link black dim">
+        maven插件新手解惑
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h2 id="maven插件的定义">maven插件的定义</h2>
+<p>maven插件的定义是在pom文件下的</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>plugins<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;</span>plugin<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    		<span style="color:#f92672">&lt;</span>groupId<span style="color:#f92672">&gt;</span>org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">boot</span><span style="color:#f92672">&lt;/</span>groupId<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;</span>artifactId<span style="color:#f92672">&gt;</span>spring<span style="color:#f92672">-</span>boot<span style="color:#f92672">-</span>maven<span style="color:#f92672">-</span>plugin<span style="color:#f92672">&lt;/</span>artifactId<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;</span>version<span style="color:#f92672">&gt;</span>2.<span style="color:#a6e22e">6</span>.<span style="color:#a6e22e">0</span><span style="color:#f92672">&lt;/</span>version<span style="color:#f92672">&gt;</span>   
+</span></span><span style="display:flex;"><span>     <span style="color:#f92672">&lt;/</span>plugin<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span> <span style="color:#f92672">&lt;/</span>plugins<span style="color:#f92672">&gt;</span>
+</span></span></code></pre></div><p>与常规的依赖定位一致，而插件的配置则是在<!-- raw HTML omitted -->、<!-- raw HTML omitted -->等标签下定义的，他们或许是环境变量或许是在maven生命周期的插入点。</p>
+<p>简单来说maven插件的两个用途</p>
+<p>1,融入maven生命周期，增加外挂式的功能</p>
+<p>2,不参入maven生周期，直接使用（例如，在微服务领域下，将服务的定义IDL文件编译为特定语言的接口文件。）</p>
+<h2 id="maven插件的原理">maven插件的原理</h2>
+<p><strong>Maven 是一个意第绪语单词，意为 知识的积累者，最初是为了简化 Jakarta Turbine 项目的构建过程而创建的。当时有多个项目，每个项目都有自己的 Ant 构建文件，而且每个文件都略有不同。JAR 被签入 CVS。我们希望有一种标准的方法来构建项目，明确定义项目包含的内容，一种发布项目信息的简便方法，以及一种在多个项目之间共享 JAR 的方法。</strong></p>
+<p>这段话取自<a href="https://maven.apache.org/what-is-maven.html">官网</a>对于maven的定义,可以看出maven的核心在于管理jar文件，便于多个不同的项目去引入相同的jar。</p>
+<p><strong>“Maven” 实际上只是一组 Maven 插件的核心框架。换句话说，插件是执行大部分实际操作的地方，插件用于：创建 jar 文件、创建 war 文件、编译代码、单元测试代码、创建项目文档等等。您能想到的在项目上执行的几乎所有操作都是作为 Maven 插件实现的。</strong></p>
+<p>这段话取自<a href="https://maven.apache.org/guides/introduction/introduction-to-plugins.html">插件开发简介</a>,也就是说maven的插件的目标是生命周期，而生命周期在官方术语中被称为<code>Mojo</code>.</p>
+<p>进而去查看maven插件开发的示例即可发现，插件实际上就是依托与maven这个框架所提供的扩展点所构建出来的可执行jar文件。</p>
+<p>至此对于maven插件的和依赖的之间的关系就已经很明确了，他们实际上是一样，都可以作为依赖去使用，实际上更准确的说法是，可以融入maven生命周期的依赖被称为maven插件。</p>
+<p><em>如果想要学习maven插件开发，就一定要仔细查看maven的<a href="https://maven.apache.org/plugin-developers/index.html">官方文档</a></em></p>
+<h2 id="maven插件示例解读">maven插件示例解读</h2>
+<h3 id="spring-boot-maven-plugin">spring-boot-maven-plugin</h3>
+<h4 id="前置知识">前置知识</h4>
+<p>什么是springboot?通常我们说springboot是对于各种依赖自动配置的boot工具，便于快速开发，避免依赖的困扰，这种方式目前已经不止是springboot的独有，只是它依托与spring生态最为出名而已。</p>
+<p>springboot与spring最大的区别在我这个小白看来则是注解开发，@SpringBootApplication定义程序的启动入口，所有的程序都需要依托于这个主类进行加载，而传统的spring项目则需要依托与web容器启动servlet配置，也就WebApplicationInitializer（简单来说是用于将项目中所有的servlet加载到web容器当中，参如http请求当中的rest控制器部分）。</p>
+<p>无论如何我们需要明白一个jar包的执行是需要一个入口！而不同项目的入口是不一样！</p>
+<p>对于普通jar包来说，他只需要将当前项目的class文件打包即可，而一个可执行的jar包则额外的需要依赖、入口、引导器。（如果稍微了解一点jvm知识就应该明白，java程序并不会在加载阶段去校验import是否存在，至于执行更是需要一个明确的入口。）</p>
+<p>可执行jar:</p>
+<ul>
+<li>将依赖引入jar包当中</li>
+<li>META-INF/MANIFEST.MF文件中存在启动类等配置</li>
+<li>使用命令<code>java -jar</code> 执行</li>
+</ul>
+<p>不可执行jar:</p>
+<ul>
+<li>内部只有项目的class文件</li>
+<li>META-INF/MANIFEST.MF文件中不存在启动类等配置</li>
+<li>不能使用<code>java -jar</code> 执行。</li>
+</ul>
+<p>java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找到程序的入口点（即主类），然后开始执行该类的main方法</p>
+    </div>
+    <a href="/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="w-100 mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/git%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%E4%B8%80/" class="link black dim">
+        git入门系列（一）
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="git是什么">git是什么？</h1>
+<h2 id="以键值数据库为基础的文件版本控制系统">以键值数据库为基础的文件版本控制系统</h2>
+<p>参考：https://git-scm.com/book/zh/v2/%e8%b5%b7%e6%ad%a5-Git-%e6%98%af%e4%bb%80%e4%b9%88%ef%bc%9f</p>
+<p>提醒： 本篇大部分在git官网都存在，只是顺序不一致，按我理解，这样有助于直接理解git的钩子机制。</p>
+<p>传统的文件版本数据库通过累计文件差异来区分文件版本，而git则是通过不断累计文件快照，然后使用链接管理当前版本应该显示的文件！</p>
+<ul>
+<li>好处：如果存储文件差异，则不可避免的需要从文件内部开始操作，所带来的是复杂且绝不能出错的高安全性要求，而git管理文件链接，换言之，他只需要保存每个版本的文件链接列表即可，对于真实的文件数据，他们互相隔离。</li>
+<li>坏处：文件系统容易变得臃肿庞大。</li>
+</ul>
+<p>参考:https://git-scm.com/book/zh/v2/Git-%e5%86%85%e9%83%a8%e5%8e%9f%e7%90%86-Git-%e5%af%b9%e8%b1%a1</p>
+<p>文件快照存储的方式则是键值数据库，位于.git/objects 目录。</p>
+<p>存储值，并返回唯一键（SHA-1 哈希值）：<code>echo 'test content' | git hash-object -w --stdin</code></p>
+<pre tabindex="0"><code>$ echo &#39;test content&#39; | git hash-object -w --stdin
+d670460b4b4aece5915caf5c68d12f560a9fe3e4
+</code></pre><p>取出：</p>
+<pre tabindex="0"><code>$ git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4
+test content
+</code></pre><p>此外还有树对象用于组织这些键值。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250312155433934.png" alt="image-20250312155433934"></p>
+<p>但是这仍然不是我们所熟知的git commit提交对象，这并没有提交信息的对应，这一点简单的说即是sha-1哈希值和文本的对应。随意找一个仓库都可以看到他们之间的关联。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250312155805995.png" alt="image-20250312155805995"></p>
+<h2 id="待补充">待补充</h2>
+<h1 id="钩子函数">钩子函数</h1>
+<p>git的钩子位于<code>.git\hooks</code>,默认情况下都是.sample结尾，去掉这个后缀即可启用。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250312160203955.png" alt="image-20250312160203955"></p>
+<p>尝试打开即可他先，他们都是统一的shell脚本，所以如果想要看懂是需要一点基础的。</p>
+<p>统一机制：当以非零退出脚本时，停止提交。</p>
+<p>提醒：shell脚本的运行并不是git管理的一部分，他们只是使用了git命令的一段编码，通常使用/bin/bash解释器运行。</p>
+<h2 id="pre-commit提交前执行">pre-commit：提交前执行</h2>
+<p>作用：当前分支是否存在，如果不存在会提供一个sha-1哈希值。</p>
+<p>git rev-parse &ndash;verify HEAD  （该命令可以验证参数是否可以转换为sha-1哈希值，即他是否在对象数据库中有对应关系，常见有分支名、标签名）</p>
+<h2 id="prepare-commit-msg提交前执行">prepare-commit-msg：提交前执行</h2>
+<p>作用：</p>
+<p>1，修改默认提交消息</p>
+<p>2，添加gpt签名</p>
+<p>3，将 git diff 结果插入提交消息的注释部分（咱不理解，自行查询）</p>
+<p>修改默认消息最直接的途径就是在文件末尾<code>echo &quot;default msg&quot; &gt; $1</code>,这样就会覆盖</p>
+<p><code>/usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' &quot;$COMMIT_MSG_FILE&quot;</code></p>
+    </div>
+    <a href="/posts/git%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%E4%B8%80/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+    </section>
+  </div>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

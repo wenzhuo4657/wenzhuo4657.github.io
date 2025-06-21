@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="index, follow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+    
+      <link href="/categories/%E6%BA%90%E7%A0%81/index.xml" rel="alternate" type="application/rss+xml" title="wenzhuo4657" />
+      <link href="/categories/%E6%BA%90%E7%A0%81/index.xml" rel="feed" type="application/rss+xml" title="wenzhuo4657" />
+      
+    
+
+    
+      <link rel="canonical" href="https://example.org/categories/%E6%BA%90%E7%A0%81/">
+    
+
+    <meta property="og:url" content="https://example.org/categories/%E6%BA%90%E7%A0%81/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="源码">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="website">
+
+  <meta itemprop="name" content="源码">
+  <meta itemprop="datePublished" content="2025-04-16T19:28:54+00:00">
+  <meta itemprop="dateModified" content="2025-04-16T19:28:54+00:00">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="源码">
+
+      
+    
+	
+  </head><body class="ma0 avenir bg-near-white production">
+
+    
+
+  <header>
+    <div class="pb3-m pb6-l bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv3 ph3 ph4-ns">
+        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
+          源码
+        </h1>
+        
+      </div>
+    </div>
+  </header>
+
+
+    <main class="pb7" role="main">
+      
+  <article class="cf pa3 pa4-m pa4-l">
+    <div class="measure-wide-l center f4 lh-copy nested-copy-line-height nested-links mid-gray">
+      <p>Below you will find pages that utilize the taxonomy term “源码”</p>
+    </div>
+  </article>
+  <div class="mw8 center">
+    <section class="flex-ns mt5 flex-wrap justify-around">
+      
+        <div class="w-100 mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/rocketmq%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80%E7%94%9F%E4%BA%A7%E8%80%85%E5%88%9D%E8%AF%86/" class="link black dim">
+        rocketmq源码阅读（一）：生产者初识
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="源码阅读一">源码阅读（一）</h1>
+<h2 id="搭建环境">搭建环境</h2>
+<p>rocketmq的java-sdk并没有什么特殊的构建的，直接加载maven即可。</p>
+<p>节点部署：
+<a href="https://rocketmq.apache.org/zh/docs/quickStart/02quickstartWithDocker">Docker 部署 RocketMQ | RocketMQ</a></p>
+<p>面板部署：
+<a href="https://github.com/apache/rocketmq-dashboard">apache/rocketmq-dashboard</a></p>
+<p>hhh，遵从官网部署，点点点就可以了。</p>
+<h2 id="生产者初识">生产者初识</h2>
+<p>阅读源码首先要明确的目标，或者说我们想要了解什么？</p>
+<p>在我看来生产者的职责分为以下几个</p>
+<ul>
+<li>1,与<code>namesrv</code>沟通，维护本地的<code>broker</code>通信队列</li>
+<li>2,发送<code>topic</code>消息到远程<code>broker</code></li>
+<li>3,根据响应结果判断是否发送成功，以及失败情况下的策略</li>
+</ul>
+<p>每一个生产者对于<code>broker</code>节点来说是消息的来源，但是<code>broker</code>并不关心究竟有多少个生产者在为它提供服务，对于消费者来说同样如此！</p>
+<p>首先定位到源码示例</p>
+<p><img src="%5Bhttps://blog.wenzhuo4657.org/img/2025/04/ce5a9ce6d095400e1dfefe77486c2729.png" alt=""></p>
+<p>示例的逻辑并不复杂，但问题是怎么处理的？尝试追溯<code>DefaultMQProducer</code>,找到客户端的sdk模块<code>rocketmq-client</code></p>
+<p>观察<code>DefaultMQProducer</code>的父类路径发现<code>extends ClientConfig implements MQProducer</code>,对于<code>MQProducer</code>没啥好说的，定义了生产者方法规范，而且没有注释。小白一只的我将目光对准<code>ClientConfig</code>,</p>
+<p><code>private String clientIP = NetworkUtil.getLocalAddress();</code>  寻找ip的方法。</p>
+<p><code>private String instanceName = System.getProperty(&quot;rocketmq.client.name&quot;, &quot;DEFAULT&quot;);</code>  生产者名称</p>
+<pre tabindex="0"><code>    # 客户端id，这个要注意与生产者名称区分，在我看来是类似与多元组一样的， ip+instanceName+......
+   
+    public String buildMQClientId() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.getClientIP());
+
+        sb.append(&#34;@&#34;);
+        sb.append(this.getInstanceName());
+        if (!UtilAll.isBlank(this.unitName)) {
+            sb.append(&#34;@&#34;);
+            sb.append(this.unitName);
+        }
+
+        if (enableStreamRequestType) {
+            sb.append(&#34;@&#34;);
+            sb.append(RequestType.STREAM);
+        }
+
+        return sb.toString();
+    }
+    
+</code></pre><p>需要注意的是对于修改<code>clentIP</code>可以直接通过<code>producer.setClientIP(DEFAULT_NAMESRVADDR);</code>,<code>clientID</code>则并没有这个字段，他是在生产者启动时自动生成的的一个标识符，或许可以这么说 <code>ip+instanceName</code>表示了这个主机上的所有rocketmq的消费者和生产者。</p>
+<p>追溯<code>buildMQClientId</code>即可发现，start的调用链路中存在这个方法。</p>
+    </div>
+    <a href="/posts/rocketmq%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80%E7%94%9F%E4%BA%A7%E8%80%85%E5%88%9D%E8%AF%86/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="w-100 mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%BA%8C/" class="link black dim">
+        tomcat源码阅读（二）
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="tomcat源码阅读">tomcat源码阅读</h1>
+<h2 id="日志模块梳理">日志模块梳理</h2>
+<p>现在日志通常分为日志门面和日志的具体实现。</p>
+<p>日志门面：充当应用程序和日志框架之间的沟通媒介，可以在程序无感的条件下更换日志框架。</p>
+<p>日志的具体实现：直接记录日志(console、file)，并且需要注意的是，这些信息都是由日志门面交给日志实现的。</p>
+<p>对于非日志编程的程序员来说，我们只需要明白如何根据日志门面切换日志实现即可，没必要阅读日志实现的代码。</p>
+<p>常见的日志门面：JCL、slf4j</p>
+<p>常见的日志实现：JUL（java.util.logging）、log4j、logback、log4j2</p>
+<h3 id="tomcat的日志门面juli">tomcat的日志门面JULI</h3>
+<p>该日志门面位于源码包<code>org.apache.juli</code>,基于JCL实现的。</p>
+<p>较为重要的三个类：</p>
+<p>org.apache.juli.logging.Log： 日志接口</p>
+<p>org.apache.juli.logging.DirectJDKLog：tomcat的默认日志实现。</p>
+<p>org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现。</p>
+<p>在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class<!-- raw HTML omitted --> clazz)。</p>
+<p>并且在LogFactory#release(ClassLoader classLoader)也可以看到日志实现默认为JUL,硬编码控制的。</p>
+<pre tabindex="0"><code>    public static void release(ClassLoader classLoader) {
+        // JULI&#39;s log manager looks at the current classLoader so there is no
+        // need to use the passed in classLoader, the default implementation
+        // does not so calling reset in that case will break things
+        if (!LogManager.getLogManager().getClass().getName().equals(
+                &#34;java.util.logging.LogManager&#34;)) {
+            LogManager.getLogManager().reset();
+        }
+    }
+</code></pre><h2 id="关于日志实现log的加载">关于日志实现log的加载</h2>
+<p>在LogFactory的无参构造器器中看到关键语句</p>
+    </div>
+    <a href="/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%BA%8C/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+        <div class="w-100 mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80/" class="link black dim">
+        tomcat源码阅读（一）
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="tomcat源码">tomcat源码</h1>
+<h2 id="idea环境搭建">idea环境搭建</h2>
+<p>源码版本apache-tomcat-9.0.43-src</p>
+<p><a href="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.43/src/">https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.43/src/</a></p>
+<p>注意： 不同版本的搭建方式可能略有不同，但这源码核心是大差不差的。</p>
+<h3 id="安装ant已安装的可以直接跳过">安装ant(已安装的可以直接跳过)</h3>
+<p>Apache Ant 是一个帮助构建软件的 Java 库和命令行工具。</p>
+<p>官网：https://ant.apache.org/bindownload.cgi</p>
+<p>直接下载最新版即可，解压之后设置环境变量</p>
+<pre tabindex="0"><code>ANT_HOME=/Library/Apache/apache-ant-1.9.15
+PATH=$PATH:$ANT_HOME/bin
+</code></pre><p>使用<code>ant -verison</code>验证安装是否成功</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250307171403529.png" alt="image-20250307171403529"></p>
+<h3 id="构建项目">构建项目</h3>
+<p><em>在打开idea之前操作，这一点非常重要！！！否则会由于编译器的一些操作导致XXXXX</em></p>
+<p>直接将res目录idea-support中的.idea文件粘贴到根目录中的.idea（手动创建</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134412453.png" alt="image-20250309134412453"></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134454556.png" alt="image-20250309134454556"></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134544101.png" alt="image-20250309134544101"></p>
+<p>此时打开项目可以发现项目被正确加载，但是会依赖报错</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309135659189.png" alt="image-20250309135659189"></p>
+<p>尝试构建项目，启动test</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309135743059.png" alt="image-20250309135743059"></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134654470.png" alt="image-20250309134654470"></p>
+<p>将这些jar包和ant目录下的lib库加入项目的外部库即可。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309141125493.png" alt="image-20250309141125493"></p>
+<h2 id="启动">启动</h2>
+<p>找到启动类Bootstrap</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309141245515.png" alt="image-20250309141245515"></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309141253099.png" alt="image-20250309141253099"></p>
+<h1 id="中文乱码">中文乱码</h1>
+<p>对于乱码，网上搜索在日志配置中更改编码，</p>
+<p><a href="https://blog.csdn.net/weixin_44109450/article/details/126544310">https://blog.csdn.net/weixin_44109450/article/details/126544310</a></p>
+<p>但是对于源码编译环境来说，似乎并不会读取conf下的配置，追溯源码找到<code>java.util.logging.ConsoleHandler</code>.</p>
+<p>断点调试发现，并没有获取到配置</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309142742777.png" alt="image-20250309142742777"></p>
+<p>并且由于该类属于依赖包jdk的一部分，<img src="https://blog.wenzhuo4657.org/img/image-20250309142835530.png" alt="image-20250309142835530"></p>
+<p>进一步追溯之后发现关键读取文件的方法LogManager#readConfiguration（）</p>
+<pre tabindex="0"><code>   String fname = System.getProperty(&#34;java.util.logging.config.file&#34;);
+        if (fname == null) {
+            fname = System.getProperty(&#34;java.home&#34;);
+            if (fname == null) {
+                throw new Error(&#34;Can&#39;t find java.home ??&#34;);
+            }
+            File f = new File(fname, &#34;lib&#34;);
+            f = new File(f, &#34;logging.properties&#34;);
+            fname = f.getCanonicalPath();
+        }
+        try (final InputStream in = new FileInputStream(fname)) {
+            final BufferedInputStream bin = new BufferedInputStream(in);
+            readConfiguration(bin);
+        }
+</code></pre><p>首先说结论，无论使更改成conf还是jdk目录下的logging.properties,他们所影响的编码都只是外层的一部分，不能影响tomcat输出的报错信息。</p>
+    </div>
+    <a href="/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+    </section>
+  </div>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

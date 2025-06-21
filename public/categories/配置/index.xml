@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>配置 on wenzhuo4657</title>
+    <link>https://example.org/categories/%E9%85%8D%E7%BD%AE/</link>
+    <description>Recent content in 配置 on wenzhuo4657</description>
+    <generator>Hugo</generator>
+    <language>zh-CN</language>
+    <lastBuildDate>Thu, 19 Jun 2025 15:03:33 +0000</lastBuildDate>
+    <atom:link href="https://example.org/categories/%E9%85%8D%E7%BD%AE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>rocketmq的可观测性配置</title>
+      <link>https://example.org/posts/rocketmq%E7%9A%84%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E9%85%8D%E7%BD%AE/</link>
+      <pubDate>Thu, 19 Jun 2025 15:03:33 +0000</pubDate>
+      <guid>https://example.org/posts/rocketmq%E7%9A%84%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E9%85%8D%E7%BD%AE/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

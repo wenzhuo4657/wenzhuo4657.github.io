@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="index, follow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+    
+      <link href="/categories/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/index.xml" rel="alternate" type="application/rss+xml" title="wenzhuo4657" />
+      <link href="/categories/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/index.xml" rel="feed" type="application/rss+xml" title="wenzhuo4657" />
+      
+    
+
+    
+      <link rel="canonical" href="https://example.org/categories/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/">
+    
+
+    <meta property="og:url" content="https://example.org/categories/%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="源码阅读">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="website">
+
+  <meta itemprop="name" content="源码阅读">
+  <meta itemprop="datePublished" content="2025-05-14T08:18:43+00:00">
+  <meta itemprop="dateModified" content="2025-05-14T08:18:43+00:00">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="源码阅读">
+
+      
+    
+	
+  </head><body class="ma0 avenir bg-near-white production">
+
+    
+
+  <header>
+    <div class="pb3-m pb6-l bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv3 ph3 ph4-ns">
+        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
+          源码阅读
+        </h1>
+        
+      </div>
+    </div>
+  </header>
+
+
+    <main class="pb7" role="main">
+      
+  <article class="cf pa3 pa4-m pa4-l">
+    <div class="measure-wide-l center f4 lh-copy nested-copy-line-height nested-links mid-gray">
+      <p>Below you will find pages that utilize the taxonomy term “源码阅读”</p>
+    </div>
+  </article>
+  <div class="mw8 center">
+    <section class="flex-ns mt5 flex-wrap justify-around">
+      
+        <div class="w-100 mb4 relative bg-white">
+          <div class="w-100 mb4 nested-copy-line-height relative bg-white">
+  <div class="mb3 pa4 gray overflow-hidden bg-white">
+    <span class="f6 db">Posts</span>
+    <h1 class="f3 near-black">
+      <a href="/posts/logback%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB%E4%B8%80/" class="link black dim">
+        logback官方文档阅读（一）
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h3 id="logback">logback</h3>
+<h4 id="架构">架构</h4>
+<p><a href="https://logback.qos.ch">Logback 架构</a>
+logback的核心依赖有：logback-core，logback-classic 和 logback-access</p>
+<p>core： 核心实现，是其他两个包的基础
+classic：
+logback-classic 模块可以被同化为 log4j 1.x 的显着改进版本。此外，logback-classic 本机实现了 <a href="http://www.slf4j.org/">SLF4J API</a></p>
+<p>access： 与 Servlet 容器（例如 Tomcat 和 Jetty）集成，以提供 HTTP 访问日志功能</p>
+<h4 id="配置">配置</h4>
+<p>Logback.xml配置的两个重要标签：<code>Logger</code>，<code>Appender</code></p>
+<p>logger： 指定日志记录根（全限定类名）和appender的关联
+appender： 日志的具体输出实现，例如： 控制台输出、文件输出等</p>
+<pre tabindex="0"><code>示例配置
+
+&lt;configuration scan=&#34;true&#34; scanPeriod=&#34;60 seconds&#34; debug=&#34;false&#34;&gt;
+&lt;property name=&#34;console&#34; value=&#34;==\n[%-5level] %red(%d{HH:mm}) Thread:[%thread]  Method:%green(%M) %cyan(%X{traceId})   classpath:%c \n%highlight(return):%m%n&#34;&gt;&lt;/property&gt;
+&lt;property name=&#34;log_dir&#34; value=&#34;./data/log&#34;&gt;&lt;/property&gt;
+    &lt;appender name=&#34;STDOUT&#34; class=&#34;ch.qos.logback.core.ConsoleAppender&#34;&gt;
+            &lt;encoder class=&#34;ch.qos.logback.classic.encoder.PatternLayoutEncoder&#34;&gt;
+                 &lt;pattern&gt;${console}&lt;/pattern&gt;
+                &lt;charset&gt;utf8&lt;/charset&gt;
+            &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+
+    &lt;!--html格式日志文件输出appender--&gt;
+    &lt;appender name=&#34;SERVICE_APPENDER&#34; class=&#34;ch.qos.logback.core.FileAppender&#34;&gt;
+        &lt;!--日志文件保存路径--&gt;
+        &lt;file&gt;${log_dir}/logback.html&lt;/file&gt;
+        &lt;!--html 消息格式配置--&gt;
+        &lt;encoder class=&#34;ch.qos.logback.core.encoder.LayoutWrappingEncoder&#34;&gt;
+            &lt;layout class=&#34;ch.qos.logback.classic.html.HTMLLayout&#34;&gt;
+            &lt;/layout&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+
+        &lt;appender name=&#34;All_APPENDER&#34; class=&#34;ch.qos.logback.core.rolling.RollingFileAppender&#34;&gt;
+            &lt;file&gt;${log_dir}/All/demo.log&lt;/file&gt;
+            &lt;encoder&gt;
+                &lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+            &lt;/encoder&gt;
+            &lt;rollingPolicy class=&#34;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&#34;&gt;
+                &lt;fileNamePattern&gt;${log_dir}/All/demo.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
+            &lt;/rollingPolicy&gt;
+
+    &lt;/appender&gt;
+
+
+
+&lt;!--    &lt;/appender&gt;--&gt;
+
+    &lt;root level=&#34;DEBUG&#34;&gt;
+        &lt;appender-ref ref=&#34;STDOUT&#34;/&gt;
+        &lt;appender-ref ref=&#34;All_APPENDER&#34;&gt;&lt;/appender-ref&gt;
+        &lt;appender-ref ref=&#34;SERVICE_APPENDER&#34;/&gt;
+    &lt;/root&gt;
+
+
+
+        &lt;logger name=&#34;org/example&#34; level=&#34;ERROR&#34; additivity=&#34;true&#34;&gt;
+            &lt;appender-ref ref=&#34;SERVICE_APPENDER&#34;/&gt;
+        &lt;/logger&gt;
+
+&lt;/configuration&gt;
+</code></pre><h3 id="官网文档阅读">官网文档阅读</h3>
+<p><a href="https://logback.qos.ch/manual/introduction.html">文档首页</a></p>
+    </div>
+    <a href="/posts/logback%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB%E4%B8%80/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+</div>
+
+        </div>
+      
+    </section>
+  </div>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

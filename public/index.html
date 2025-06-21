@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="index, follow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+    
+      <link href="/index.xml" rel="alternate" type="application/rss+xml" title="wenzhuo4657" />
+      <link href="/index.xml" rel="feed" type="application/rss+xml" title="wenzhuo4657" />
+      
+    
+
+    
+      <link rel="canonical" href="https://example.org/">
+    
+
+    <meta property="og:url" content="https://example.org/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="wenzhuo4657">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="website">
+
+  <meta itemprop="name" content="wenzhuo4657">
+  <meta itemprop="datePublished" content="2025-06-19T15:03:33+00:00">
+  <meta itemprop="dateModified" content="2025-06-19T15:03:33+00:00">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="wenzhuo4657">
+
+      
+    
+	
+  </head><body class="ma0 avenir bg-near-white production">
+
+    
+
+  <header>
+    <div class="pb3-m pb6-l bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv3 ph3 ph4-ns">
+        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
+          wenzhuo4657
+        </h1>
+        
+      </div>
+    </div>
+  </header>
+
+
+    <main class="pb7" role="main">
+      
+  <article class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links mid-gray">
+    
+  </article>
+
+  
+  
+  
+  
+  
+
+  
+    <div class="pa3 pa4-ns w-100 w-70-ns center">
+      
+
+      <section class="w-100 mw8">
+        
+        
+          <div class="w-100 mb4 relative">
+            
+<article class="bb b--black-10">
+  <div class="db pv4 ph3 ph0-l dark-gray no-underline">
+    <div class="flex-column flex-row-ns flex">
+      
+      <div class="blah w-100">
+        <h1 class="f3 fw1 athelas mt0 lh-title">
+          <a href="/posts/rocketmq%E7%9A%84%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E9%85%8D%E7%BD%AE/" class="color-inherit dim link">
+            rocketmq的可观测性配置
+            </a>
+        </h1>
+        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
+          
+        </div>
+        <a href="/posts/rocketmq%E7%9A%84%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E9%85%8D%E7%BD%AE/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+          </div>
+        
+          <div class="w-100 mb4 relative">
+            
+<article class="bb b--black-10">
+  <div class="db pv4 ph3 ph0-l dark-gray no-underline">
+    <div class="flex-column flex-row-ns flex">
+      
+      <div class="blah w-100">
+        <h1 class="f3 fw1 athelas mt0 lh-title">
+          <a href="/posts/sshgpg%E4%BB%A5%E5%8F%8Aapt%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%99%A8/" class="color-inherit dim link">
+            ssh、gpg以及apt软件下载器
+            </a>
+        </h1>
+        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
+          <h1 id="小白级别的理解勿cue">小白级别的理解，勿cue</h1>
+<p>首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。</p>
+<h2 id="sshgpg">ssh、gpg</h2>
+<h3 id="对称加密和非堆成加密">对称加密和非堆成加密</h3>
+<p>对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。</p>
+<p>但是由于使用相同的密钥进行加密和解密，所以x速度比较快。</p>
+<p>而非对称加密算法将密钥分为私钥和公钥，其中私钥用于解密，公钥用于加密。所以相比于同级别的对称加密，非对称加密速度更慢，但安全性更高，我们只需要将公钥发布到任意服务器上即可实现通信（例如 keyserver）</p>
+<h3 id="ssh和gpg的区别">ssh和gpg的区别？</h3>
+<p>ssh： 常用于服务器加密（实时交互，需要处理动态数据），强度相当于钥匙。</p>
+<p>gpg： 常用于文件加密（静态数据），强度相当于保险箱。</p>
+<h3 id="pgpgpgopenpgp">pgp、gpg、OpenPGP</h3>
+<p><a href="https://www.rmnof.com/article/openpgp-gnupg-introduction/">OpenPGP（PGP/GPG）深入浅出，完全入门指南</a>、</p>
+<ul>
+<li>PGP：由Phil Zimmermann开发，最终被赛门铁克收购，是一个商业软件，需要付费。</li>
+<li>OpenPGP：一种协议，定义了加密消息、签名、私钥和用于交换公钥的证书统一标准。</li>
+<li>GPG（GnuPG）：符合OpenPGP标准的开源加密软件，PGP的开源实现。</li>
+</ul>
+<h2 id="使用">使用</h2>
+<h3 id="创建密钥">创建密钥</h3>
+<p>官方推荐的工具</p>
+<p>ssh：<a href="https://www.openssh.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN">OpenSSH</a></p>
+<p>gpg： <a href="https://gnupg.org/index.html">GnuPG</a></p>
+<h3 id="公钥服务器">公钥服务器</h3>
+<p><a href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
+<p><a href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
+<h3 id="使用gpg密钥">使用gpg密钥</h3>
+<p>对于ssh直接进行服务器链接等操作即可，但是gpg密钥是令人迷惑的，因为他是属于静态文件的加密，这意味着灵活性低、安全性高，而这样的加密特性势必要求一个符合的场景，例如：通信的双方必须信任对方，否则没有进行交换文件的必要。</p>
+<p><a href="https://ulyc.github.io/2021/01/26/2021%E5%B9%B4-%E7%94%A8%E6%9B%B4%E7%8E%B0%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8PGP-%E4%B8%8B/">2021年，用更现代的方法使用PGP（下） - C的博客 |UlyC</a></p>
+<p>ps： 这篇文章中说的漏洞已经被解决了，需要注意的是里面所提到的交换公钥的方式</p>
+<h4 id="gpg的特征">gpg的特征</h4>
+<p>这里的特征是指gpg密钥上的签名、指纹等名词，他们在很长一段时间一直困扰我。</p>
+<h5 id="1--创建">1，  创建</h5>
+<p><code> gpg   --full-generate-key</code> 该选项表示功能齐全的密钥生成</p>
+<pre tabindex="0"><code>PS C:\Users\25370&gt; gpg  --full-generate-key
+gpg (GnuPG) 2.4.3; Copyright (C) 2023 g10 Code GmbH
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Please select what kind of key you want:
+   (1) RSA and RSA
+   (2) DSA and Elgamal
+   (3) DSA (sign only)
+   (4) RSA (sign only)
+   (9) ECC (sign and encrypt) *default*
+  (10) ECC (sign only)
+  (14) Existing key from card
+Your selection? 1
+RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (3072) 2048
+Requested keysize is 2048 bits
+Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) 1y
+Key expires at 2026/5/25 21:39:55 �й���׼ʱ��
+Is this correct? (y/N) y
+
+GnuPG needs to construct a user ID to identify your key.
+
+Real name: wenzhuo4657
+Email address: 14783149521@163.com
+Comment: test
+You selected this USER-ID:
+    &#34;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&#34;
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? q
+gpg: Key generation canceled.
+PS C:\Users\25370&gt;
+</code></pre><p>这一部分定义了uid： wenzhuo4657 (test) <a href="mailto:14783149521@163.com">14783149521@163.com</a></p>
+        </div>
+        <a href="/posts/sshgpg%E4%BB%A5%E5%8F%8Aapt%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%99%A8/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+          </div>
+        
+          <div class="w-100 mb4 relative">
+            
+<article class="bb b--black-10">
+  <div class="db pv4 ph3 ph0-l dark-gray no-underline">
+    <div class="flex-column flex-row-ns flex">
+      
+      <div class="blah w-100">
+        <h1 class="f3 fw1 athelas mt0 lh-title">
+          <a href="/posts/logback%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB%E4%B8%80/" class="color-inherit dim link">
+            logback官方文档阅读（一）
+            </a>
+        </h1>
+        <div class="f6 f5-l lh-copy nested-copy-line-height nested-links">
+          <h3 id="logback">logback</h3>
+<h4 id="架构">架构</h4>
+<p><a href="https://logback.qos.ch">Logback 架构</a>
+logback的核心依赖有：logback-core，logback-classic 和 logback-access</p>
+<p>core： 核心实现，是其他两个包的基础
+classic：
+logback-classic 模块可以被同化为 log4j 1.x 的显着改进版本。此外，logback-classic 本机实现了 <a href="http://www.slf4j.org/">SLF4J API</a></p>
+<p>access： 与 Servlet 容器（例如 Tomcat 和 Jetty）集成，以提供 HTTP 访问日志功能</p>
+<h4 id="配置">配置</h4>
+<p>Logback.xml配置的两个重要标签：<code>Logger</code>，<code>Appender</code></p>
+<p>logger： 指定日志记录根（全限定类名）和appender的关联
+appender： 日志的具体输出实现，例如： 控制台输出、文件输出等</p>
+<pre tabindex="0"><code>示例配置
+
+&lt;configuration scan=&#34;true&#34; scanPeriod=&#34;60 seconds&#34; debug=&#34;false&#34;&gt;
+&lt;property name=&#34;console&#34; value=&#34;==\n[%-5level] %red(%d{HH:mm}) Thread:[%thread]  Method:%green(%M) %cyan(%X{traceId})   classpath:%c \n%highlight(return):%m%n&#34;&gt;&lt;/property&gt;
+&lt;property name=&#34;log_dir&#34; value=&#34;./data/log&#34;&gt;&lt;/property&gt;
+    &lt;appender name=&#34;STDOUT&#34; class=&#34;ch.qos.logback.core.ConsoleAppender&#34;&gt;
+            &lt;encoder class=&#34;ch.qos.logback.classic.encoder.PatternLayoutEncoder&#34;&gt;
+                 &lt;pattern&gt;${console}&lt;/pattern&gt;
+                &lt;charset&gt;utf8&lt;/charset&gt;
+            &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+
+    &lt;!--html格式日志文件输出appender--&gt;
+    &lt;appender name=&#34;SERVICE_APPENDER&#34; class=&#34;ch.qos.logback.core.FileAppender&#34;&gt;
+        &lt;!--日志文件保存路径--&gt;
+        &lt;file&gt;${log_dir}/logback.html&lt;/file&gt;
+        &lt;!--html 消息格式配置--&gt;
+        &lt;encoder class=&#34;ch.qos.logback.core.encoder.LayoutWrappingEncoder&#34;&gt;
+            &lt;layout class=&#34;ch.qos.logback.classic.html.HTMLLayout&#34;&gt;
+            &lt;/layout&gt;
+        &lt;/encoder&gt;
+    &lt;/appender&gt;
+
+
+        &lt;appender name=&#34;All_APPENDER&#34; class=&#34;ch.qos.logback.core.rolling.RollingFileAppender&#34;&gt;
+            &lt;file&gt;${log_dir}/All/demo.log&lt;/file&gt;
+            &lt;encoder&gt;
+                &lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
+            &lt;/encoder&gt;
+            &lt;rollingPolicy class=&#34;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&#34;&gt;
+                &lt;fileNamePattern&gt;${log_dir}/All/demo.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
+            &lt;/rollingPolicy&gt;
+
+    &lt;/appender&gt;
+
+
+
+&lt;!--    &lt;/appender&gt;--&gt;
+
+    &lt;root level=&#34;DEBUG&#34;&gt;
+        &lt;appender-ref ref=&#34;STDOUT&#34;/&gt;
+        &lt;appender-ref ref=&#34;All_APPENDER&#34;&gt;&lt;/appender-ref&gt;
+        &lt;appender-ref ref=&#34;SERVICE_APPENDER&#34;/&gt;
+    &lt;/root&gt;
+
+
+
+        &lt;logger name=&#34;org/example&#34; level=&#34;ERROR&#34; additivity=&#34;true&#34;&gt;
+            &lt;appender-ref ref=&#34;SERVICE_APPENDER&#34;/&gt;
+        &lt;/logger&gt;
+
+&lt;/configuration&gt;
+</code></pre><h3 id="官网文档阅读">官网文档阅读</h3>
+<p><a href="https://logback.qos.ch/manual/introduction.html">文档首页</a></p>
+        </div>
+        <a href="/posts/logback%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB%E4%B8%80/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+      </div>
+    </div>
+  </div>
+</article>
+
+          </div>
+        
+      </section>
+
+      
+        <section class="w-100">
+          <h1 class="f3">More</h1>
+          
+          
+            <h2 class="f5 fw4 mb4 dib mr3">
+              <a href="/posts/rocketmq%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80%E7%94%9F%E4%BA%A7%E8%80%85%E5%88%9D%E8%AF%86/" class="link black dim">
+                rocketmq源码阅读（一）：生产者初识
+              </a>
+            </h2>
+          
+            <h2 class="f5 fw4 mb4 dib mr3">
+              <a href="/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/" class="link black dim">
+                maven插件新手解惑
+              </a>
+            </h2>
+          
+            <h2 class="f5 fw4 mb4 dib mr3">
+              <a href="/posts/%E5%85%B3%E4%BA%8E-requestparam%E7%9A%84%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA/" class="link black dim">
+                关于@RequestParam的常见误区
+              </a>
+            </h2>
+          
+            <h2 class="f5 fw4 mb4 dib mr3">
+              <a href="/posts/%E5%85%AB%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%A2%B3%E7%90%86/" class="link black dim">
+                八大排序算法梳理
+              </a>
+            </h2>
+          
+        </section>
+      
+
+    </div>
+  
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>
