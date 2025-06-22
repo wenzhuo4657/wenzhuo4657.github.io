@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
-    <title>单路分发和多路分发 | wenzhuo4657</title>
+    <title>单路分发和多路分发 | 猢狲</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <meta name="description" content="单路分发
 前置概念：
@@ -68,12 +68,12 @@ enum RoShamBo5 implements Competitor&lt;RoShamBo5&gt; {
     
     
     
-      <meta name="robots" content="index, follow">
+      <meta name="robots" content="noindex, nofollow">
     
     
 
     
-<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
 
 
 
@@ -89,11 +89,11 @@ enum RoShamBo5 implements Competitor&lt;RoShamBo5&gt; {
     
 
     
-      <link rel="canonical" href="https://example.org/posts/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/">
+      <link rel="canonical" href="http://localhost:1313/posts/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/">
     
 
-    <meta property="og:url" content="https://example.org/posts/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/">
-  <meta property="og:site_name" content="wenzhuo4657">
+    <meta property="og:url" content="http://localhost:1313/posts/%E5%8D%95%E8%B7%AF%E5%88%86%E5%8F%91%E5%92%8C%E5%A4%9A%E8%B7%AF%E5%88%86%E5%8F%91/">
+  <meta property="og:site_name" content="猢狲">
   <meta property="og:title" content="单路分发和多路分发">
   <meta property="og:description" content="单路分发 前置概念： 接收者对象：方法调用的目标对象 动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在class文件的常量池里。 引用类型/静态类型：java对象的声明类型 运行类型：jvm中对象的实际类型，是堆区数据的对象类型。
 java对象的多态性导致其引用类型和运行类型两者的区分，且各自的方法可能出现重写的现象，因而在对象执行过程中需要找到正确的方法。jvm只有在运行阶段才会创建对象，调用方法时根据动态链接找到堆区的方法实现。。
@@ -145,14 +145,10 @@ java实现两路分发实际上就是在方法调用中再次触发方法调用�
 EnumMap 实现：
 package enums; import java.util.*; import static enums.Outcome.*; enum RoShamBo5 implements Competitor&lt;RoShamBo5&gt; { PAPER, SCISSORS, ROCK; static EnumMap&lt;RoShamBo5,EnumMap&lt;RoShamBo5,Outcome&gt;&gt; table = new EnumMap&lt;&gt;(RoShamBo5.class); static { for(RoShamBo5 it : RoShamBo5.values()) table.put(it, new EnumMap&lt;&gt;(RoShamBo5.class)); initRow(PAPER, DRAW, LOSE, WIN); initRow(SCISSORS, WIN, DRAW, LOSE); initRow(ROCK, LOSE, WIN, DRAW); } static void initRow(RoShamBo5 it, Outcome vPAPER, Outcome vSCISSORS, Outcome vROCK) { EnumMap&lt;RoShamBo5,Outcome&gt; row = RoShamBo5.table.get(it); row.put(RoShamBo5.PAPER, vPAPER); row.put(RoShamBo5.SCISSORS, vSCISSORS); row.put(RoShamBo5.ROCK, vROCK); } @Override public Outcome compete(RoShamBo5 it) { return table.get(this).get(it); } public static void main(String[] args) { RoShamBo.play(RoShamBo5.class, 20); } } 实际上依旧是二次选择，只是没有触发方法的动态链接机制，而是通过map类型手动填充了一张表格进行分发。">
 
-      
-    
 	
-  </head><body class="ma0 avenir bg-near-white production">
+  </head><body class="ma0 avenir bg-near-white development">
 
     
-   
-  
 
   <header>
     <div class="bg-black">
@@ -160,12 +156,46 @@ package enums; import java.util.*; import static enums.Outcome.*; enum RoShamBo5
   <div class="flex-l center items-center justify-between">
     <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
       
-        wenzhuo4657
+        猢狲
       
     </a>
     <div class="flex-l items-center">
       
 
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/" title="主页 page">
+              主页
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title="文章 page">
+              文章
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
+              about
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+        </ul>
       
       <div class="ananke-socials"></div>
 
@@ -177,28 +207,17 @@ package enums; import java.util.*; import static enums.Outcome.*; enum RoShamBo5
   </header>
 
 
-
     <main class="pb7" role="main">
       
-  
-  
-  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
-    <header class="mt4 w-100">
-      <aside class="instapaper_ignoref b helvetica tracked ttu">
-          
-        Posts
-      </aside><div id="sharing" class="mt3 ananke-socials"></div>
-<h1 class="f1 athelas mt3 mb1">单路分发和多路分发</h1>
-      
-      
-      
-      <time class="f6 mv4 dib tracked" datetime="2025-01-21T15:01:05Z">January 21, 2025</time>
-      
-
-      
-      
-    </header>
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="单路分发">单路分发</h1>
+  <div class="flex-l mt2 mw8 center">
+    <article class="center cf pv5 ph3 ph4-ns mw7">
+      <header>
+        <h1 class="f1">
+          单路分发和多路分发
+        </h1>
+      </header>
+      <div class="nested-copy-line-height lh-copy f4 nested-links mid-gray">
+        <h1 id="单路分发">单路分发</h1>
 <p>前置概念：
 接收者对象：方法调用的目标对象
 动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在<strong>class文件的常量池</strong>里。
@@ -256,29 +275,16 @@ package enums; import java.util.*; import static enums.Outcome.*; enum RoShamBo5
 </span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>实际上依旧是二次选择，只是没有触发方法的动态链接机制，而是通过map类型手动填充了一张表格进行分发。</p>
-<ul class="pa0">
-  
-</ul>
-<div class="mt6 instapaper_ignoref">
-      
-      
+ 
       </div>
-    </div>
-
-    <aside class="w-30-l mt6-l">
-
-
-
-
-</aside>
-
-  </article>
+    </article>
+  </div>
 
     </main>
     <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
   <div class="flex justify-between">
-  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
-    &copy;  wenzhuo4657 2025 
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  猢狲 2025 
   </a>
     <div><div class="ananke-socials"></div>
 </div>

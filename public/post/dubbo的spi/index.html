@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>dubbo的spi | wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载）
+按需加载
+jdk的spi的配置文件
+org.example.ToyotaCar
+org.example.HondaCar
+dubbo的spi的配置文件
+toyota=org.example.ToyotaCar
+honda=org.example.HondaCar
+wrapper=org.example.aop.CarWrapper1
+wrapper=org.example.aop.CarWrapper2
+Race=org.example.ioc.RaceRes
+red=org.example.ioc.PenRes
+二者的区别在于dubbo中使用键值，可以实现按需加载，请注意，该加载并非指配置文件的加载，而加载配置文件之后的对于服务对象的实例化。
+示例
+jdk的spi
+      ServiceLoader&lt;Car&gt; load = ServiceLoader.load(Car.class);
+
+//        获取迭代器遍历
+        Iterator&lt;Car&gt; iterator = load.iterator();
+        while (iterator.hasNext()){
+            Car registry = iterator.next();
+            registry.run();
+        }
+        
+追溯源码可以看到迭代器内部。
+
+关键成员变量
+Iterator pending ;//配置文件读取的数据  该变量也是迭代器
+String nextName ;//下一个将要读取的配置
+存在关键方法
+hasNextService：用于判断下一个服务名称，即配置文件当中的全限定类名。
+       private boolean hasNextService() {
+            if (nextName != null) {
+                return true;
+            }
+            if (configs == null) {
+                try {
+                    String fullName = PREFIX &#43; service.getName();
+                    if (loader == null)
+                        configs = ClassLoader.getSystemResources(fullName);
+                    else
+                        configs = loader.getResources(fullName);
+                } catch (IOException x) {
+                    fail(service, &#34;Error locating configuration files&#34;, x);
+                }
+            }
+            while ((pending == null) || !pending.hasNext()) {
+                if (!configs.hasMoreElements()) {
+                    return false;
+                }
+                pending = parse(service, configs.nextElement());
+            }
+            nextName = pending.next();//获取下一个元素，
+            return true;
+        }
+nextService：">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/post/dubbo%E7%9A%84spi/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/post/dubbo%E7%9A%84spi/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="dubbo的spi">
+  <meta property="og:description" content="dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载）
+按需加载 jdk的spi的配置文件
+org.example.ToyotaCar org.example.HondaCar dubbo的spi的配置文件
+toyota=org.example.ToyotaCar honda=org.example.HondaCar wrapper=org.example.aop.CarWrapper1 wrapper=org.example.aop.CarWrapper2 Race=org.example.ioc.RaceRes red=org.example.ioc.PenRes 二者的区别在于dubbo中使用键值，可以实现按需加载，请注意，该加载并非指配置文件的加载，而加载配置文件之后的对于服务对象的实例化。
+示例 jdk的spi ServiceLoader&lt;Car&gt; load = ServiceLoader.load(Car.class); // 获取迭代器遍历 Iterator&lt;Car&gt; iterator = load.iterator(); while (iterator.hasNext()){ Car registry = iterator.next(); registry.run(); } 追溯源码可以看到迭代器内部。
+关键成员变量
+Iterator pending ;//配置文件读取的数据 该变量也是迭代器 String nextName ;//下一个将要读取的配置
+存在关键方法
+hasNextService：用于判断下一个服务名称，即配置文件当中的全限定类名。
+private boolean hasNextService() { if (nextName != null) { return true; } if (configs == null) { try { String fullName = PREFIX &#43; service.getName(); if (loader == null) configs = ClassLoader.getSystemResources(fullName); else configs = loader.getResources(fullName); } catch (IOException x) { fail(service, &#34;Error locating configuration files&#34;, x); } } while ((pending == null) || !pending.hasNext()) { if (!configs.hasMoreElements()) { return false; } pending = parse(service, configs.nextElement()); } nextName = pending.next();//获取下一个元素， return true; } nextService：">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="post">
+    <meta property="article:published_time" content="2025-01-22T16:47:11+00:00">
+    <meta property="article:modified_time" content="2025-01-22T16:47:11+00:00">
+
+  <meta itemprop="name" content="dubbo的spi">
+  <meta itemprop="description" content="dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载）
+按需加载 jdk的spi的配置文件
+org.example.ToyotaCar org.example.HondaCar dubbo的spi的配置文件
+toyota=org.example.ToyotaCar honda=org.example.HondaCar wrapper=org.example.aop.CarWrapper1 wrapper=org.example.aop.CarWrapper2 Race=org.example.ioc.RaceRes red=org.example.ioc.PenRes 二者的区别在于dubbo中使用键值，可以实现按需加载，请注意，该加载并非指配置文件的加载，而加载配置文件之后的对于服务对象的实例化。
+示例 jdk的spi ServiceLoader&lt;Car&gt; load = ServiceLoader.load(Car.class); // 获取迭代器遍历 Iterator&lt;Car&gt; iterator = load.iterator(); while (iterator.hasNext()){ Car registry = iterator.next(); registry.run(); } 追溯源码可以看到迭代器内部。
+关键成员变量
+Iterator pending ;//配置文件读取的数据 该变量也是迭代器 String nextName ;//下一个将要读取的配置
+存在关键方法
+hasNextService：用于判断下一个服务名称，即配置文件当中的全限定类名。
+private boolean hasNextService() { if (nextName != null) { return true; } if (configs == null) { try { String fullName = PREFIX &#43; service.getName(); if (loader == null) configs = ClassLoader.getSystemResources(fullName); else configs = loader.getResources(fullName); } catch (IOException x) { fail(service, &#34;Error locating configuration files&#34;, x); } } while ((pending == null) || !pending.hasNext()) { if (!configs.hasMoreElements()) { return false; } pending = parse(service, configs.nextElement()); } nextName = pending.next();//获取下一个元素， return true; } nextService：">
+  <meta itemprop="datePublished" content="2025-01-22T16:47:11+00:00">
+  <meta itemprop="dateModified" content="2025-01-22T16:47:11+00:00">
+  <meta itemprop="wordCount" content="605">
+  <meta itemprop="keywords" content="Dubbo">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="dubbo的spi">
+  <meta name="twitter:description" content="dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载）
+按需加载 jdk的spi的配置文件
+org.example.ToyotaCar org.example.HondaCar dubbo的spi的配置文件
+toyota=org.example.ToyotaCar honda=org.example.HondaCar wrapper=org.example.aop.CarWrapper1 wrapper=org.example.aop.CarWrapper2 Race=org.example.ioc.RaceRes red=org.example.ioc.PenRes 二者的区别在于dubbo中使用键值，可以实现按需加载，请注意，该加载并非指配置文件的加载，而加载配置文件之后的对于服务对象的实例化。
+示例 jdk的spi ServiceLoader&lt;Car&gt; load = ServiceLoader.load(Car.class); // 获取迭代器遍历 Iterator&lt;Car&gt; iterator = load.iterator(); while (iterator.hasNext()){ Car registry = iterator.next(); registry.run(); } 追溯源码可以看到迭代器内部。
+关键成员变量
+Iterator pending ;//配置文件读取的数据 该变量也是迭代器 String nextName ;//下一个将要读取的配置
+存在关键方法
+hasNextService：用于判断下一个服务名称，即配置文件当中的全限定类名。
+private boolean hasNextService() { if (nextName != null) { return true; } if (configs == null) { try { String fullName = PREFIX &#43; service.getName(); if (loader == null) configs = ClassLoader.getSystemResources(fullName); else configs = loader.getResources(fullName); } catch (IOException x) { fail(service, &#34;Error locating configuration files&#34;, x); } } while ((pending == null) || !pending.hasNext()) { if (!configs.hasMoreElements()) { return false; } pending = parse(service, configs.nextElement()); } nextName = pending.next();//获取下一个元素， return true; } nextService：">
+
+	
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+    <main class="pb7" role="main">
+      
+  <div class="flex-l mt2 mw8 center">
+    <article class="center cf pv5 ph3 ph4-ns mw7">
+      <header>
+        <h1 class="f1">
+          你是什么dubbo的spi
+        </h1>
+      </header>
+      <div class="nested-copy-line-height lh-copy f4 nested-links mid-gray">
+        <p>dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载）</p>
+<h2 id="按需加载">按需加载</h2>
+<p>jdk的spi的配置文件</p>
+<pre tabindex="0"><code>org.example.ToyotaCar
+org.example.HondaCar
+</code></pre><p>dubbo的spi的配置文件</p>
+<pre tabindex="0"><code>toyota=org.example.ToyotaCar
+honda=org.example.HondaCar
+wrapper=org.example.aop.CarWrapper1
+wrapper=org.example.aop.CarWrapper2
+Race=org.example.ioc.RaceRes
+red=org.example.ioc.PenRes
+</code></pre><p>二者的区别在于dubbo中使用键值，可以实现按需加载，请注意，该加载并非指配置文件的加载，而加载配置文件之后的对于<strong>服务对象的实例化</strong>。</p>
+<h3 id="示例">示例</h3>
+<h4 id="jdk的spi">jdk的spi</h4>
+<pre tabindex="0"><code>      ServiceLoader&lt;Car&gt; load = ServiceLoader.load(Car.class);
+
+//        获取迭代器遍历
+        Iterator&lt;Car&gt; iterator = load.iterator();
+        while (iterator.hasNext()){
+            Car registry = iterator.next();
+            registry.run();
+        }
+        
+</code></pre><p>追溯源码可以看到迭代器内部。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250122174648892.png" alt="image-20250122174648892"></p>
+<p>关键成员变量</p>
+<p>Iterator<!-- raw HTML omitted --> pending ;//配置文件读取的数据  <strong>该变量也是迭代器</strong>
+String nextName ;//下一个将要读取的配置</p>
+<p>存在关键方法</p>
+<p>hasNextService：用于判断下一个服务名称，即配置文件当中的全限定类名。</p>
+<pre tabindex="0"><code>       private boolean hasNextService() {
+            if (nextName != null) {
+                return true;
+            }
+            if (configs == null) {
+                try {
+                    String fullName = PREFIX + service.getName();
+                    if (loader == null)
+                        configs = ClassLoader.getSystemResources(fullName);
+                    else
+                        configs = loader.getResources(fullName);
+                } catch (IOException x) {
+                    fail(service, &#34;Error locating configuration files&#34;, x);
+                }
+            }
+            while ((pending == null) || !pending.hasNext()) {
+                if (!configs.hasMoreElements()) {
+                    return false;
+                }
+                pending = parse(service, configs.nextElement());
+            }
+            nextName = pending.next();//获取下一个元素，
+            return true;
+        }
+</code></pre><p>nextService：</p>
+<pre tabindex="0"><code>    private S nextService() {
+            if (!hasNextService())
+                throw new NoSuchElementException();
+            String cn = nextName;
+            nextName = null;
+            Class&lt;?&gt; c = null;
+            try {
+                c = Class.forName(cn, false, loader);//获取类加载器
+            } catch (ClassNotFoundException x) {
+                fail(service,
+                     &#34;Provider &#34; + cn + &#34; not found&#34;);
+            }
+            if (!service.isAssignableFrom(c)) {
+                fail(service,
+                     &#34;Provider &#34; + cn  + &#34; not a subtype&#34;);
+            }
+            try {
+                S p = service.cast(c.newInstance());//实例化对象
+                providers.put(cn, p);//延迟加载，将其收入到一个map集合当中
+                return p;//返回加载元素
+            } catch (Throwable x) {
+                fail(service,
+                     &#34;Provider &#34; + cn + &#34; could not be instantiated&#34;,
+                     x);
+            }
+            throw new Error();          // This cannot happen
+        }
+</code></pre><h4 id="dubbo的spi">dubbo的spi</h4>
+<p>dubbo的spi则使用键值加载。</p>
+<pre tabindex="0"><code>    ExtensionLoader&lt;Car&gt; extensionLoader;
+    @Before
+    public void  fi(){
+        extensionLoader = ExtensionLoader.getExtensionLoader(Car.class);
+    }
+
+
+    /**
+     *  @author:wenzhuo4657
+        des:
+    dubbo基本服务发现，和jdk的主要区别在于可以用键去获取指定的扩展实现。
+    */
+        @Test
+        public void test(){
+            Car car = extensionLoader.getExtension(&#34;ali&#34;,false);//false表示不进行自动装配等其他配置，默认为true,
+            car.run();
+            if (car instanceof HondaCar){
+                System.out.println(&#34;true&#34;);
+            }
+        }
+       
+</code></pre><p>追溯getExtension方法，可以看到关键实例化对象的createExtension方法</p>
+<pre tabindex="0"><code> private T createExtension(String name, boolean wrap) {
+        Class&lt;?&gt; clazz = getExtensionClasses().get(name);
+        if (clazz == null) {
+            throw findException(name);
+        }
+        try {
+            T instance = (T) EXTENSION_INSTANCES.get(clazz);
+            if (instance == null) {
+                EXTENSION_INSTANCES.putIfAbsent(clazz, clazz.newInstance());
+                instance = (T) EXTENSION_INSTANCES.get(clazz);
+            }
+            injectExtension(instance);
+
+
+            if (wrap) {
+
+                List&lt;Class&lt;?&gt;&gt; wrapperClassesList = new ArrayList&lt;&gt;();
+                if (cachedWrapperClasses != null) {
+                    wrapperClassesList.addAll(cachedWrapperClasses);
+                    wrapperClassesList.sort(WrapperComparator.COMPARATOR);
+                    Collections.reverse(wrapperClassesList);
+                }
+
+                if (CollectionUtils.isNotEmpty(wrapperClassesList)) {
+                    for (Class&lt;?&gt; wrapperClass : wrapperClassesList) {
+                        Wrapper wrapper = wrapperClass.getAnnotation(Wrapper.class);
+                        if (wrapper == null
+                                || (ArrayUtils.contains(wrapper.matches(), name) &amp;&amp; !ArrayUtils.contains(wrapper.mismatches(), name))) {
+                            instance = injectExtension((T) wrapperClass.getConstructor(type).newInstance(instance));
+                        }
+                    }
+                }
+            }
+
+            initExtension(instance);
+            return instance;
+        } catch (Throwable t) {
+            throw new IllegalStateException(&#34;Extension instance (name: &#34; + name + &#34;, class: &#34; +
+                    type + &#34;) couldn&#39;t be instantiated: &#34; + t.getMessage(), t);
+        }
+    }
+</code></pre><p>1，提前获取类加载器，</p>
+<p>Class<!-- raw HTML omitted --> clazz = getExtensionClasses().get(name);方法内部可以看到有一个成员变量<code>private final Holder&lt;Map&lt;String, Class&lt;?&gt;&gt;&gt; cachedClasses = new Holder&lt;&gt;();</code></p>
+<h1 id="dubbo的扩展点加载">DUBBO的扩展点加载</h1>
+<p><a href="https://cn.dubbo.apache.org/zh-cn/docsv2.7/dev/spi/">扩展点加载 | Apache Dubbo</a>:该文档旨在对官网翻译，助于理解</p>
+<p>dubbo扩展点加载与单纯的spi不同，会使用Wrapper包装类对服务方法进行扩展，实际上将，这有点像aop。</p>
+<p>包装之后，获取的对象将不是所需要的服务对象，而是包装类对象。</p>
+<pre tabindex="0"><code>public class XxxProtocolWrapper implements Protocol {
+    Protocol impl;
+ 
+    public XxxProtocolWrapper(Protocol protocol) { impl = protocol; }
+ 
+    // 接口方法做一个操作后，再调用extension的方法
+    public void refer() {
+        //... 一些操作
+        impl.refer();
+        // ... 一些操作
+    }
+ 
+    // ...
+}
+</code></pre><p>可以在加载是通过参数指定是否开启包装类代理。</p>
+<pre tabindex="0"><code>Car car = extensionLoader.getExtension(&#34;ali&#34;,false);//false表示不进行自动装配等其他配置，默认为true,
+</code></pre><h2 id="自动装配">自动装配</h2>
+<p>自动装配对应spring DI自动注入，判断方式为方法名称。</p>
+<p>形如setWheelMaker 方法的 WheelMaker 也是扩展点则会注入 WheelMaker 的实现。</p>
+<pre tabindex="0"><code>public class RaceCarMaker implements CarMaker {
+    WheelMaker wheelMaker;
+ 
+    public void setWheelMaker(WheelMaker wheelMaker) {
+        this.wheelMaker = wheelMaker;
+    }
+ 
+    public Car makeCar() {
+        // ...
+        Wheel wheel = wheelMaker.makeWheel();
+        // ...
+        return new RaceCar(wheel, ...);
+    }
+}
+</code></pre><p>但是这种注入无法指定依赖服务的实现，一般为默认实现或者优先级判断使用哪个实现，但无论是哪种都是全局唯一的默认，无法实现特例。</p>
+<h2 id="自适应装配">自适应装配</h2>
+<p>该装配利用了包装类和方法参数，实现在扩展时加载服务对象并调用方法。</p>
+<p>（<strong>该方式和自动装配并不冲突，只是并不使用自动装配的服务，并且由于包装类方法执行的缘故，甚至不用判断是否使用默认服务。</strong>）</p>
+<pre tabindex="0"><code>public interface CarMaker {
+	 @Adaptive({&#34;CarMaker&#34;})
+    Car makeCar(URL url);
+}
+ 
+public interface WheelMaker {
+	 @Adaptive({&#34;WheelMaker&#34;})
+    Wheel makeWheel(URL url);
+}
+</code></pre><pre tabindex="0"><code>public class RaceCarMaker implements CarMaker {
+    WheelMaker wheelMaker;
+ 
+    public void setWheelMaker(WheelMaker wheelMaker) {
+        this.wheelMaker = wheelMaker;
+    }
+ 
+    public Car makeCar(URL url) {
+        // ...
+        Wheel wheel = wheelMaker.makeWheel(url);
+        // ...
+        return new RaceCar(wheel, ...);
+    }
+}
+</code></pre><pre tabindex="0"><code>        Pen pen = extensionLoader.getAdaptiveExtension();
+        URL url = new URL(&#34;dubbo&#34;, &#34;127.0.0.1&#34;, 20880).
+                addParameter(&#34;WheelMaker&#34;, &#34;wheel&#34;).
+                addParameter(&#34;CarMaker&#34;,&#34;car&#34;);
+
+        // 调用方法
+        pen.run(url);
+</code></pre><p>使用@Adaptive注解定义包装类实例化服务的key,在url参数中指定，最终实现特定服务调用特定服务。</p>
+<p>深入源码中即可发现这一实现的依赖于包装类。</p>
+<pre tabindex="0"><code>public java.lang.String queryCountry(org.apache.dubbo.common.URL arg0) {         if (arg0 == null) throw new IllegalArgumentException(&#34;url == null&#34;);         org.apache.dubbo.common.URL url = arg0;         String extName = url.getParameter(&#34;person.service&#34;, &#34;china&#34;);//获取指定扩展服务         if (extName == null)             throw new IllegalStateException(&#34;Failed to get extension (org.dubbo.spi.example.PersonService) name from url (&#34; + url.toString() + &#34;) use keys([person.service])&#34;);         org.dubbo.spi.example.PersonService extension = (org.dubbo.spi.example.PersonService) ExtensionLoader.getExtensionLoader(org.dubbo.spi.example.PersonService.class).getExtension(extName); //扩展服务加载      
+return extension.queryCountry(arg0);//扩展服务执行    
+}
+</code></pre><p>它会在扩展执行时通过url参数中的指定值，加载扩展服务执行。 </p>
+<h1 id="补充要点">补充要点</h1>
+<h2 id="jdk的加载默认使用无参构造器">jdk的加载默认使用无参构造器</h2>
+<p>这一点可以在ServiceLoader.LazyIterator#nextService()中看到</p>
+<p><code>S p = service.cast(c.newInstance());</code></p>
+<p>而Dubbo可以通过url携带参数实例化。</p>
+
+      </div>
+    </article>
+  </div>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

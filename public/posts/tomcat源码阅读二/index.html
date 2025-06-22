@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
-    <title>tomcat源码阅读（二） | wenzhuo4657</title>
+    <title>tomcat源码阅读（二） | 猢狲</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <meta name="description" content="tomcat源码阅读
 日志模块梳理
@@ -37,12 +37,12 @@ org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现�
     
     
     
-      <meta name="robots" content="index, follow">
+      <meta name="robots" content="noindex, nofollow">
     
     
 
     
-<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
 
 
 
@@ -58,11 +58,11 @@ org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现�
     
 
     
-      <link rel="canonical" href="https://example.org/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%BA%8C/">
+      <link rel="canonical" href="http://localhost:1313/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%BA%8C/">
     
 
-    <meta property="og:url" content="https://example.org/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%BA%8C/">
-  <meta property="og:site_name" content="wenzhuo4657">
+    <meta property="og:url" content="http://localhost:1313/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%BA%8C/">
+  <meta property="og:site_name" content="猢狲">
   <meta property="og:title" content="tomcat源码阅读（二）">
   <meta property="og:description" content="tomcat源码阅读 日志模块梳理 现在日志通常分为日志门面和日志的具体实现。
 日志门面：充当应用程序和日志框架之间的沟通媒介，可以在程序无感的条件下更换日志框架。
@@ -120,14 +120,10 @@ org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现�
 并且在LogFactory#release(ClassLoader classLoader)也可以看到日志实现默认为JUL,硬编码控制的。
 public static void release(ClassLoader classLoader) { // JULI&#39;s log manager looks at the current classLoader so there is no // need to use the passed in classLoader, the default implementation // does not so calling reset in that case will break things if (!LogManager.getLogManager().getClass().getName().equals( &#34;java.util.logging.LogManager&#34;)) { LogManager.getLogManager().reset(); } } 关于日志实现log的加载 在LogFactory的无参构造器器中看到关键语句">
 
-      
-    
 	
-  </head><body class="ma0 avenir bg-near-white production">
+  </head><body class="ma0 avenir bg-near-white development">
 
     
-   
-  
 
   <header>
     <div class="bg-black">
@@ -135,12 +131,46 @@ public static void release(ClassLoader classLoader) { // JULI&#39;s log manager 
   <div class="flex-l center items-center justify-between">
     <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
       
-        wenzhuo4657
+        猢狲
       
     </a>
     <div class="flex-l items-center">
       
 
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/" title="主页 page">
+              主页
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title="文章 page">
+              文章
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
+              about
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+        </ul>
       
       <div class="ananke-socials"></div>
 
@@ -152,28 +182,17 @@ public static void release(ClassLoader classLoader) { // JULI&#39;s log manager 
   </header>
 
 
-
     <main class="pb7" role="main">
       
-  
-  
-  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
-    <header class="mt4 w-100">
-      <aside class="instapaper_ignoref b helvetica tracked ttu">
-          
-        Posts
-      </aside><div id="sharing" class="mt3 ananke-socials"></div>
-<h1 class="f1 athelas mt3 mb1">tomcat源码阅读（二）</h1>
-      
-      
-      
-      <time class="f6 mv4 dib tracked" datetime="2025-03-10T14:59:35Z">March 10, 2025</time>
-      
-
-      
-      
-    </header>
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h1 id="tomcat源码阅读">tomcat源码阅读</h1>
+  <div class="flex-l mt2 mw8 center">
+    <article class="center cf pv5 ph3 ph4-ns mw7">
+      <header>
+        <h1 class="f1">
+          tomcat源码阅读（二）
+        </h1>
+      </header>
+      <div class="nested-copy-line-height lh-copy f4 nested-links mid-gray">
+        <h1 id="tomcat源码阅读">tomcat源码阅读</h1>
 <h2 id="日志模块梳理">日志模块梳理</h2>
 <p>现在日志通常分为日志门面和日志的具体实现。</p>
 <p>日志门面：充当应用程序和日志框架之间的沟通媒介，可以在程序无感的条件下更换日志框架。</p>
@@ -240,29 +259,16 @@ public static void release(ClassLoader classLoader) { // JULI&#39;s log manager 
 <p>例如tomcat会在中途对字符串进行转码，所以到达StringManager时字符串编码已经变为了“UTF-8”，所以直接进行转码会失败</p>
 <p><code>str= new String(str.getBytes(), StandardCharsets.*UTF_8*);</code> 失败，追溯str.getBytes()发现底层编码已经改变。这时我们可以强行指定编码。</p>
 <p><code>str= new String(str.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);</code></p>
-<ul class="pa0">
-  
-</ul>
-<div class="mt6 instapaper_ignoref">
-      
-      
+ 
       </div>
-    </div>
-
-    <aside class="w-30-l mt6-l">
-
-
-
-
-</aside>
-
-  </article>
+    </article>
+  </div>
 
     </main>
     <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
   <div class="flex justify-between">
-  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
-    &copy;  wenzhuo4657 2025 
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  猢狲 2025 
   </a>
     <div><div class="ananke-socials"></div>
 </div>

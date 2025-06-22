@@ -1,7 +1,21 @@
 baseURL = 'https://example.org/'
 languageCode = 'zh-CN'
-title = 'wenzhuo4657'
+title = '猢狲'
 theme = 'ananke'
+sectionPagesMenu = 'main'
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
+[menu]
+[[menu.main]]
+    name = '主页'
+    pageRef = '/_index'
+    weight = 1
+[[menu.main]]
+    name = '文章'
+    pageRef = '/posts/_index'
+    weight = 2
+[[menu.main]]
+    name = 'about'
+    pageRef = '/about/_index'
+    weight = 100000

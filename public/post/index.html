@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>wenzhuo4657</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+    
+      <link href="/post/index.xml" rel="alternate" type="application/rss+xml" title="wenzhuo4657" />
+      <link href="/post/index.xml" rel="feed" type="application/rss+xml" title="wenzhuo4657" />
+      
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/post/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/post/">
+  <meta property="og:site_name" content="wenzhuo4657">
+  <meta property="og:title" content="Posts">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="website">
+
+  <meta itemprop="name" content="Posts">
+  <meta itemprop="datePublished" content="2025-01-22T16:47:11+00:00">
+  <meta itemprop="dateModified" content="2025-01-22T16:47:11+00:00">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Posts">
+
+	
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+
+  <header>
+    <div class="pb3-m pb6-l bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        wenzhuo4657
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+      <div class="tc-l pv3 ph3 ph4-ns">
+        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
+          Posts
+        </h1>
+        
+      </div>
+    </div>
+  </header>
+
+
+    <main class="pb7" role="main">
+      
+
+  <article class="pa3 pa4-ns nested-copy-line-height">
+    <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links mid-gray">
+      
+    </section>
+    <aside class="flex-ns mt5 flex-wrap justify-around">
+      
+        <div class="w-100 w-30-l mb4 relative bg-white">
+            <div class="mb3 pa4 mid-gray overflow-hidden">
+    
+      <div class="f6">
+        January 22, 2025
+      </div>
+    
+    <h1 class="f3 near-black">
+      <a href="/post/dubbo%E7%9A%84spi/" class="link black dim">
+        dubbo的spi   
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <p>dubbo的spi相比于jdk的spi而言，提供了更为强大的功能，主要来说是帮助我们更好的面对多个服务互相依赖的场景，并且做了一定优化。（例如：按需加载）</p>
+<h2 id="按需加载">按需加载</h2>
+<p>jdk的spi的配置文件</p>
+<pre tabindex="0"><code>org.example.ToyotaCar
+org.example.HondaCar
+</code></pre><p>dubbo的spi的配置文件</p>
+<pre tabindex="0"><code>toyota=org.example.ToyotaCar
+honda=org.example.HondaCar
+wrapper=org.example.aop.CarWrapper1
+wrapper=org.example.aop.CarWrapper2
+Race=org.example.ioc.RaceRes
+red=org.example.ioc.PenRes
+</code></pre><p>二者的区别在于dubbo中使用键值，可以实现按需加载，请注意，该加载并非指配置文件的加载，而加载配置文件之后的对于<strong>服务对象的实例化</strong>。</p>
+<h3 id="示例">示例</h3>
+<h4 id="jdk的spi">jdk的spi</h4>
+<pre tabindex="0"><code>      ServiceLoader&lt;Car&gt; load = ServiceLoader.load(Car.class);
+
+//        获取迭代器遍历
+        Iterator&lt;Car&gt; iterator = load.iterator();
+        while (iterator.hasNext()){
+            Car registry = iterator.next();
+            registry.run();
+        }
+        
+</code></pre><p>追溯源码可以看到迭代器内部。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250122174648892.png" alt="image-20250122174648892"></p>
+<p>关键成员变量</p>
+<p>Iterator<!-- raw HTML omitted --> pending ;//配置文件读取的数据  <strong>该变量也是迭代器</strong>
+String nextName ;//下一个将要读取的配置</p>
+<p>存在关键方法</p>
+<p>hasNextService：用于判断下一个服务名称，即配置文件当中的全限定类名。</p>
+<pre tabindex="0"><code>       private boolean hasNextService() {
+            if (nextName != null) {
+                return true;
+            }
+            if (configs == null) {
+                try {
+                    String fullName = PREFIX + service.getName();
+                    if (loader == null)
+                        configs = ClassLoader.getSystemResources(fullName);
+                    else
+                        configs = loader.getResources(fullName);
+                } catch (IOException x) {
+                    fail(service, &#34;Error locating configuration files&#34;, x);
+                }
+            }
+            while ((pending == null) || !pending.hasNext()) {
+                if (!configs.hasMoreElements()) {
+                    return false;
+                }
+                pending = parse(service, configs.nextElement());
+            }
+            nextName = pending.next();//获取下一个元素，
+            return true;
+        }
+</code></pre><p>nextService：</p>
+    </div>
+  <a href="/post/dubbo%E7%9A%84spi/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+
+        </div>
+      
+    </aside>
+    
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  wenzhuo4657 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

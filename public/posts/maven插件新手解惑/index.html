@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
-    <title>maven插件新手解惑 | wenzhuo4657</title>
+    <title>maven插件新手解惑 | 猢狲</title>
     <meta name="viewport" content="width=device-width,minimum-scale=1">
     <meta name="description" content="maven插件的定义
 maven插件的定义是在pom文件下的
@@ -51,12 +51,12 @@ java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找�
     
     
     
-      <meta name="robots" content="index, follow">
+      <meta name="robots" content="noindex, nofollow">
     
     
 
     
-<link rel="stylesheet" href="/ananke/css/main.min.8d048772ae72ab11245a0e296d1f2a36d3e3dd376c6c867394d6cc659c68fc37.css" >
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
 
 
 
@@ -72,11 +72,11 @@ java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找�
     
 
     
-      <link rel="canonical" href="https://example.org/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/">
+      <link rel="canonical" href="http://localhost:1313/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/">
     
 
-    <meta property="og:url" content="https://example.org/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/">
-  <meta property="og:site_name" content="wenzhuo4657">
+    <meta property="og:url" content="http://localhost:1313/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/">
+  <meta property="og:site_name" content="猢狲">
   <meta property="og:title" content="maven插件新手解惑">
   <meta property="og:description" content="maven插件的定义 maven插件的定义是在pom文件下的
 &lt;plugins&gt; &lt;plugin&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt; &lt;version&gt;2.6.0&lt;/version&gt; &lt;/plugin&gt; &lt;/plugins&gt; 与常规的依赖定位一致，而插件的配置则是在、等标签下定义的，他们或许是环境变量或许是在maven生命周期的插入点。
@@ -149,14 +149,10 @@ springboot与spring最大的区别在我这个小白看来则是注解开发，@
 将依赖引入jar包当中 META-INF/MANIFEST.MF文件中存在启动类等配置 使用命令java -jar 执行 不可执行jar:
 内部只有项目的class文件 META-INF/MANIFEST.MF文件中不存在启动类等配置 不能使用java -jar 执行。 java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找到程序的入口点（即主类），然后开始执行该类的main方法">
 
-      
-    
 	
-  </head><body class="ma0 avenir bg-near-white production">
+  </head><body class="ma0 avenir bg-near-white development">
 
     
-   
-  
 
   <header>
     <div class="bg-black">
@@ -164,12 +160,46 @@ springboot与spring最大的区别在我这个小白看来则是注解开发，@
   <div class="flex-l center items-center justify-between">
     <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
       
-        wenzhuo4657
+        猢狲
       
     </a>
     <div class="flex-l items-center">
       
 
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/" title="主页 page">
+              主页
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title="文章 page">
+              文章
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
+              about
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+        </ul>
       
       <div class="ananke-socials"></div>
 
@@ -181,28 +211,17 @@ springboot与spring最大的区别在我这个小白看来则是注解开发，@
   </header>
 
 
-
     <main class="pb7" role="main">
       
-  
-  
-  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
-    <header class="mt4 w-100">
-      <aside class="instapaper_ignoref b helvetica tracked ttu">
-          
-        Posts
-      </aside><div id="sharing" class="mt3 ananke-socials"></div>
-<h1 class="f1 athelas mt3 mb1">maven插件新手解惑</h1>
-      
-      
-      
-      <time class="f6 mv4 dib tracked" datetime="2025-04-06T16:44:01Z">April 6, 2025</time>
-      
-
-      
-      
-    </header>
-    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><h2 id="maven插件的定义">maven插件的定义</h2>
+  <div class="flex-l mt2 mw8 center">
+    <article class="center cf pv5 ph3 ph4-ns mw7">
+      <header>
+        <h1 class="f1">
+          maven插件新手解惑
+        </h1>
+      </header>
+      <div class="nested-copy-line-height lh-copy f4 nested-links mid-gray">
+        <h2 id="maven插件的定义">maven插件的定义</h2>
 <p>maven插件的定义是在pom文件下的</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>plugins<span style="color:#f92672">&gt;</span>
 </span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;</span>plugin<span style="color:#f92672">&gt;</span>
@@ -311,29 +330,16 @@ springboot与spring最大的区别在我这个小白看来则是注解开发，@
 <h2 id="结语">结语</h2>
 <p>插件这东西吧，最开始总是搞不懂，一直都是复制粘贴别人的配置，经过这次学习，倒不是说技术成长了多少，哈哈，其实甚至没有技术，只是看文档尝试功能而已。</p>
 <p>没错，就是看文档，一定学会看官方文档！！！</p>
-<ul class="pa0">
-  
-</ul>
-<div class="mt6 instapaper_ignoref">
-      
-      
+ 
       </div>
-    </div>
-
-    <aside class="w-30-l mt6-l">
-
-
-
-
-</aside>
-
-  </article>
+    </article>
+  </div>
 
     </main>
     <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
   <div class="flex justify-between">
-  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="https://example.org/" >
-    &copy;  wenzhuo4657 2025 
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  猢狲 2025 
   </a>
     <div><div class="ananke-socials"></div>
 </div>
