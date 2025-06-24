@@ -57,7 +57,9 @@
   {{- $environment := hugo.Environment | compare.Default "production" -}}
   <body class="ma0 {{ $.Param "body_classes"  | compare.Default "avenir bg-near-white"}} {{ $environment }}">
 
-    {{ block "header" . }}{{ partials.Include "site-header.html" .}}{{ end }}
+    {{ block "header" . }}
+	{{ partials.Include "site-header.html" .}}{{ end }}
+	
     <main class="pb7" role="main">
       {{ block "main" . }}{{ end }}
     </main>

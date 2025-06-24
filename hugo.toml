@@ -16,6 +16,10 @@ sectionPagesMenu = 'main'
     pageRef = '/posts/_index'
     weight = 2
 [[menu.main]]
+    name = '长期更新'
+    pageRef = '/follow/_index'
+    weight = 99999
+[[menu.main]]
     name = 'about'
     pageRef = '/about/_index'
     weight = 100000

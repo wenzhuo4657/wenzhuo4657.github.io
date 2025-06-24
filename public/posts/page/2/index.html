@@ -56,6 +56,7 @@
   </head><body class="ma0 avenir bg-near-white development">
 
     
+	
 
   <header>
     <div class="pb3-m pb6-l bg-black">
@@ -85,6 +86,12 @@
           </li>
           
           <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/follow/" title="长期更新 page">
+              长期更新
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
             <a class="hover-white white-90 no-underline" href="/about/" title="about page">
               about
             </a>
@@ -92,6 +99,12 @@
           
           <li class="list f5 f4-ns fw4 dib pr3">
             <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/follow/" title=" page">
               
             </a>
           </li>
@@ -120,6 +133,7 @@
   </header>
 
 
+	
     <main class="pb7" role="main">
       
 
@@ -127,6 +141,78 @@
     <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links mid-gray"></section>
 
     <section class="flex-ns mt5 flex-wrap justify-around">
+      
+        <div class="w-100 w-30-l mb4 relative bg-white">
+            <div class="mb3 pa4 mid-gray overflow-hidden">
+    
+      <div class="f6">
+        March 7, 2025
+      </div>
+    
+    <h1 class="f3 near-black">
+      <a href="/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80/" class="link black dim">
+        tomcat源码阅读（一）   
+      </a>
+    </h1>
+    <div class="nested-links f5 lh-copy nested-copy-line-height">
+      <h1 id="tomcat源码">tomcat源码</h1>
+<h2 id="idea环境搭建">idea环境搭建</h2>
+<p>源码版本apache-tomcat-9.0.43-src</p>
+<p><a href="https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.43/src/">https://archive.apache.org/dist/tomcat/tomcat-9/v9.0.43/src/</a></p>
+<p>注意： 不同版本的搭建方式可能略有不同，但这源码核心是大差不差的。</p>
+<h3 id="安装ant已安装的可以直接跳过">安装ant(已安装的可以直接跳过)</h3>
+<p>Apache Ant 是一个帮助构建软件的 Java 库和命令行工具。</p>
+<p>官网：https://ant.apache.org/bindownload.cgi</p>
+<p>直接下载最新版即可，解压之后设置环境变量</p>
+<pre tabindex="0"><code>ANT_HOME=/Library/Apache/apache-ant-1.9.15
+PATH=$PATH:$ANT_HOME/bin
+</code></pre><p>使用<code>ant -verison</code>验证安装是否成功</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250307171403529.png" alt="image-20250307171403529"></p>
+<h3 id="构建项目">构建项目</h3>
+<p><em>在打开idea之前操作，这一点非常重要！！！否则会由于编译器的一些操作导致XXXXX</em></p>
+<p>直接将res目录idea-support中的.idea文件粘贴到根目录中的.idea（手动创建</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134412453.png" alt="image-20250309134412453"></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134454556.png" alt="image-20250309134454556"></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134544101.png" alt="image-20250309134544101"></p>
+<p>此时打开项目可以发现项目被正确加载，但是会依赖报错</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309135659189.png" alt="image-20250309135659189"></p>
+<p>尝试构建项目，启动test</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309135743059.png" alt="image-20250309135743059"></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309134654470.png" alt="image-20250309134654470"></p>
+<p>将这些jar包和ant目录下的lib库加入项目的外部库即可。</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309141125493.png" alt="image-20250309141125493"></p>
+<h2 id="启动">启动</h2>
+<p>找到启动类Bootstrap</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309141245515.png" alt="image-20250309141245515"></p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309141253099.png" alt="image-20250309141253099"></p>
+<h1 id="中文乱码">中文乱码</h1>
+<p>对于乱码，网上搜索在日志配置中更改编码，</p>
+<p><a href="https://blog.csdn.net/weixin_44109450/article/details/126544310">https://blog.csdn.net/weixin_44109450/article/details/126544310</a></p>
+<p>但是对于源码编译环境来说，似乎并不会读取conf下的配置，追溯源码找到<code>java.util.logging.ConsoleHandler</code>.</p>
+<p>断点调试发现，并没有获取到配置</p>
+<p><img src="https://blog.wenzhuo4657.org/img/image-20250309142742777.png" alt="image-20250309142742777"></p>
+<p>并且由于该类属于依赖包jdk的一部分，<img src="https://blog.wenzhuo4657.org/img/image-20250309142835530.png" alt="image-20250309142835530"></p>
+<p>进一步追溯之后发现关键读取文件的方法LogManager#readConfiguration（）</p>
+<pre tabindex="0"><code>   String fname = System.getProperty(&#34;java.util.logging.config.file&#34;);
+        if (fname == null) {
+            fname = System.getProperty(&#34;java.home&#34;);
+            if (fname == null) {
+                throw new Error(&#34;Can&#39;t find java.home ??&#34;);
+            }
+            File f = new File(fname, &#34;lib&#34;);
+            f = new File(f, &#34;logging.properties&#34;);
+            fname = f.getCanonicalPath();
+        }
+        try (final InputStream in = new FileInputStream(fname)) {
+            final BufferedInputStream bin = new BufferedInputStream(in);
+            readConfiguration(bin);
+        }
+</code></pre><p>首先说结论，无论使更改成conf还是jdk目录下的logging.properties,他们所影响的编码都只是外层的一部分，不能影响tomcat输出的报错信息。</p>
+    </div>
+  <a href="/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+
+        </div>
       
         <div class="w-100 w-30-l mb4 relative bg-white">
             <div class="mb3 pa4 mid-gray overflow-hidden">
