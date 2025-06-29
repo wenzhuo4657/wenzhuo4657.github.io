@@ -1,8 +1,7 @@
 ---
 title: maven插件新手解惑
 date: 2025-04-06 16:44:01
-categories: 教程
-
+layout : 'singlet'
 ---
 
 

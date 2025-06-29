@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>关于utc时区的那些事情 | 猢狲</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="首先说结论，utc时区是一种分区，对于全球时间的划分、转换，例如，北京时间8点，实际上等于英国时间0点。哈哈哈，还是很模糊吧，最开始我也是这么认为的，但是在编程时遇到一些东西还是不懂，根本无法分清他们。
+基本概念
+UTC时间基于经纬度的划分，如果没有他们也无法时间时区的转换，因为所谓的时间，是根据地球对太阳的公转和自传共同作用形成的。
+经纬线的定义
+经线： 连接南极、北极的半圆弧线
+
+纬线： 与经线垂直，包围地球表面的一个圆。
+
+时区的划分
+时区可分为理论时区和法定时区，值得注意的，虽然叫做时区，看上去像是时间的划分，可实际上是地理位置的划分。
+理论时区又被成为协调世界时，写作UTC。
+以被15整除的经线为中心，向东西两侧延伸7.5度，即每15°划分一个时区，这是理论时区，理论时区的时间采用其中央经线（或标准经线）的地方时。所以每差一个时区，区时相差一个小时，相差多少个时区，就相差多少个小时。因此推算，东12区与西12区为同一地方，为避免同一地方日期却相差一天的矛盾，提出国际换日线的概念，国际换日线东侧比西侧迟整整24小时。
+ps： 虽然东12和西12被称作两个名字，但他们属于一个时区，这恰恰也证明时区是地理划分，而非时间划分，只是由于换日线的存在，日期不同，而时间相同。因此全球一共有12个时区。
+不同时区的标识为‘UTC±[hh]’，例如UTC&#43;8标识东八区，也是中国常用的时区，标志是UTC&#43;8 = 北京时间 = Asia/Shanghai，他比0时区早八个小时，这意味着当我们早上8点时，英国此时时0时，而西八区此时还是昨天下午四点。
+0时区的标识： 如果UTC并无特别标注，或者使用单个字母Z，就表示零时区。例如： 09:30 UTC，09:30Z。此外，0时区的地理标志为格林威治天文台，是国际公认的世界时间起源地。
+法定时区则是相对于理论时区而言，或者说相对于地理而言，以为理论时区的划分是根据地球整体的划分，而部分国家的时区并不刚好在某个时区内，有可能在两个时区夹缝之中。
+总结
+这里仅仅介绍了UTC协调世界时，此外还有其他的时间表示法，例如： 英国仍在使用GMT。">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/posts/%E5%85%B3%E4%BA%8Eutc%E6%97%B6%E5%8C%BA%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B%E6%83%85/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/posts/%E5%85%B3%E4%BA%8Eutc%E6%97%B6%E5%8C%BA%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B%E6%83%85/">
+  <meta property="og:site_name" content="猢狲">
+  <meta property="og:title" content="关于utc时区的那些事情">
+  <meta property="og:description" content="首先说结论，utc时区是一种分区，对于全球时间的划分、转换，例如，北京时间8点，实际上等于英国时间0点。哈哈哈，还是很模糊吧，最开始我也是这么认为的，但是在编程时遇到一些东西还是不懂，根本无法分清他们。
+基本概念 UTC时间基于经纬度的划分，如果没有他们也无法时间时区的转换，因为所谓的时间，是根据地球对太阳的公转和自传共同作用形成的。
+经纬线的定义 经线： 连接南极、北极的半圆弧线
+纬线： 与经线垂直，包围地球表面的一个圆。
+时区的划分 时区可分为理论时区和法定时区，值得注意的，虽然叫做时区，看上去像是时间的划分，可实际上是地理位置的划分。
+理论时区又被成为协调世界时，写作UTC。
+以被15整除的经线为中心，向东西两侧延伸7.5度，即每15°划分一个时区，这是理论时区，理论时区的时间采用其中央经线（或标准经线）的地方时。所以每差一个时区，区时相差一个小时，相差多少个时区，就相差多少个小时。因此推算，东12区与西12区为同一地方，为避免同一地方日期却相差一天的矛盾，提出国际换日线的概念，国际换日线东侧比西侧迟整整24小时。
+ps： 虽然东12和西12被称作两个名字，但他们属于一个时区，这恰恰也证明时区是地理划分，而非时间划分，只是由于换日线的存在，日期不同，而时间相同。因此全球一共有12个时区。
+不同时区的标识为‘UTC±[hh]’，例如UTC&#43;8标识东八区，也是中国常用的时区，标志是UTC&#43;8 = 北京时间 = Asia/Shanghai，他比0时区早八个小时，这意味着当我们早上8点时，英国此时时0时，而西八区此时还是昨天下午四点。
+0时区的标识： 如果UTC并无特别标注，或者使用单个字母Z，就表示零时区。例如： 09:30 UTC，09:30Z。此外，0时区的地理标志为格林威治天文台，是国际公认的世界时间起源地。
+法定时区则是相对于理论时区而言，或者说相对于地理而言，以为理论时区的划分是根据地球整体的划分，而部分国家的时区并不刚好在某个时区内，有可能在两个时区夹缝之中。
+总结 这里仅仅介绍了UTC协调世界时，此外还有其他的时间表示法，例如： 英国仍在使用GMT。">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2025-06-29T10:00:14+08:00">
+    <meta property="article:modified_time" content="2025-06-29T10:00:14+08:00">
+
+  <meta itemprop="name" content="关于utc时区的那些事情">
+  <meta itemprop="description" content="首先说结论，utc时区是一种分区，对于全球时间的划分、转换，例如，北京时间8点，实际上等于英国时间0点。哈哈哈，还是很模糊吧，最开始我也是这么认为的，但是在编程时遇到一些东西还是不懂，根本无法分清他们。
+基本概念 UTC时间基于经纬度的划分，如果没有他们也无法时间时区的转换，因为所谓的时间，是根据地球对太阳的公转和自传共同作用形成的。
+经纬线的定义 经线： 连接南极、北极的半圆弧线
+纬线： 与经线垂直，包围地球表面的一个圆。
+时区的划分 时区可分为理论时区和法定时区，值得注意的，虽然叫做时区，看上去像是时间的划分，可实际上是地理位置的划分。
+理论时区又被成为协调世界时，写作UTC。
+以被15整除的经线为中心，向东西两侧延伸7.5度，即每15°划分一个时区，这是理论时区，理论时区的时间采用其中央经线（或标准经线）的地方时。所以每差一个时区，区时相差一个小时，相差多少个时区，就相差多少个小时。因此推算，东12区与西12区为同一地方，为避免同一地方日期却相差一天的矛盾，提出国际换日线的概念，国际换日线东侧比西侧迟整整24小时。
+ps： 虽然东12和西12被称作两个名字，但他们属于一个时区，这恰恰也证明时区是地理划分，而非时间划分，只是由于换日线的存在，日期不同，而时间相同。因此全球一共有12个时区。
+不同时区的标识为‘UTC±[hh]’，例如UTC&#43;8标识东八区，也是中国常用的时区，标志是UTC&#43;8 = 北京时间 = Asia/Shanghai，他比0时区早八个小时，这意味着当我们早上8点时，英国此时时0时，而西八区此时还是昨天下午四点。
+0时区的标识： 如果UTC并无特别标注，或者使用单个字母Z，就表示零时区。例如： 09:30 UTC，09:30Z。此外，0时区的地理标志为格林威治天文台，是国际公认的世界时间起源地。
+法定时区则是相对于理论时区而言，或者说相对于地理而言，以为理论时区的划分是根据地球整体的划分，而部分国家的时区并不刚好在某个时区内，有可能在两个时区夹缝之中。
+总结 这里仅仅介绍了UTC协调世界时，此外还有其他的时间表示法，例如： 英国仍在使用GMT。">
+  <meta itemprop="datePublished" content="2025-06-29T10:00:14+08:00">
+  <meta itemprop="dateModified" content="2025-06-29T10:00:14+08:00">
+  <meta itemprop="wordCount" content="27">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="关于utc时区的那些事情">
+  <meta name="twitter:description" content="首先说结论，utc时区是一种分区，对于全球时间的划分、转换，例如，北京时间8点，实际上等于英国时间0点。哈哈哈，还是很模糊吧，最开始我也是这么认为的，但是在编程时遇到一些东西还是不懂，根本无法分清他们。
+基本概念 UTC时间基于经纬度的划分，如果没有他们也无法时间时区的转换，因为所谓的时间，是根据地球对太阳的公转和自传共同作用形成的。
+经纬线的定义 经线： 连接南极、北极的半圆弧线
+纬线： 与经线垂直，包围地球表面的一个圆。
+时区的划分 时区可分为理论时区和法定时区，值得注意的，虽然叫做时区，看上去像是时间的划分，可实际上是地理位置的划分。
+理论时区又被成为协调世界时，写作UTC。
+以被15整除的经线为中心，向东西两侧延伸7.5度，即每15°划分一个时区，这是理论时区，理论时区的时间采用其中央经线（或标准经线）的地方时。所以每差一个时区，区时相差一个小时，相差多少个时区，就相差多少个小时。因此推算，东12区与西12区为同一地方，为避免同一地方日期却相差一天的矛盾，提出国际换日线的概念，国际换日线东侧比西侧迟整整24小时。
+ps： 虽然东12和西12被称作两个名字，但他们属于一个时区，这恰恰也证明时区是地理划分，而非时间划分，只是由于换日线的存在，日期不同，而时间相同。因此全球一共有12个时区。
+不同时区的标识为‘UTC±[hh]’，例如UTC&#43;8标识东八区，也是中国常用的时区，标志是UTC&#43;8 = 北京时间 = Asia/Shanghai，他比0时区早八个小时，这意味着当我们早上8点时，英国此时时0时，而西八区此时还是昨天下午四点。
+0时区的标识： 如果UTC并无特别标注，或者使用单个字母Z，就表示零时区。例如： 09:30 UTC，09:30Z。此外，0时区的地理标志为格林威治天文台，是国际公认的世界时间起源地。
+法定时区则是相对于理论时区而言，或者说相对于地理而言，以为理论时区的划分是根据地球整体的划分，而部分国家的时区并不刚好在某个时区内，有可能在两个时区夹缝之中。
+总结 这里仅仅介绍了UTC协调世界时，此外还有其他的时间表示法，例如： 英国仍在使用GMT。">
+
+	
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        猢狲
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/" title="主页 page">
+              主页
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title="文章 page">
+              文章
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/follow/" title="长期更新 page">
+              长期更新
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
+              about
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/follow/" title=" page">
+              
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+	
+    
+	
+	<main class="pv0" role="main">
+      
+  <div class="flex-l mt2 mw8 center">
+    <article class="center cf pv5 ph3 ph4-ns mw7">
+      <header>
+        <h1 class="f1">
+          关于utc时区的那些事情
+        </h1>
+      </header>
+      <div class="nested-copy-line-height lh-copy f4 nested-links mid-gray">
+        <p>首先说结论，utc时区是一种分区，对于全球时间的划分、转换，例如，北京时间8点，实际上等于英国时间0点。哈哈哈，还是很模糊吧，最开始我也是这么认为的，但是在编程时遇到一些东西还是不懂，根本无法分清他们。</p>
+<h1 id="基本概念">基本概念</h1>
+<p>UTC时间基于经纬度的划分，如果没有他们也无法时间时区的转换，因为所谓的时间，是根据地球对太阳的公转和自传共同作用形成的。</p>
+<h2 id="经纬线的定义">经纬线的定义</h2>
+<p>经线： 连接南极、北极的半圆弧线</p>
+<p><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRysWlVgkDIZvvS4ZsoM_ZL84MiA20e835SHw&amp;s" alt="经线和经度示意图_地球地图_初高中地理网"></p>
+<p>纬线： 与经线垂直，包围地球表面的一个圆。</p>
+<p><img src="https://lh3.googleusercontent.com/proxy/pikT13oe93jyKeXqpLQtwebl0mrrpM9v5VlcbtDk83ciKXiGpgCFZqoaiIpIIXMuJQ50_sZ_pVDAWMCI4V_yR7N9VKlkXgbasYitJnZa" alt="纬线和纬度示意图_地球地图_初高中地理网"></p>
+<h2 id="时区的划分">时区的划分</h2>
+<p>时区可分为理论时区和法定时区，值得注意的，虽然叫做时区，看上去像是时间的划分，可实际上是地理位置的划分。</p>
+<p>理论时区又被成为协调世界时，写作UTC。</p>
+<p>以被15整除的<a href="https://zh.wikipedia.org/wiki/%E7%B6%93%E7%B7%9A">经线</a>为中心，向东西两侧延伸7.5度，即每15°划分一个时区，这是<strong>理论时区</strong>，理论时区的时间采用其中央经线（或标准经线）的地方时。所以每差一个时区，区时相差一个小时，相差多少个时区，就相差多少个小时。因此推算，东12区与西12区为同一地方，为避免同一地方日期却相差一天的矛盾，提出<a href="https://zh.wikipedia.org/wiki/%E5%9C%8B%E9%9A%9B%E6%8F%9B%E6%97%A5%E7%B7%9A">国际换日线</a>的概念，国际换日线东侧比西侧迟整整24小时。</p>
+<p>ps： 虽然东12和西12被称作两个名字，但他们属于一个时区，这恰恰也证明时区是地理划分，而非时间划分，只是由于换日线的存在，日期不同，而时间相同。因此全球一共有12个时区。</p>
+<p>不同时区的标识为‘UTC±[hh]’，例如UTC+8标识东八区，也是中国常用的时区，标志是UTC+8 = 北京时间 = Asia/Shanghai，他比0时区早八个小时，这意味着当我们早上8点时，英国此时时0时，而西八区此时还是昨天下午四点。</p>
+<p>0时区的标识： 如果UTC并无特别标注，或者使用单个字母Z，就表示零时区。例如： 09:30 UTC，09:30Z。此外，0时区的地理标志为格林威治天文台，是国际公认的世界时间起源地。</p>
+<p>法定时区则是相对于理论时区而言，或者说相对于地理而言，以为理论时区的划分是根据地球整体的划分，而部分国家的时区并不刚好在某个时区内，有可能在两个时区夹缝之中。</p>
+<h1 id="总结">总结</h1>
+<p>这里仅仅介绍了UTC协调世界时，此外还有其他的时间表示法，例如： 英国仍在使用GMT。</p>
+ 
+      </div>
+    </article>
+  </div>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  猢狲 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

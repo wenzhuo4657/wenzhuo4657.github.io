@@ -1,5 +1,15 @@
 {{ define "main" }}
-  <article class="box pa3 pa4-ns nested-copy-line-height ">
+  <!-- <article class="box pa3 pa4-ns nested-copy-line-height "> -->
+  
+<!-- <article class=" ">  -->
+    <section class="">
+      {{ $image := resources.GetRemote "https://blog.wenzhuo4657.org/img/2025/06/e495c75605c66163a0dcecacb10a7275.jpg" }}
+      {{ if $image }}
+        <img src="{{ $image.RelPermalink }}" alt="示例图片"   style="background-color: rgba(0, 0, 0, 0.5) " class="w-100">
+      {{ else }}
+        <p class="red">图片加载失败，请检查 URL 或网络设置。</p>
+      {{ end }}
+    </section>
 
     <!-- <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}"> -->
       <!-- {{- .Content -}} -->

@@ -1,7 +1,7 @@
 ---
 title: dubbo的spi
 date: 2025-01-22 16:47:11
-categories:  dubbo
+layout : 'singlet'
 ---
 
 

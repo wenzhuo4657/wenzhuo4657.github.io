@@ -1,7 +1,7 @@
 ---
 title: ssh、gpg以及apt软件下载器
 date: 2025-05-25 20:44:43
-categories: 教程
+layout : 'singlet'
 ---
 
 

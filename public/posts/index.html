@@ -59,7 +59,8 @@
 	
 
   <header>
-    <div class="pb3-m pb6-l bg-black">
+    
+	<div class="bg-black"> 
       <nav class="pv3 ph3 ph4-ns" role="navigation">
   <div class="flex-l center items-center justify-between">
     <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
@@ -123,24 +124,46 @@
   </div>
 </nav>
 
-      <div class="tc-l pv3 ph3 ph4-ns">
-        <h1 class="f2 f-subheadline-l fw2 light-silver mb0 lh-title">
-          猢狲
-        </h1>
+      
         
-      </div>
+          
+        
+        
+      
     </div>
   </header>
 
 
 	
-    <main class="pb7" role="main">
+    
+	
+	<main class="pv0" role="main">
       
 
   <article class="pa3 pa4-ns nested-copy-line-height">
     <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links mid-gray"></section>
 
     <section class="flex-ns mt5 flex-wrap justify-around">
+      
+        <div class="w-100 w-30-l mb4 relative bg-white">
+            <div class="mb3 pa4 mid-gray overflow-hidden">
+    
+      <div class="f6">
+        June 29, 2025
+      </div>
+    
+    <h1 class="f3 near-black">
+      <a href="/posts/%E5%85%B3%E4%BA%8Eutc%E6%97%B6%E5%8C%BA%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B%E6%83%85/" class="link black dim">
+        关于utc时区的那些事情   
+      </a>
+    </h1>
+    
+      
+    
+  <a href="/posts/%E5%85%B3%E4%BA%8Eutc%E6%97%B6%E5%8C%BA%E7%9A%84%E9%82%A3%E4%BA%9B%E4%BA%8B%E6%83%85/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
+  </div>
+
+        </div>
       
         <div class="w-100 w-30-l mb4 relative bg-white">
             <div class="mb3 pa4 mid-gray overflow-hidden">
@@ -154,30 +177,10 @@
         rocketmq的可观测性配置   
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
+    
       
-    </div>
+    
   <a href="/posts/rocketmq%E7%9A%84%E5%8F%AF%E8%A7%82%E6%B5%8B%E6%80%A7%E9%85%8D%E7%BD%AE/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
-  </div>
-
-        </div>
-      
-        <div class="w-100 w-30-l mb4 relative bg-white">
-            <div class="mb3 pa4 mid-gray overflow-hidden">
-    
-      <div class="f6">
-        June 22, 2025
-      </div>
-    
-    <h1 class="f3 near-black">
-      <a href="/posts/test/" class="link black dim">
-        Test   
-      </a>
-    </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <p>这是什么</p>
-    </div>
-  <a href="/posts/test/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
 
         </div>
@@ -194,80 +197,9 @@
         ssh、gpg以及apt软件下载器   
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <h1 id="小白级别的理解勿cue">小白级别的理解，勿cue</h1>
-<p>首先说结论，ssh、gpt是用于加密，且在加密这个分类下属于非对称加密（指公钥加密、私钥解密），而apt是ubunt等linux系统的一个软甲下载器。</p>
-<h2 id="sshgpg">ssh、gpg</h2>
-<h3 id="对称加密和非堆成加密">对称加密和非堆成加密</h3>
-<p>对称加密算法使用相同的密钥用于加密或者解密，这使通信双方必须完全信任对方，才能够发送密钥，否则密钥就很可能被泄露，并且在传输过程中泄露也很糟糕。</p>
-<p>但是由于使用相同的密钥进行加密和解密，所以x速度比较快。</p>
-<p>而非对称加密算法将密钥分为私钥和公钥，其中私钥用于解密，公钥用于加密。所以相比于同级别的对称加密，非对称加密速度更慢，但安全性更高，我们只需要将公钥发布到任意服务器上即可实现通信（例如 keyserver）</p>
-<h3 id="ssh和gpg的区别">ssh和gpg的区别？</h3>
-<p>ssh： 常用于服务器加密（实时交互，需要处理动态数据），强度相当于钥匙。</p>
-<p>gpg： 常用于文件加密（静态数据），强度相当于保险箱。</p>
-<h3 id="pgpgpgopenpgp">pgp、gpg、OpenPGP</h3>
-<p><a href="https://www.rmnof.com/article/openpgp-gnupg-introduction/">OpenPGP（PGP/GPG）深入浅出，完全入门指南</a>、</p>
-<ul>
-<li>PGP：由Phil Zimmermann开发，最终被赛门铁克收购，是一个商业软件，需要付费。</li>
-<li>OpenPGP：一种协议，定义了加密消息、签名、私钥和用于交换公钥的证书统一标准。</li>
-<li>GPG（GnuPG）：符合OpenPGP标准的开源加密软件，PGP的开源实现。</li>
-</ul>
-<h2 id="使用">使用</h2>
-<h3 id="创建密钥">创建密钥</h3>
-<p>官方推荐的工具</p>
-<p>ssh：<a href="https://www.openssh.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN">OpenSSH</a></p>
-<p>gpg： <a href="https://gnupg.org/index.html">GnuPG</a></p>
-<h3 id="公钥服务器">公钥服务器</h3>
-<p><a href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
-<p><a href="https://keyserver.ubuntu.com/?spm=a2ty_o01.29997173.0.0.299fc921OTUceN#">OpenPGP 密钥服务器</a></p>
-<h3 id="使用gpg密钥">使用gpg密钥</h3>
-<p>对于ssh直接进行服务器链接等操作即可，但是gpg密钥是令人迷惑的，因为他是属于静态文件的加密，这意味着灵活性低、安全性高，而这样的加密特性势必要求一个符合的场景，例如：通信的双方必须信任对方，否则没有进行交换文件的必要。</p>
-<p><a href="https://ulyc.github.io/2021/01/26/2021%E5%B9%B4-%E7%94%A8%E6%9B%B4%E7%8E%B0%E4%BB%A3%E7%9A%84%E6%96%B9%E6%B3%95%E4%BD%BF%E7%94%A8PGP-%E4%B8%8B/">2021年，用更现代的方法使用PGP（下） - C的博客 |UlyC</a></p>
-<p>ps： 这篇文章中说的漏洞已经被解决了，需要注意的是里面所提到的交换公钥的方式</p>
-<h4 id="gpg的特征">gpg的特征</h4>
-<p>这里的特征是指gpg密钥上的签名、指纹等名词，他们在很长一段时间一直困扰我。</p>
-<h5 id="1--创建">1，  创建</h5>
-<p><code> gpg   --full-generate-key</code> 该选项表示功能齐全的密钥生成</p>
-<pre tabindex="0"><code>PS C:\Users\25370&gt; gpg  --full-generate-key
-gpg (GnuPG) 2.4.3; Copyright (C) 2023 g10 Code GmbH
-This is free software: you are free to change and redistribute it.
-There is NO WARRANTY, to the extent permitted by law.
-
-Please select what kind of key you want:
-   (1) RSA and RSA
-   (2) DSA and Elgamal
-   (3) DSA (sign only)
-   (4) RSA (sign only)
-   (9) ECC (sign and encrypt) *default*
-  (10) ECC (sign only)
-  (14) Existing key from card
-Your selection? 1
-RSA keys may be between 1024 and 4096 bits long.
-What keysize do you want? (3072) 2048
-Requested keysize is 2048 bits
-Please specify how long the key should be valid.
-         0 = key does not expire
-      &lt;n&gt;  = key expires in n days
-      &lt;n&gt;w = key expires in n weeks
-      &lt;n&gt;m = key expires in n months
-      &lt;n&gt;y = key expires in n years
-Key is valid for? (0) 1y
-Key expires at 2026/5/25 21:39:55 �й���׼ʱ��
-Is this correct? (y/N) y
-
-GnuPG needs to construct a user ID to identify your key.
-
-Real name: wenzhuo4657
-Email address: 14783149521@163.com
-Comment: test
-You selected this USER-ID:
-    &#34;wenzhuo4657 (test) &lt;14783149521@163.com&gt;&#34;
-
-Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit? q
-gpg: Key generation canceled.
-PS C:\Users\25370&gt;
-</code></pre><p>这一部分定义了uid： wenzhuo4657 (test) <a href="mailto:14783149521@163.com">14783149521@163.com</a></p>
-    </div>
+    
+      
+    
   <a href="/posts/sshgpg%E4%BB%A5%E5%8F%8Aapt%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD%E5%99%A8/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
 
@@ -285,75 +217,9 @@ PS C:\Users\25370&gt;
         logback官方文档阅读（一）   
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <h3 id="logback">logback</h3>
-<h4 id="架构">架构</h4>
-<p><a href="https://logback.qos.ch">Logback 架构</a>
-logback的核心依赖有：logback-core，logback-classic 和 logback-access</p>
-<p>core： 核心实现，是其他两个包的基础
-classic：
-logback-classic 模块可以被同化为 log4j 1.x 的显着改进版本。此外，logback-classic 本机实现了 <a href="http://www.slf4j.org/">SLF4J API</a></p>
-<p>access： 与 Servlet 容器（例如 Tomcat 和 Jetty）集成，以提供 HTTP 访问日志功能</p>
-<h4 id="配置">配置</h4>
-<p>Logback.xml配置的两个重要标签：<code>Logger</code>，<code>Appender</code></p>
-<p>logger： 指定日志记录根（全限定类名）和appender的关联
-appender： 日志的具体输出实现，例如： 控制台输出、文件输出等</p>
-<pre tabindex="0"><code>示例配置
-
-&lt;configuration scan=&#34;true&#34; scanPeriod=&#34;60 seconds&#34; debug=&#34;false&#34;&gt;
-&lt;property name=&#34;console&#34; value=&#34;==\n[%-5level] %red(%d{HH:mm}) Thread:[%thread]  Method:%green(%M) %cyan(%X{traceId})   classpath:%c \n%highlight(return):%m%n&#34;&gt;&lt;/property&gt;
-&lt;property name=&#34;log_dir&#34; value=&#34;./data/log&#34;&gt;&lt;/property&gt;
-    &lt;appender name=&#34;STDOUT&#34; class=&#34;ch.qos.logback.core.ConsoleAppender&#34;&gt;
-            &lt;encoder class=&#34;ch.qos.logback.classic.encoder.PatternLayoutEncoder&#34;&gt;
-                 &lt;pattern&gt;${console}&lt;/pattern&gt;
-                &lt;charset&gt;utf8&lt;/charset&gt;
-            &lt;/encoder&gt;
-    &lt;/appender&gt;
-
-
-    &lt;!--html格式日志文件输出appender--&gt;
-    &lt;appender name=&#34;SERVICE_APPENDER&#34; class=&#34;ch.qos.logback.core.FileAppender&#34;&gt;
-        &lt;!--日志文件保存路径--&gt;
-        &lt;file&gt;${log_dir}/logback.html&lt;/file&gt;
-        &lt;!--html 消息格式配置--&gt;
-        &lt;encoder class=&#34;ch.qos.logback.core.encoder.LayoutWrappingEncoder&#34;&gt;
-            &lt;layout class=&#34;ch.qos.logback.classic.html.HTMLLayout&#34;&gt;
-            &lt;/layout&gt;
-        &lt;/encoder&gt;
-    &lt;/appender&gt;
-
-
-        &lt;appender name=&#34;All_APPENDER&#34; class=&#34;ch.qos.logback.core.rolling.RollingFileAppender&#34;&gt;
-            &lt;file&gt;${log_dir}/All/demo.log&lt;/file&gt;
-            &lt;encoder&gt;
-                &lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt;
-            &lt;/encoder&gt;
-            &lt;rollingPolicy class=&#34;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&#34;&gt;
-                &lt;fileNamePattern&gt;${log_dir}/All/demo.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt;
-            &lt;/rollingPolicy&gt;
-
-    &lt;/appender&gt;
-
-
-
-&lt;!--    &lt;/appender&gt;--&gt;
-
-    &lt;root level=&#34;DEBUG&#34;&gt;
-        &lt;appender-ref ref=&#34;STDOUT&#34;/&gt;
-        &lt;appender-ref ref=&#34;All_APPENDER&#34;&gt;&lt;/appender-ref&gt;
-        &lt;appender-ref ref=&#34;SERVICE_APPENDER&#34;/&gt;
-    &lt;/root&gt;
-
-
-
-        &lt;logger name=&#34;org/example&#34; level=&#34;ERROR&#34; additivity=&#34;true&#34;&gt;
-            &lt;appender-ref ref=&#34;SERVICE_APPENDER&#34;/&gt;
-        &lt;/logger&gt;
-
-&lt;/configuration&gt;
-</code></pre><h3 id="官网文档阅读">官网文档阅读</h3>
-<p><a href="https://logback.qos.ch/manual/introduction.html">文档首页</a></p>
-    </div>
+    
+      
+    
   <a href="/posts/logback%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3%E9%98%85%E8%AF%BB%E4%B8%80/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
 
@@ -371,54 +237,9 @@ appender： 日志的具体输出实现，例如： 控制台输出、文件输�
         rocketmq源码阅读（一）：生产者初识   
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <h1 id="源码阅读一">源码阅读（一）</h1>
-<h2 id="搭建环境">搭建环境</h2>
-<p>rocketmq的java-sdk并没有什么特殊的构建的，直接加载maven即可。</p>
-<p>节点部署：
-<a href="https://rocketmq.apache.org/zh/docs/quickStart/02quickstartWithDocker">Docker 部署 RocketMQ | RocketMQ</a></p>
-<p>面板部署：
-<a href="https://github.com/apache/rocketmq-dashboard">apache/rocketmq-dashboard</a></p>
-<p>hhh，遵从官网部署，点点点就可以了。</p>
-<h2 id="生产者初识">生产者初识</h2>
-<p>阅读源码首先要明确的目标，或者说我们想要了解什么？</p>
-<p>在我看来生产者的职责分为以下几个</p>
-<ul>
-<li>1,与<code>namesrv</code>沟通，维护本地的<code>broker</code>通信队列</li>
-<li>2,发送<code>topic</code>消息到远程<code>broker</code></li>
-<li>3,根据响应结果判断是否发送成功，以及失败情况下的策略</li>
-</ul>
-<p>每一个生产者对于<code>broker</code>节点来说是消息的来源，但是<code>broker</code>并不关心究竟有多少个生产者在为它提供服务，对于消费者来说同样如此！</p>
-<p>首先定位到源码示例</p>
-<p><img src="%5Bhttps://blog.wenzhuo4657.org/img/2025/04/ce5a9ce6d095400e1dfefe77486c2729.png" alt=""></p>
-<p>示例的逻辑并不复杂，但问题是怎么处理的？尝试追溯<code>DefaultMQProducer</code>,找到客户端的sdk模块<code>rocketmq-client</code></p>
-<p>观察<code>DefaultMQProducer</code>的父类路径发现<code>extends ClientConfig implements MQProducer</code>,对于<code>MQProducer</code>没啥好说的，定义了生产者方法规范，而且没有注释。小白一只的我将目光对准<code>ClientConfig</code>,</p>
-<p><code>private String clientIP = NetworkUtil.getLocalAddress();</code>  寻找ip的方法。</p>
-<p><code>private String instanceName = System.getProperty(&quot;rocketmq.client.name&quot;, &quot;DEFAULT&quot;);</code>  生产者名称</p>
-<pre tabindex="0"><code>    # 客户端id，这个要注意与生产者名称区分，在我看来是类似与多元组一样的， ip+instanceName+......
-   
-    public String buildMQClientId() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(this.getClientIP());
-
-        sb.append(&#34;@&#34;);
-        sb.append(this.getInstanceName());
-        if (!UtilAll.isBlank(this.unitName)) {
-            sb.append(&#34;@&#34;);
-            sb.append(this.unitName);
-        }
-
-        if (enableStreamRequestType) {
-            sb.append(&#34;@&#34;);
-            sb.append(RequestType.STREAM);
-        }
-
-        return sb.toString();
-    }
     
-</code></pre><p>需要注意的是对于修改<code>clentIP</code>可以直接通过<code>producer.setClientIP(DEFAULT_NAMESRVADDR);</code>,<code>clientID</code>则并没有这个字段，他是在生产者启动时自动生成的的一个标识符，或许可以这么说 <code>ip+instanceName</code>表示了这个主机上的所有rocketmq的消费者和生产者。</p>
-<p>追溯<code>buildMQClientId</code>即可发现，start的调用链路中存在这个方法。</p>
-    </div>
+      
+    
   <a href="/posts/rocketmq%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%B8%80%E7%94%9F%E4%BA%A7%E8%80%85%E5%88%9D%E8%AF%86/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
 
@@ -436,49 +257,9 @@ appender： 日志的具体输出实现，例如： 控制台输出、文件输�
         maven插件新手解惑   
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <h2 id="maven插件的定义">maven插件的定义</h2>
-<p>maven插件的定义是在pom文件下的</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">&lt;</span>plugins<span style="color:#f92672">&gt;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;</span>plugin<span style="color:#f92672">&gt;</span>
-</span></span><span style="display:flex;"><span>    		<span style="color:#f92672">&lt;</span>groupId<span style="color:#f92672">&gt;</span>org.<span style="color:#a6e22e">springframework</span>.<span style="color:#a6e22e">boot</span><span style="color:#f92672">&lt;/</span>groupId<span style="color:#f92672">&gt;</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;</span>artifactId<span style="color:#f92672">&gt;</span>spring<span style="color:#f92672">-</span>boot<span style="color:#f92672">-</span>maven<span style="color:#f92672">-</span>plugin<span style="color:#f92672">&lt;/</span>artifactId<span style="color:#f92672">&gt;</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&lt;</span>version<span style="color:#f92672">&gt;</span>2.<span style="color:#a6e22e">6</span>.<span style="color:#a6e22e">0</span><span style="color:#f92672">&lt;/</span>version<span style="color:#f92672">&gt;</span>   
-</span></span><span style="display:flex;"><span>     <span style="color:#f92672">&lt;/</span>plugin<span style="color:#f92672">&gt;</span>
-</span></span><span style="display:flex;"><span> <span style="color:#f92672">&lt;/</span>plugins<span style="color:#f92672">&gt;</span>
-</span></span></code></pre></div><p>与常规的依赖定位一致，而插件的配置则是在<!-- raw HTML omitted -->、<!-- raw HTML omitted -->等标签下定义的，他们或许是环境变量或许是在maven生命周期的插入点。</p>
-<p>简单来说maven插件的两个用途</p>
-<p>1,融入maven生命周期，增加外挂式的功能</p>
-<p>2,不参入maven生周期，直接使用（例如，在微服务领域下，将服务的定义IDL文件编译为特定语言的接口文件。）</p>
-<h2 id="maven插件的原理">maven插件的原理</h2>
-<p><strong>Maven 是一个意第绪语单词，意为 知识的积累者，最初是为了简化 Jakarta Turbine 项目的构建过程而创建的。当时有多个项目，每个项目都有自己的 Ant 构建文件，而且每个文件都略有不同。JAR 被签入 CVS。我们希望有一种标准的方法来构建项目，明确定义项目包含的内容，一种发布项目信息的简便方法，以及一种在多个项目之间共享 JAR 的方法。</strong></p>
-<p>这段话取自<a href="https://maven.apache.org/what-is-maven.html">官网</a>对于maven的定义,可以看出maven的核心在于管理jar文件，便于多个不同的项目去引入相同的jar。</p>
-<p><strong>“Maven” 实际上只是一组 Maven 插件的核心框架。换句话说，插件是执行大部分实际操作的地方，插件用于：创建 jar 文件、创建 war 文件、编译代码、单元测试代码、创建项目文档等等。您能想到的在项目上执行的几乎所有操作都是作为 Maven 插件实现的。</strong></p>
-<p>这段话取自<a href="https://maven.apache.org/guides/introduction/introduction-to-plugins.html">插件开发简介</a>,也就是说maven的插件的目标是生命周期，而生命周期在官方术语中被称为<code>Mojo</code>.</p>
-<p>进而去查看maven插件开发的示例即可发现，插件实际上就是依托与maven这个框架所提供的扩展点所构建出来的可执行jar文件。</p>
-<p>至此对于maven插件的和依赖的之间的关系就已经很明确了，他们实际上是一样，都可以作为依赖去使用，实际上更准确的说法是，可以融入maven生命周期的依赖被称为maven插件。</p>
-<p><em>如果想要学习maven插件开发，就一定要仔细查看maven的<a href="https://maven.apache.org/plugin-developers/index.html">官方文档</a></em></p>
-<h2 id="maven插件示例解读">maven插件示例解读</h2>
-<h3 id="spring-boot-maven-plugin">spring-boot-maven-plugin</h3>
-<h4 id="前置知识">前置知识</h4>
-<p>什么是springboot?通常我们说springboot是对于各种依赖自动配置的boot工具，便于快速开发，避免依赖的困扰，这种方式目前已经不止是springboot的独有，只是它依托与spring生态最为出名而已。</p>
-<p>springboot与spring最大的区别在我这个小白看来则是注解开发，@SpringBootApplication定义程序的启动入口，所有的程序都需要依托于这个主类进行加载，而传统的spring项目则需要依托与web容器启动servlet配置，也就WebApplicationInitializer（简单来说是用于将项目中所有的servlet加载到web容器当中，参如http请求当中的rest控制器部分）。</p>
-<p>无论如何我们需要明白一个jar包的执行是需要一个入口！而不同项目的入口是不一样！</p>
-<p>对于普通jar包来说，他只需要将当前项目的class文件打包即可，而一个可执行的jar包则额外的需要依赖、入口、引导器。（如果稍微了解一点jvm知识就应该明白，java程序并不会在加载阶段去校验import是否存在，至于执行更是需要一个明确的入口。）</p>
-<p>可执行jar:</p>
-<ul>
-<li>将依赖引入jar包当中</li>
-<li>META-INF/MANIFEST.MF文件中存在启动类等配置</li>
-<li>使用命令<code>java -jar</code> 执行</li>
-</ul>
-<p>不可执行jar:</p>
-<ul>
-<li>内部只有项目的class文件</li>
-<li>META-INF/MANIFEST.MF文件中不存在启动类等配置</li>
-<li>不能使用<code>java -jar</code> 执行。</li>
-</ul>
-<p>java -jar执行逻辑： JVM会根据MANIFEST.MF文件中的Main-Class属性找到程序的入口点（即主类），然后开始执行该类的main方法</p>
-    </div>
+    
+      
+    
   <a href="/posts/maven%E6%8F%92%E4%BB%B6%E6%96%B0%E6%89%8B%E8%A7%A3%E6%83%91/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
 
@@ -496,37 +277,9 @@ appender： 日志的具体输出实现，例如： 控制台输出、文件输�
         关于@RequestParam的常见误区   
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <p>首先说结论，@RequestParam不仅可以结束queryString的参数，还可以接收表单数据。</p>
-<h2 id="关于http载荷的区分">关于http载荷的区分</h2>
-<ul>
-<li>
-<p>queryString</p>
-<p><code>http://example.com/path?key1=value1&amp;key2=value2&amp;key3=value3</code></p>
-<p>无论是get还是post，他在url上的表现都是上述，而关于get和post的区别主要显示在http报文上字段填充。</p>
-<pre tabindex="0"><code>GET /search?q=springboot&amp;page=1 HTTP/1.1
-Host: example.com
-Accept: application/json
-</code></pre><pre tabindex="0"><code>路径和请求体可以共存，但是他们都统一可以使用作为queryString参数进行键值对解析。
-POST /submit?id=123 HTTP/1.1
-Host: example.com
-Content-Type: application/json
-
-{&#34;name&#34;: &#34;Alice&#34;}
-</code></pre></li>
-</ul>
-<p>事实上，queryStirng参数的核心在于键值，而不是位于请求体、路径。</p>
-<ul>
-<li>
-<p>multipart/form-data</p>
-<p>文件上传</p>
-</li>
-<li>
-<p>application/x-www-form-urlencoded</p>
-<p>表单文件</p>
-</li>
-</ul>
-    </div>
+    
+      
+    
   <a href="/posts/%E5%85%B3%E4%BA%8E-requestparam%E7%9A%84%E5%B8%B8%E8%A7%81%E8%AF%AF%E5%8C%BA/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
 
@@ -544,89 +297,9 @@ Content-Type: application/json
         八大排序算法梳理   
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <p>本篇blog的语言为java实现，介意请划走</p>
-<h1 id="八大排序算法">八大排序算法</h1>
-<ul>
-<li>冒泡排序</li>
-<li>选择排序</li>
-<li>插入排序</li>
-<li>希尔排序</li>
-<li>快速排序</li>
-<li>归并排序</li>
-<li>桶排序</li>
-<li>堆排序</li>
-</ul>
-<p>上述排序值得注意的是堆排序，他利用顺序二叉树实现了对堆元素的随机存取，而他所操作的虽然是数组结构，但本质上我们将其视为一个二叉树。</p>
-<h2 id="基本排序算法并不复杂甚至称不上算法理解即可">基本排序算法（并不复杂，甚至称不上算法，理解即可）</h2>
-<h3 id="冒泡">冒泡</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">bubble_sort</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr) {
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> i, j, temp, len <span style="color:#f92672">=</span> arr.<span style="color:#a6e22e">length</span>;
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> len <span style="color:#f92672">-</span> 1; i<span style="color:#f92672">++</span>)
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">for</span> (j <span style="color:#f92672">=</span> 0; j <span style="color:#f92672">&lt;</span> len <span style="color:#f92672">-</span> 1 <span style="color:#f92672">-</span> i; j<span style="color:#f92672">++</span>)
-</span></span><span style="display:flex;"><span>				<span style="color:#66d9ef">if</span> (arr<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> arr<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span>) {
-</span></span><span style="display:flex;"><span>					temp <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span>;
-</span></span><span style="display:flex;"><span>					arr<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span>;
-</span></span><span style="display:flex;"><span>					arr<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> temp;
-</span></span><span style="display:flex;"><span>				}
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>时间复杂度（n^2）</p>
-<p>每次排序将最大值放入末尾，且注意，该算法的核心在于逐步排序，内层循环将较小或者较大的值下沉。</p>
-<h3 id="选择排序">选择排序</h3>
-<p>在冒泡排序中，我们逐步将最大或最小值后移，而选择排序优化了这个过程，比较过程并不移动数组元素，而是先找到将要移动的坐标。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Description: 选择排序
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param array
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return void
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author JourWon
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @date 2019/7/11 23:31
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">selectionSort</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> array) {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (array <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> array.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;=</span> 1) {
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span>;
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> array.<span style="color:#a6e22e">length</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> length <span style="color:#f92672">-</span> 1; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 保存最小数的索引</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">int</span> minIndex <span style="color:#f92672">=</span> i;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1; j <span style="color:#f92672">&lt;</span> length; j<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>			<span style="color:#75715e">// 找到最小的数</span>
-</span></span><span style="display:flex;"><span>			<span style="color:#66d9ef">if</span> (array<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> array<span style="color:#f92672">[</span>minIndex<span style="color:#f92672">]</span>) {
-</span></span><span style="display:flex;"><span>				minIndex <span style="color:#f92672">=</span> j;
-</span></span><span style="display:flex;"><span>			}
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>		<span style="color:#75715e">// 交换元素位置</span>
-</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">if</span> (i <span style="color:#f92672">!=</span> minIndex) {
-</span></span><span style="display:flex;"><span>			swap(array, minIndex, i);
-</span></span><span style="display:flex;"><span>		}
-</span></span><span style="display:flex;"><span>	}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Description: 交换元素位置
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param array
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param a
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param b
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return void
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @author JourWon
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @date 2019/7/11 17:57
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> array, <span style="color:#66d9ef">int</span> a, <span style="color:#66d9ef">int</span> b) {
-</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> temp <span style="color:#f92672">=</span> array<span style="color:#f92672">[</span>a<span style="color:#f92672">]</span>;
-</span></span><span style="display:flex;"><span>	array<span style="color:#f92672">[</span>a<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> array<span style="color:#f92672">[</span>b<span style="color:#f92672">]</span>;
-</span></span><span style="display:flex;"><span>	array<span style="color:#f92672">[</span>b<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> temp;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="插入排序">插入排序</h3>
-<p>该思想和动态规划有点像，即我们假定要将插入某个元素插入一个有序数组，那么我们只需要从数组起点或者某位逐步比较即可。</p>
-    </div>
+    
+      
+    
   <a href="/posts/%E5%85%AB%E5%A4%A7%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95%E6%A2%B3%E7%90%86/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
 
@@ -644,46 +317,9 @@ Content-Type: application/json
         git入门系列（一）   
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <h1 id="git是什么">git是什么？</h1>
-<h2 id="以键值数据库为基础的文件版本控制系统">以键值数据库为基础的文件版本控制系统</h2>
-<p>参考：https://git-scm.com/book/zh/v2/%e8%b5%b7%e6%ad%a5-Git-%e6%98%af%e4%bb%80%e4%b9%88%ef%bc%9f</p>
-<p>提醒： 本篇大部分在git官网都存在，只是顺序不一致，按我理解，这样有助于直接理解git的钩子机制。</p>
-<p>传统的文件版本数据库通过累计文件差异来区分文件版本，而git则是通过不断累计文件快照，然后使用链接管理当前版本应该显示的文件！</p>
-<ul>
-<li>好处：如果存储文件差异，则不可避免的需要从文件内部开始操作，所带来的是复杂且绝不能出错的高安全性要求，而git管理文件链接，换言之，他只需要保存每个版本的文件链接列表即可，对于真实的文件数据，他们互相隔离。</li>
-<li>坏处：文件系统容易变得臃肿庞大。</li>
-</ul>
-<p>参考:https://git-scm.com/book/zh/v2/Git-%e5%86%85%e9%83%a8%e5%8e%9f%e7%90%86-Git-%e5%af%b9%e8%b1%a1</p>
-<p>文件快照存储的方式则是键值数据库，位于.git/objects 目录。</p>
-<p>存储值，并返回唯一键（SHA-1 哈希值）：<code>echo 'test content' | git hash-object -w --stdin</code></p>
-<pre tabindex="0"><code>$ echo &#39;test content&#39; | git hash-object -w --stdin
-d670460b4b4aece5915caf5c68d12f560a9fe3e4
-</code></pre><p>取出：</p>
-<pre tabindex="0"><code>$ git cat-file -p d670460b4b4aece5915caf5c68d12f560a9fe3e4
-test content
-</code></pre><p>此外还有树对象用于组织这些键值。</p>
-<p><img src="https://blog.wenzhuo4657.org/img/image-20250312155433934.png" alt="image-20250312155433934"></p>
-<p>但是这仍然不是我们所熟知的git commit提交对象，这并没有提交信息的对应，这一点简单的说即是sha-1哈希值和文本的对应。随意找一个仓库都可以看到他们之间的关联。</p>
-<p><img src="https://blog.wenzhuo4657.org/img/image-20250312155805995.png" alt="image-20250312155805995"></p>
-<h2 id="待补充">待补充</h2>
-<h1 id="钩子函数">钩子函数</h1>
-<p>git的钩子位于<code>.git\hooks</code>,默认情况下都是.sample结尾，去掉这个后缀即可启用。</p>
-<p><img src="https://blog.wenzhuo4657.org/img/image-20250312160203955.png" alt="image-20250312160203955"></p>
-<p>尝试打开即可他先，他们都是统一的shell脚本，所以如果想要看懂是需要一点基础的。</p>
-<p>统一机制：当以非零退出脚本时，停止提交。</p>
-<p>提醒：shell脚本的运行并不是git管理的一部分，他们只是使用了git命令的一段编码，通常使用/bin/bash解释器运行。</p>
-<h2 id="pre-commit提交前执行">pre-commit：提交前执行</h2>
-<p>作用：当前分支是否存在，如果不存在会提供一个sha-1哈希值。</p>
-<p>git rev-parse &ndash;verify HEAD  （该命令可以验证参数是否可以转换为sha-1哈希值，即他是否在对象数据库中有对应关系，常见有分支名、标签名）</p>
-<h2 id="prepare-commit-msg提交前执行">prepare-commit-msg：提交前执行</h2>
-<p>作用：</p>
-<p>1，修改默认提交消息</p>
-<p>2，添加gpt签名</p>
-<p>3，将 git diff 结果插入提交消息的注释部分（咱不理解，自行查询）</p>
-<p>修改默认消息最直接的途径就是在文件末尾<code>echo &quot;default msg&quot; &gt; $1</code>,这样就会覆盖</p>
-<p><code>/usr/bin/perl -i.bak -ne 'print unless(m/^. Please enter the commit message/..m/^#$/)' &quot;$COMMIT_MSG_FILE&quot;</code></p>
-    </div>
+    
+      
+    
   <a href="/posts/git%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97%E4%B8%80/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
 
@@ -701,35 +337,9 @@ test content
         tomcat源码阅读（二）   
       </a>
     </h1>
-    <div class="nested-links f5 lh-copy nested-copy-line-height">
-      <h1 id="tomcat源码阅读">tomcat源码阅读</h1>
-<h2 id="日志模块梳理">日志模块梳理</h2>
-<p>现在日志通常分为日志门面和日志的具体实现。</p>
-<p>日志门面：充当应用程序和日志框架之间的沟通媒介，可以在程序无感的条件下更换日志框架。</p>
-<p>日志的具体实现：直接记录日志(console、file)，并且需要注意的是，这些信息都是由日志门面交给日志实现的。</p>
-<p>对于非日志编程的程序员来说，我们只需要明白如何根据日志门面切换日志实现即可，没必要阅读日志实现的代码。</p>
-<p>常见的日志门面：JCL、slf4j</p>
-<p>常见的日志实现：JUL（java.util.logging）、log4j、logback、log4j2</p>
-<h3 id="tomcat的日志门面juli">tomcat的日志门面JULI</h3>
-<p>该日志门面位于源码包<code>org.apache.juli</code>,基于JCL实现的。</p>
-<p>较为重要的三个类：</p>
-<p>org.apache.juli.logging.Log： 日志接口</p>
-<p>org.apache.juli.logging.DirectJDKLog：tomcat的默认日志实现。</p>
-<p>org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现。</p>
-<p>在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class<!-- raw HTML omitted --> clazz)。</p>
-<p>并且在LogFactory#release(ClassLoader classLoader)也可以看到日志实现默认为JUL,硬编码控制的。</p>
-<pre tabindex="0"><code>    public static void release(ClassLoader classLoader) {
-        // JULI&#39;s log manager looks at the current classLoader so there is no
-        // need to use the passed in classLoader, the default implementation
-        // does not so calling reset in that case will break things
-        if (!LogManager.getLogManager().getClass().getName().equals(
-                &#34;java.util.logging.LogManager&#34;)) {
-            LogManager.getLogManager().reset();
-        }
-    }
-</code></pre><h2 id="关于日志实现log的加载">关于日志实现log的加载</h2>
-<p>在LogFactory的无参构造器器中看到关键语句</p>
-    </div>
+    
+      
+    
   <a href="/posts/tomcat%E6%BA%90%E7%A0%81%E9%98%85%E8%AF%BB%E4%BA%8C/" class="ba b--moon-gray bg-light-gray br2 color-inherit dib f7 hover-bg-moon-gray link mt2 ph2 pv1">read more</a>
   </div>
 

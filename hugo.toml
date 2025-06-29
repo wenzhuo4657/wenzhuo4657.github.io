@@ -23,3 +23,13 @@ sectionPagesMenu = 'main'
     name = 'about'
     pageRef = '/about/_index'
     weight = 100000
+[markup.goldmark.renderer]
+  unsafe = true  # 允许渲染原始 HTML
+[security]
+  enableInlineShortcodes = true
+  [security.exec]
+    allow = ['^dart-sass-embedded$', '^go$', '^npx$', '^postcss$']
+  [security.funcs]
+    getenv = ['^HUGO_']
+    # 添加以下配置以允许远程资源
+    getRemote = true

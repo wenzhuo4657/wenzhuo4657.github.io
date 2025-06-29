@@ -1,7 +1,7 @@
 ---
 title: 关于@RequestParam的常见误区
 date: 2025-03-29 15:35:29
-categories: springboot
+layout : 'singlet'
 ---
 
 

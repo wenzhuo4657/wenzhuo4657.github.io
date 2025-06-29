@@ -1,7 +1,7 @@
 ---
 title: rocketmq源码阅读（一）：生产者初识
 date: 2025-04-16 19:28:54
-categories: 源码
+layout : 'singlet'
 
 ---
 

@@ -20,7 +20,7 @@ tomcat的日志门面JULI
 org.apache.juli.logging.Log： 日志接口
 org.apache.juli.logging.DirectJDKLog：tomcat的默认日志实现。
 org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现。
-在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class clazz)。
+在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class&lt;?&gt; clazz)。
 并且在LogFactory#release(ClassLoader classLoader)也可以看到日志实现默认为JUL,硬编码控制的。
     public static void release(ClassLoader classLoader) {
         // JULI&#39;s log manager looks at the current classLoader so there is no
@@ -75,7 +75,7 @@ tomcat的日志门面JULI 该日志门面位于源码包org.apache.juli,基于JC
 org.apache.juli.logging.Log： 日志接口
 org.apache.juli.logging.DirectJDKLog：tomcat的默认日志实现。
 org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现。
-在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class clazz)。
+在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class&lt;?&gt; clazz)。
 并且在LogFactory#release(ClassLoader classLoader)也可以看到日志实现默认为JUL,硬编码控制的。
 public static void release(ClassLoader classLoader) { // JULI&#39;s log manager looks at the current classLoader so there is no // need to use the passed in classLoader, the default implementation // does not so calling reset in that case will break things if (!LogManager.getLogManager().getClass().getName().equals( &#34;java.util.logging.LogManager&#34;)) { LogManager.getLogManager().reset(); } } 关于日志实现log的加载 在LogFactory的无参构造器器中看到关键语句">
   <meta property="og:locale" content="zh_CN">
@@ -96,13 +96,12 @@ tomcat的日志门面JULI 该日志门面位于源码包org.apache.juli,基于JC
 org.apache.juli.logging.Log： 日志接口
 org.apache.juli.logging.DirectJDKLog：tomcat的默认日志实现。
 org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现。
-在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class clazz)。
+在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class&lt;?&gt; clazz)。
 并且在LogFactory#release(ClassLoader classLoader)也可以看到日志实现默认为JUL,硬编码控制的。
 public static void release(ClassLoader classLoader) { // JULI&#39;s log manager looks at the current classLoader so there is no // need to use the passed in classLoader, the default implementation // does not so calling reset in that case will break things if (!LogManager.getLogManager().getClass().getName().equals( &#34;java.util.logging.LogManager&#34;)) { LogManager.getLogManager().reset(); } } 关于日志实现log的加载 在LogFactory的无参构造器器中看到关键语句">
   <meta itemprop="datePublished" content="2025-03-10T14:59:35+00:00">
   <meta itemprop="dateModified" content="2025-03-10T14:59:35+00:00">
   <meta itemprop="wordCount" content="159">
-  <meta itemprop="keywords" content="源码">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="tomcat源码阅读（二）">
   <meta name="twitter:description" content="tomcat源码阅读 日志模块梳理 现在日志通常分为日志门面和日志的具体实现。
@@ -116,7 +115,7 @@ tomcat的日志门面JULI 该日志门面位于源码包org.apache.juli,基于JC
 org.apache.juli.logging.Log： 日志接口
 org.apache.juli.logging.DirectJDKLog：tomcat的默认日志实现。
 org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现。
-在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class clazz)。
+在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class&lt;?&gt; clazz)。
 并且在LogFactory#release(ClassLoader classLoader)也可以看到日志实现默认为JUL,硬编码控制的。
 public static void release(ClassLoader classLoader) { // JULI&#39;s log manager looks at the current classLoader so there is no // need to use the passed in classLoader, the default implementation // does not so calling reset in that case will break things if (!LogManager.getLogManager().getClass().getName().equals( &#34;java.util.logging.LogManager&#34;)) { LogManager.getLogManager().reset(); } } 关于日志实现log的加载 在LogFactory的无参构造器器中看到关键语句">
 
@@ -195,7 +194,9 @@ public static void release(ClassLoader classLoader) { // JULI&#39;s log manager 
 
 
 	
-    <main class="pb7" role="main">
+    
+	
+	<main class="pv0" role="main">
       
   <div class="flex-l mt2 mw8 center">
     <article class="center cf pv5 ph3 ph4-ns mw7">
@@ -219,7 +220,7 @@ public static void release(ClassLoader classLoader) { // JULI&#39;s log manager 
 <p>org.apache.juli.logging.Log： 日志接口</p>
 <p>org.apache.juli.logging.DirectJDKLog：tomcat的默认日志实现。</p>
 <p>org.apache.juli.logging.LogFactory: 与tomcat进行交互获取log接口实现。</p>
-<p>在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class<!-- raw HTML omitted --> clazz)。</p>
+<p>在源码中可以看到，无论是什么类要记录日志都必须使用到Log的实现类，而对于tomcat源码来说，唯一获取该实例的途径就是LogFactory#getLog(Class<?> clazz)。</p>
 <p>并且在LogFactory#release(ClassLoader classLoader)也可以看到日志实现默认为JUL,硬编码控制的。</p>
 <pre tabindex="0"><code>    public static void release(ClassLoader classLoader) {
         // JULI&#39;s log manager looks at the current classLoader so there is no

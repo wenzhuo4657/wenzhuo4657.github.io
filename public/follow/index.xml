@@ -6,7 +6,14 @@
     <description>Recent content on 猢狲</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate></lastBuildDate>
+    <lastBuildDate>Sun, 29 Jun 2025 11:10:33 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/follow/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Jdk的接口收集</title>
+      <link>http://localhost:1313/follow/jdk%E7%9A%84%E6%8E%A5%E5%8F%A3%E6%94%B6%E9%9B%86/</link>
+      <pubDate>Sun, 29 Jun 2025 11:10:33 +0800</pubDate>
+      <guid>http://localhost:1313/follow/jdk%E7%9A%84%E6%8E%A5%E5%8F%A3%E6%94%B6%E9%9B%86/</guid>
+      <description>&lt;h1 id=&#34;jdk17&#34;&gt;jdk17&lt;/h1&gt;&#xA;&lt;p&gt;需要注意的，无论是何种依赖，他们需要jdk原因都是需要jdk定义的通用接口，换句话说，在执行时最底层一定会使用到他们，这对于问题调试非常有用，我们可以直接定位到这些接口，查看究竟是什么地方有问题。&lt;/p&gt;&#xA;&lt;h2 id=&#34;外部接口收集&#34;&gt;外部接口收集&lt;/h2&gt;&#xA;&lt;h3 id=&#34;sql&#34;&gt;sql&lt;/h3&gt;&#xA;&lt;p&gt;只要支持sql，应当都可以使用这些接口&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;java.sql.Connection     与特定数据库的连接 （会话&#xA;java.sql.Statement    用于执行静态 SQL 语句并返回其生成的结果的对象&#xA;javax.sql.DataSource  用于连接到此 DataSource 对象所表示的物理数据源的工厂&#xA;该 DataSource 接口由驱动程序供应商实现。有三种类型的实现：&#xA;基本实现 -- 生成标准 Connection 对象&#xA;连接池实现 -- 生成 Connection 将自动参与连接池的对象。此实现与中间层连接池管理器一起使用。&#xA;分布式事务实现 -- 生成 Connection 可用于分布式事务的对象，并且几乎总是参与连接池。此实现与中间层事务管理器一起使用，并且几乎总是与连接池管理器一起使用。&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;ldap&#34;&gt;ldap&lt;/h3&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;com.sun.jndi.ldap.LdapCtx      LDAP上下文实现&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h3 id=&#34;log&#34;&gt;log&lt;/h3&gt;&#xA;&lt;p&gt;这个接口是jdk提供的日志实现，但是多数情况下，我们使用logback等外部实现。&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;java.util.logging.Logger     jul的日志记录根&#xA;java.util.logging.LogManager     有一个全局 LogManager 对象，用于维护一组关于 Logger 和日志服务的共享状态&#xA;&lt;/code&gt;&lt;/pre&gt;</description>
+    </item>
   </channel>
 </rss>

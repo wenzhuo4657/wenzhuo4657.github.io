@@ -1,8 +1,7 @@
 ---
 title: git入门系列（一）
 date: 2025-03-12 15:37:15
-categories: 教程
-single_column: true
+layout : 'singlet'
 ---
 
 

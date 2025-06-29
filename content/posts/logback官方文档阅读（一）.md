@@ -1,7 +1,7 @@
 ---
 title: logback官方文档阅读（一）
 date: 2025-05-14 08:18:43
-categories: 源码阅读
+layout : 'singlet'
 ---
 
 
