@@ -6,8 +6,15 @@
     <description>Recent content on 猢狲</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Sun, 29 Jun 2025 11:10:33 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 01 Jul 2025 16:04:35 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/follow/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Vps脚本收集</title>
+      <link>http://localhost:1313/follow/vps%E8%84%9A%E6%9C%AC%E6%94%B6%E9%9B%86/</link>
+      <pubDate>Tue, 01 Jul 2025 16:04:35 +0800</pubDate>
+      <guid>http://localhost:1313/follow/vps%E8%84%9A%E6%9C%AC%E6%94%B6%E9%9B%86/</guid>
+      <description>&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://github.com/NodeSeekDev/NodeScriptKit&#34;&gt;NodeScriptKit&lt;/a&gt;&lt;/strong&gt;：nodeseek社区维护的脚本合集&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;2,&lt;a href=&#34;https://github.com/sjlleo/netflix-verify&#34;&gt;netflix-verify&lt;/a&gt;：奈飞解锁监测&lt;/p&gt;&#xA;&lt;p&gt;3，&lt;strong&gt;&lt;a href=&#34;https://github.com/xykt/IPQuality&#34;&gt;IPQuality&lt;/a&gt;&lt;/strong&gt;：IP质量检测脚本&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Jdk的接口收集</title>
       <link>http://localhost:1313/follow/jdk%E7%9A%84%E6%8E%A5%E5%8F%A3%E6%94%B6%E9%9B%86/</link>
