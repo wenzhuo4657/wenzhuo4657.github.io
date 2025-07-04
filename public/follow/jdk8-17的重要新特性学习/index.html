@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    
+    <title>Jdk8 17的重要新特性学习 | 猢狲</title>
+    <meta name="viewport" content="width=device-width,minimum-scale=1">
+    <meta name="description" content="本文档的主要目的是学习从jdk8升级至jdk17的所有重要特性。
+单文件的源代码启动
+java  recordTest.java
+这样可以不用生成class文件，只是必须写在一个java文件中。
+对于 Java 初学者并希望尝试简单程序的人特别有用，并且能和 jshell 一起使用。一定能程度上增强了使用 Java 来写脚本程序的能力。
+模块化系统
+解释
+引用： Java 9 揭秘（2. 模块化系统） - 林本托 - 博客园
+作用： 对包结构进行类型声明
+过往的问题：
+1， 依赖版本问题： jar依赖之间的相互引用，仅仅是根据类的全限定路径。但是众所周知，java中的大部分的依赖错误都并非是由于找不到全限定路径，而是引入了错误的版本。
+核心： 不同版本的依赖（也就是jar）他们具有相同的权限类限定符的类，但是我们无法确定究竟要不要使用。
+2，依赖缺失问题： 只有在运行时需要加载某个类时，才会具体的检查他们是否存在。
+此外引申的问题是，单体jre（他必须加载完整的类）相比于jdk中裁剪的jre启动速度更慢，消耗内存更多，但是注意，这并不意味着单体jre比jdk更大，只是相比于jdk中jre大，这使得原本是想要通过剥离出一个可运行的jre来减少内存消耗，反倒比安装jdk消耗更大了。
+问题解决：
+1，显示声明模块的依赖：
+模块必须声明对其他模块的显式依赖。 模块系统验证应用程序开发的所有阶段的依赖关系 —— 编译时，链接时和运行时。 假设一个模块声明对另一个模块的依赖，并且第二个模块在启动时丢失。
+并报错启动时错误，在这之间会报错运行时操作，且显示的声明对于依赖错误的排除非常有用。
+2，模块的强封装
+模块必须明确声明其中哪些公共类型可以被其他模块访问。 除非这些模块明确地使其公共类型可访问，否则模块不能访问另一个模块中的公共类型。
+改变：
+模块化将jdk重新划分为多个模块，这在idea中可以清晰的看到。
+![[Pasted image 20250630160727.png]]
+使用
+1，模块的可访问性配置：
+模块明确地使其公共类型可供其他模块使用，并且使用这些公共类型的模块明确声明对模块的依赖。 模块中的所有未导出的软件包都是模块的私有的，它们不能在模块之外使用。
+2，模块图
+应用程序的模块化结构可以被视为一个称为模块图。 在模块图中，每个模块都表示为一个节点。 如果第一个模块依赖于第二个模块，则存在从模块到另一个模块的有向边。 通过将称为根模块的一组初始模块的依赖关系与称为可观察模块的模块系统已知的一组模块相结合来构建模块图。
+-p 依赖模块位置  -m代表根模块定义/所检查模块  ： 模块名：主类
+java -p lib -m claim/pkg3.Main
+3， 语法
+基本语句
+五种基本语句">
+    <meta name="generator" content="Hugo 0.147.8">
+    
+    
+    
+      <meta name="robots" content="noindex, nofollow">
+    
+    
+
+    
+<link rel="stylesheet" href="/ananke/css/main.min.css" >
+
+
+
+
+    
+
+
+    
+      
+
+    
+
+    
+
+    
+      <link rel="canonical" href="http://localhost:1313/follow/jdk8-17%E7%9A%84%E9%87%8D%E8%A6%81%E6%96%B0%E7%89%B9%E6%80%A7%E5%AD%A6%E4%B9%A0/">
+    
+
+    <meta property="og:url" content="http://localhost:1313/follow/jdk8-17%E7%9A%84%E9%87%8D%E8%A6%81%E6%96%B0%E7%89%B9%E6%80%A7%E5%AD%A6%E4%B9%A0/">
+  <meta property="og:site_name" content="猢狲">
+  <meta property="og:title" content="Jdk8 17的重要新特性学习">
+  <meta property="og:description" content="本文档的主要目的是学习从jdk8升级至jdk17的所有重要特性。
+单文件的源代码启动 java recordTest.java 这样可以不用生成class文件，只是必须写在一个java文件中。
+对于 Java 初学者并希望尝试简单程序的人特别有用，并且能和 jshell 一起使用。一定能程度上增强了使用 Java 来写脚本程序的能力。
+模块化系统 解释 引用： Java 9 揭秘（2. 模块化系统） - 林本托 - 博客园
+作用： 对包结构进行类型声明
+过往的问题： 1， 依赖版本问题： jar依赖之间的相互引用，仅仅是根据类的全限定路径。但是众所周知，java中的大部分的依赖错误都并非是由于找不到全限定路径，而是引入了错误的版本。 核心： 不同版本的依赖（也就是jar）他们具有相同的权限类限定符的类，但是我们无法确定究竟要不要使用。
+2，依赖缺失问题： 只有在运行时需要加载某个类时，才会具体的检查他们是否存在。
+此外引申的问题是，单体jre（他必须加载完整的类）相比于jdk中裁剪的jre启动速度更慢，消耗内存更多，但是注意，这并不意味着单体jre比jdk更大，只是相比于jdk中jre大，这使得原本是想要通过剥离出一个可运行的jre来减少内存消耗，反倒比安装jdk消耗更大了。
+问题解决：
+1，显示声明模块的依赖： 模块必须声明对其他模块的显式依赖。 模块系统验证应用程序开发的所有阶段的依赖关系 —— 编译时，链接时和运行时。 假设一个模块声明对另一个模块的依赖，并且第二个模块在启动时丢失。 并报错启动时错误，在这之间会报错运行时操作，且显示的声明对于依赖错误的排除非常有用。 2，模块的强封装 模块必须明确声明其中哪些公共类型可以被其他模块访问。 除非这些模块明确地使其公共类型可访问，否则模块不能访问另一个模块中的公共类型。
+改变： 模块化将jdk重新划分为多个模块，这在idea中可以清晰的看到。 ![[Pasted image 20250630160727.png]]
+使用 1，模块的可访问性配置： 模块明确地使其公共类型可供其他模块使用，并且使用这些公共类型的模块明确声明对模块的依赖。 模块中的所有未导出的软件包都是模块的私有的，它们不能在模块之外使用。
+2，模块图 应用程序的模块化结构可以被视为一个称为模块图。 在模块图中，每个模块都表示为一个节点。 如果第一个模块依赖于第二个模块，则存在从模块到另一个模块的有向边。 通过将称为根模块的一组初始模块的依赖关系与称为可观察模块的模块系统已知的一组模块相结合来构建模块图。
+-p 依赖模块位置 -m代表根模块定义/所检查模块 ： 模块名：主类 java -p lib -m claim/pkg3.Main 3， 语法 基本语句 五种基本语句">
+  <meta property="og:locale" content="zh_CN">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="follow">
+    <meta property="article:published_time" content="2025-07-01T21:52:32+08:00">
+    <meta property="article:modified_time" content="2025-07-01T21:52:32+08:00">
+
+  <meta itemprop="name" content="Jdk8 17的重要新特性学习">
+  <meta itemprop="description" content="本文档的主要目的是学习从jdk8升级至jdk17的所有重要特性。
+单文件的源代码启动 java recordTest.java 这样可以不用生成class文件，只是必须写在一个java文件中。
+对于 Java 初学者并希望尝试简单程序的人特别有用，并且能和 jshell 一起使用。一定能程度上增强了使用 Java 来写脚本程序的能力。
+模块化系统 解释 引用： Java 9 揭秘（2. 模块化系统） - 林本托 - 博客园
+作用： 对包结构进行类型声明
+过往的问题： 1， 依赖版本问题： jar依赖之间的相互引用，仅仅是根据类的全限定路径。但是众所周知，java中的大部分的依赖错误都并非是由于找不到全限定路径，而是引入了错误的版本。 核心： 不同版本的依赖（也就是jar）他们具有相同的权限类限定符的类，但是我们无法确定究竟要不要使用。
+2，依赖缺失问题： 只有在运行时需要加载某个类时，才会具体的检查他们是否存在。
+此外引申的问题是，单体jre（他必须加载完整的类）相比于jdk中裁剪的jre启动速度更慢，消耗内存更多，但是注意，这并不意味着单体jre比jdk更大，只是相比于jdk中jre大，这使得原本是想要通过剥离出一个可运行的jre来减少内存消耗，反倒比安装jdk消耗更大了。
+问题解决：
+1，显示声明模块的依赖： 模块必须声明对其他模块的显式依赖。 模块系统验证应用程序开发的所有阶段的依赖关系 —— 编译时，链接时和运行时。 假设一个模块声明对另一个模块的依赖，并且第二个模块在启动时丢失。 并报错启动时错误，在这之间会报错运行时操作，且显示的声明对于依赖错误的排除非常有用。 2，模块的强封装 模块必须明确声明其中哪些公共类型可以被其他模块访问。 除非这些模块明确地使其公共类型可访问，否则模块不能访问另一个模块中的公共类型。
+改变： 模块化将jdk重新划分为多个模块，这在idea中可以清晰的看到。 ![[Pasted image 20250630160727.png]]
+使用 1，模块的可访问性配置： 模块明确地使其公共类型可供其他模块使用，并且使用这些公共类型的模块明确声明对模块的依赖。 模块中的所有未导出的软件包都是模块的私有的，它们不能在模块之外使用。
+2，模块图 应用程序的模块化结构可以被视为一个称为模块图。 在模块图中，每个模块都表示为一个节点。 如果第一个模块依赖于第二个模块，则存在从模块到另一个模块的有向边。 通过将称为根模块的一组初始模块的依赖关系与称为可观察模块的模块系统已知的一组模块相结合来构建模块图。
+-p 依赖模块位置 -m代表根模块定义/所检查模块 ： 模块名：主类 java -p lib -m claim/pkg3.Main 3， 语法 基本语句 五种基本语句">
+  <meta itemprop="datePublished" content="2025-07-01T21:52:32+08:00">
+  <meta itemprop="dateModified" content="2025-07-01T21:52:32+08:00">
+  <meta itemprop="wordCount" content="203">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Jdk8 17的重要新特性学习">
+  <meta name="twitter:description" content="本文档的主要目的是学习从jdk8升级至jdk17的所有重要特性。
+单文件的源代码启动 java recordTest.java 这样可以不用生成class文件，只是必须写在一个java文件中。
+对于 Java 初学者并希望尝试简单程序的人特别有用，并且能和 jshell 一起使用。一定能程度上增强了使用 Java 来写脚本程序的能力。
+模块化系统 解释 引用： Java 9 揭秘（2. 模块化系统） - 林本托 - 博客园
+作用： 对包结构进行类型声明
+过往的问题： 1， 依赖版本问题： jar依赖之间的相互引用，仅仅是根据类的全限定路径。但是众所周知，java中的大部分的依赖错误都并非是由于找不到全限定路径，而是引入了错误的版本。 核心： 不同版本的依赖（也就是jar）他们具有相同的权限类限定符的类，但是我们无法确定究竟要不要使用。
+2，依赖缺失问题： 只有在运行时需要加载某个类时，才会具体的检查他们是否存在。
+此外引申的问题是，单体jre（他必须加载完整的类）相比于jdk中裁剪的jre启动速度更慢，消耗内存更多，但是注意，这并不意味着单体jre比jdk更大，只是相比于jdk中jre大，这使得原本是想要通过剥离出一个可运行的jre来减少内存消耗，反倒比安装jdk消耗更大了。
+问题解决：
+1，显示声明模块的依赖： 模块必须声明对其他模块的显式依赖。 模块系统验证应用程序开发的所有阶段的依赖关系 —— 编译时，链接时和运行时。 假设一个模块声明对另一个模块的依赖，并且第二个模块在启动时丢失。 并报错启动时错误，在这之间会报错运行时操作，且显示的声明对于依赖错误的排除非常有用。 2，模块的强封装 模块必须明确声明其中哪些公共类型可以被其他模块访问。 除非这些模块明确地使其公共类型可访问，否则模块不能访问另一个模块中的公共类型。
+改变： 模块化将jdk重新划分为多个模块，这在idea中可以清晰的看到。 ![[Pasted image 20250630160727.png]]
+使用 1，模块的可访问性配置： 模块明确地使其公共类型可供其他模块使用，并且使用这些公共类型的模块明确声明对模块的依赖。 模块中的所有未导出的软件包都是模块的私有的，它们不能在模块之外使用。
+2，模块图 应用程序的模块化结构可以被视为一个称为模块图。 在模块图中，每个模块都表示为一个节点。 如果第一个模块依赖于第二个模块，则存在从模块到另一个模块的有向边。 通过将称为根模块的一组初始模块的依赖关系与称为可观察模块的模块系统已知的一组模块相结合来构建模块图。
+-p 依赖模块位置 -m代表根模块定义/所检查模块 ： 模块名：主类 java -p lib -m claim/pkg3.Main 3， 语法 基本语句 五种基本语句">
+
+	
+  </head><body class="ma0 avenir bg-near-white development">
+
+    
+   
+  
+
+  <header>
+    <div class="bg-black">
+      <nav class="pv3 ph3 ph4-ns" role="navigation">
+  <div class="flex-l center items-center justify-between">
+    <a href="/" class="f3 fw2 hover-white white-90 dib no-underline">
+      
+        猢狲
+      
+    </a>
+    <div class="flex-l items-center">
+      
+
+      
+        <ul class="pl0 mr3">
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/" title="主页 page">
+              主页
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title="文章 page">
+              文章
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/follow/" title="长期更新 page">
+              长期更新
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
+              about
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/follow/" title=" page">
+              
+            </a>
+          </li>
+          
+          <li class="list f5 f4-ns fw4 dib pr3">
+            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
+              
+            </a>
+          </li>
+          
+        </ul>
+      
+      <div class="ananke-socials"></div>
+
+    </div>
+  </div>
+</nav>
+
+    </div>
+  </header>
+
+
+
+	
+    
+	
+	<main class="pv0" role="main">
+      
+  
+  
+  <article class="flex-l mw8 center ph3 flex-wrap justify-between">
+    <header class="mt4 w-100">
+      <aside class="instapaper_ignoref b helvetica tracked ttu">
+          
+        
+      </aside><div id="sharing" class="mt3 ananke-socials"></div>
+<h1 class="f1 athelas mt3 mb1">Jdk8 17的重要新特性学习</h1>
+      
+      
+      
+      <time class="f6 mv4 dib tracked" datetime="2025-07-01T21:52:32+08:00">July 1, 2025</time>
+      
+
+      
+      
+    </header>
+    <div class="nested-copy-line-height lh-copy serif f4 nested-links mid-gray pr4-l w-two-thirds-l"><p>本文档的主要目的是学习从jdk8升级至jdk17的所有重要特性。</p>
+<h2 id="单文件的源代码启动">单文件的源代码启动</h2>
+<pre tabindex="0"><code>java  recordTest.java
+</code></pre><p>这样可以不用生成class文件，只是必须写在一个java文件中。</p>
+<p>对于 Java 初学者并希望尝试简单程序的人特别有用，并且能和 jshell 一起使用。一定能程度上增强了使用 Java 来写脚本程序的能力。</p>
+<h2 id="模块化系统">模块化系统</h2>
+<h3 id="解释">解释</h3>
+<p>引用： <a href="https://www.cnblogs.com/IcanFixIt/p/6947763.html">Java 9 揭秘（2. 模块化系统） - 林本托 - 博客园</a></p>
+<p>作用： 对包结构进行类型声明</p>
+<p>过往的问题：
+1， 依赖版本问题： jar依赖之间的相互引用，仅仅是根据类的全限定路径。但是众所周知，java中的大部分的依赖错误都并非是由于找不到全限定路径，而是引入了错误的版本。
+核心： 不同版本的依赖（也就是jar）他们具有相同的权限类限定符的类，但是我们无法确定究竟要不要使用。</p>
+<p>2，依赖缺失问题： 只有在运行时需要加载某个类时，才会具体的检查他们是否存在。</p>
+<p>此外引申的问题是，单体jre（他必须加载完整的类）相比于jdk中裁剪的jre启动速度更慢，消耗内存更多，但是注意，这并不意味着单体jre比jdk更大，只是相比于jdk中jre大，这使得原本是想要通过剥离出一个可运行的jre来减少内存消耗，反倒比安装jdk消耗更大了。</p>
+<p>问题解决：</p>
+<p>1，显示声明模块的依赖：
+模块必须声明对其他模块的显式依赖。 模块系统验证应用程序开发的所有阶段的依赖关系 —— 编译时，链接时和运行时。 假设一个模块声明对另一个模块的依赖，并且第二个模块在启动时丢失。
+并报错启动时错误，在这之间会报错运行时操作，且显示的声明对于依赖错误的排除非常有用。
+2，模块的强封装
+模块必须明确声明其中哪些公共类型可以被其他模块访问。 除非这些模块明确地使其公共类型可访问，否则模块不能访问另一个模块中的公共类型。</p>
+<p>改变：
+模块化将jdk重新划分为多个模块，这在idea中可以清晰的看到。
+![[Pasted image 20250630160727.png]]</p>
+<h3 id="使用">使用</h3>
+<h4 id="1模块的可访问性配置">1，模块的可访问性配置：</h4>
+<p>模块明确地使其公共类型可供其他模块使用，并且使用这些公共类型的模块明确声明对模块的依赖。 模块中的所有未导出的软件包都是模块的私有的，它们不能在模块之外使用。</p>
+<h4 id="2模块图">2，模块图</h4>
+<p>应用程序的模块化结构可以被视为一个称为模块图。 在模块图中，每个模块都表示为一个节点。 如果第一个模块依赖于第二个模块，则存在从模块到另一个模块的有向边。 通过将称为根模块的一组初始模块的依赖关系与称为可观察模块的模块系统已知的一组模块相结合来构建模块图。</p>
+<pre tabindex="0"><code>-p 依赖模块位置  -m代表根模块定义/所检查模块  ： 模块名：主类
+java -p lib -m claim/pkg3.Main
+</code></pre><h4 id="3-语法">3， 语法</h4>
+<h5 id="基本语句">基本语句</h5>
+<p>五种基本语句</p>
+<ul>
+<li>导出语句（exports statement）： 声明导出模块中的某些包</li>
+<li>开放语句（opens statement）：声明一个开放的模块， 可以使用反射访问</li>
+<li>需要语句（requires statement）： 声明模块对另一个模块的依赖关系</li>
+<li>使用语句（uses statement）：表达服务消费</li>
+<li>提供语句（provides statement）： 表达服务提供</li>
+</ul>
+<h5 id="模块命名">模块命名</h5>
+<p>受限关键字： 只有当具体位置出现在模块声明中时，它们才具有特殊意义。 可以将它们用作程序中其他地方的标识符。</p>
+<p>在JDK 9中， open, module, requires, transitive, exports, opens, to, uses, provides 和 with是受限关键字。</p>
+<p>换句话说，可以使用这些受限关键字作为模块名称，例如</p>
+<pre tabindex="0"><code>// Declare a module named 
+module module module { 
+// Module statements go here 
+}
+</code></pre><h5 id="访问控制">访问控制</h5>
+<p>访问控制的语句</p>
+<ul>
+<li>
+<p>导出语句（exports statement）：  声明导出模块中的某些包</p>
+</li>
+<li>
+<p>开放语句（opens statement）： 声明一个开放的模块，可以使用反射访问</p>
+</li>
+</ul>
+<p>ps：  开发语句只是表示可以通过反射访问，但是他们不能够直接访问</p>
+<h5 id="依赖控制">依赖控制</h5>
+<ul>
+<li>transitive: 隐式依赖，
+假设p 依赖q，q依赖r，
+当我在p依赖q时添加这个关键字时，则p隐式r</li>
+<li>static  ： 在编译时的依赖是强制的</li>
+</ul>
+<pre tabindex="0"><code>
+requires transitive &lt;module&gt;;    
+requires static &lt;module&gt;;
+requires transitive static &lt;module&gt;;
+</code></pre><h5 id="对spi机制的支持">对spi机制的支持</h5>
+<ul>
+<li>使用语句（uses statement）：表达服务消费</li>
+<li>提供语句（provides statement）： 表达服务提供</li>
+</ul>
+<p>服务消费者语句定义需要使用的接口，服务提供者则定义对服务的支持/实现(可定义多个)。</p>
+<pre tabindex="0"><code>uses &lt;service-interface&gt;;
+
+
+provides &lt;service-interface&gt;
+    with &lt;service-impl-class1&gt;, &lt;service-impl-class2&gt;...;
+</code></pre><pre tabindex="0"><code>module org {  
+
+    opens org.example;    
+    exports org.example;  
+    provides user with userImpl;  
+}
+
+
+module test {  
+    requires org;  
+    uses user;  
+}
+</code></pre><p>使用</p>
+<pre tabindex="0"><code>ServiceLoader&lt;user&gt; loader = ServiceLoader.load(user.class);  
+loader.iterator().forEachRemaining(user::show);
+</code></pre><h5 id="观察模块信息的命令">观察模块信息的命令</h5>
+<pre tabindex="0"><code>java --module-path ./jdk8-jdk17-1.0-SNAPSHOT.jar --list-modules
+</code></pre><p>ps: 关于命令的含义可以使用java -help查看</p>
+<h4 id="4-注意事项">4 ，注意事项</h4>
+<p>1， 确保module-info.java被编译，在target目录下查看
+2，无论是导入的项目，还是被依赖的项目，如果想要使用模块配置，都必须module-info.java，否则无法被标识为一个模块。
+3,服务提供者和消费者在使用时需要通过反射，那么很显然，他需要对应接口被声明为开放（opens）</p>
+<ul class="pa0">
+  
+</ul>
+<div class="mt6 instapaper_ignoref">
+      
+      
+      </div>
+    </div>
+
+    <aside class="w-30-l mt6-l">
+
+
+
+
+</aside>
+
+  </article>
+
+    </main>
+    <footer class="bg-black bottom-0 w-100 pa3" role="contentinfo">
+  <div class="flex justify-between">
+  <a class="f4 fw4 hover-white white-70 dn dib-ns pv2 ph3 no-underline" href="http://localhost:1313/" >
+    &copy;  猢狲 2025 
+  </a>
+    <div><div class="ananke-socials"></div>
+</div>
+  </div>
+</footer>
+
+  </body>
+</html>

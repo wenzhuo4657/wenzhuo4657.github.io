@@ -6,14 +6,28 @@
     <description>Recent content on 猢狲</description>
     <generator>Hugo</generator>
     <language>zh-CN</language>
-    <lastBuildDate>Tue, 01 Jul 2025 16:04:35 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 04 Jul 2025 16:32:23 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cursor体验如是说</title>
+      <link>http://localhost:1313/posts/cursor%E5%85%A5%E9%97%A8%E6%96%87%E6%A1%A3/</link>
+      <pubDate>Fri, 04 Jul 2025 16:32:23 +0800</pubDate>
+      <guid>http://localhost:1313/posts/cursor%E5%85%A5%E9%97%A8%E6%96%87%E6%A1%A3/</guid>
+      <description>&lt;h1 id=&#34;体验&#34;&gt;体验&lt;/h1&gt;&#xA;&lt;p&gt;仔细体验了cursor之后，我发现程序员这一行业真的要迎来天翻地覆了。&lt;/p&gt;&#xA;&lt;p&gt;1，高级程序员和初级程序员的距离在拉低，资深程序员引以为傲的源码阅读和深度，在cursor的ask模式下不堪一击&lt;/p&gt;&#xA;&lt;p&gt;ps： 前段时间一直在阅读各种源码，hhh，现在真想穿越回去捶死自己。&lt;/p&gt;&#xA;&lt;p&gt;但是话又说回来，cursor在我看来仍然不足以取代程序员，特别是具备良好逻辑的程序员，因为他的定位仍然死ai编程工具，只是ai赋能使其功能变得更加强大。&lt;/p&gt;&#xA;&lt;p&gt;而且对于入门级别的选手来说，通过cursor可以快速的编辑出一个可以正常运行的产品，这是门槛的降低，但是同时，调试一个程序到达理想的状态是cursor无论如何也不能帮助小白完成的，因为所谓的理想，&lt;/p&gt;&#xA;&lt;p&gt;1，老板要的&lt;/p&gt;&#xA;&lt;p&gt;2，程序员指挥的&lt;/p&gt;&#xA;&lt;p&gt;3，cursor做的&lt;/p&gt;&#xA;&lt;p&gt;现阶段cursor仍然不能通过简单的自然语言来调试出一个理想的程序，他只是能够浓缩程序员这个团体，变得更加像我们认为的那样强大，在计算机的世界里畅游无阻，而不是在工位上苦思冥想一个上午，然后打出一个todo。&lt;/p&gt;&#xA;&lt;h1 id=&#34;入门文档链接&#34;&gt;入门文档链接&lt;/h1&gt;&#xA;&lt;p&gt;cursor是基于vscode，所以他的入门实际上是ide的转换&lt;/p&gt;&#xA;&lt;p&gt;idea转： &lt;a href=&#34;https://github.com/tindy2013/subconverter/blob/master/README-cn.md&#34;&gt;https://github.com/tindy2013/subconverter/blob/master/README-cn.md&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;cursor官方文档：&lt;a href=&#34;https://docs.cursor.com/welcome&#34;&gt;Cursor – Welcome&lt;/a&gt;&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>Jdk8 17的重要新特性学习</title>
+      <link>http://localhost:1313/follow/jdk8-17%E7%9A%84%E9%87%8D%E8%A6%81%E6%96%B0%E7%89%B9%E6%80%A7%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Tue, 01 Jul 2025 21:52:32 +0800</pubDate>
+      <guid>http://localhost:1313/follow/jdk8-17%E7%9A%84%E9%87%8D%E8%A6%81%E6%96%B0%E7%89%B9%E6%80%A7%E5%AD%A6%E4%B9%A0/</guid>
+      <description>&lt;p&gt;本文档的主要目的是学习从jdk8升级至jdk17的所有重要特性。&lt;/p&gt;&#xA;&lt;h2 id=&#34;单文件的源代码启动&#34;&gt;单文件的源代码启动&lt;/h2&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;java  recordTest.java&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;这样可以不用生成class文件，只是必须写在一个java文件中。&lt;/p&gt;&#xA;&lt;p&gt;对于 Java 初学者并希望尝试简单程序的人特别有用，并且能和 jshell 一起使用。一定能程度上增强了使用 Java 来写脚本程序的能力。&lt;/p&gt;&#xA;&lt;h2 id=&#34;模块化系统&#34;&gt;模块化系统&lt;/h2&gt;&#xA;&lt;h3 id=&#34;解释&#34;&gt;解释&lt;/h3&gt;&#xA;&lt;p&gt;引用： &lt;a href=&#34;https://www.cnblogs.com/IcanFixIt/p/6947763.html&#34;&gt;Java 9 揭秘（2. 模块化系统） - 林本托 - 博客园&lt;/a&gt;&lt;/p&gt;&#xA;&lt;p&gt;作用： 对包结构进行类型声明&lt;/p&gt;&#xA;&lt;p&gt;过往的问题：&#xA;1， 依赖版本问题： jar依赖之间的相互引用，仅仅是根据类的全限定路径。但是众所周知，java中的大部分的依赖错误都并非是由于找不到全限定路径，而是引入了错误的版本。&#xA;核心： 不同版本的依赖（也就是jar）他们具有相同的权限类限定符的类，但是我们无法确定究竟要不要使用。&lt;/p&gt;&#xA;&lt;p&gt;2，依赖缺失问题： 只有在运行时需要加载某个类时，才会具体的检查他们是否存在。&lt;/p&gt;&#xA;&lt;p&gt;此外引申的问题是，单体jre（他必须加载完整的类）相比于jdk中裁剪的jre启动速度更慢，消耗内存更多，但是注意，这并不意味着单体jre比jdk更大，只是相比于jdk中jre大，这使得原本是想要通过剥离出一个可运行的jre来减少内存消耗，反倒比安装jdk消耗更大了。&lt;/p&gt;&#xA;&lt;p&gt;问题解决：&lt;/p&gt;&#xA;&lt;p&gt;1，显示声明模块的依赖：&#xA;模块必须声明对其他模块的显式依赖。 模块系统验证应用程序开发的所有阶段的依赖关系 —— 编译时，链接时和运行时。 假设一个模块声明对另一个模块的依赖，并且第二个模块在启动时丢失。&#xA;并报错启动时错误，在这之间会报错运行时操作，且显示的声明对于依赖错误的排除非常有用。&#xA;2，模块的强封装&#xA;模块必须明确声明其中哪些公共类型可以被其他模块访问。 除非这些模块明确地使其公共类型可访问，否则模块不能访问另一个模块中的公共类型。&lt;/p&gt;&#xA;&lt;p&gt;改变：&#xA;模块化将jdk重新划分为多个模块，这在idea中可以清晰的看到。&#xA;![[Pasted image 20250630160727.png]]&lt;/p&gt;&#xA;&lt;h3 id=&#34;使用&#34;&gt;使用&lt;/h3&gt;&#xA;&lt;h4 id=&#34;1模块的可访问性配置&#34;&gt;1，模块的可访问性配置：&lt;/h4&gt;&#xA;&lt;p&gt;模块明确地使其公共类型可供其他模块使用，并且使用这些公共类型的模块明确声明对模块的依赖。 模块中的所有未导出的软件包都是模块的私有的，它们不能在模块之外使用。&lt;/p&gt;&#xA;&lt;h4 id=&#34;2模块图&#34;&gt;2，模块图&lt;/h4&gt;&#xA;&lt;p&gt;应用程序的模块化结构可以被视为一个称为模块图。 在模块图中，每个模块都表示为一个节点。 如果第一个模块依赖于第二个模块，则存在从模块到另一个模块的有向边。 通过将称为根模块的一组初始模块的依赖关系与称为可观察模块的模块系统已知的一组模块相结合来构建模块图。&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;-p 依赖模块位置  -m代表根模块定义/所检查模块  ： 模块名：主类&#xA;java -p lib -m claim/pkg3.Main&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h4 id=&#34;3-语法&#34;&gt;3， 语法&lt;/h4&gt;&#xA;&lt;h5 id=&#34;基本语句&#34;&gt;基本语句&lt;/h5&gt;&#xA;&lt;p&gt;五种基本语句&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Vps脚本收集</title>
       <link>http://localhost:1313/follow/vps%E8%84%9A%E6%9C%AC%E6%94%B6%E9%9B%86/</link>
       <pubDate>Tue, 01 Jul 2025 16:04:35 +0800</pubDate>
       <guid>http://localhost:1313/follow/vps%E8%84%9A%E6%9C%AC%E6%94%B6%E9%9B%86/</guid>
-      <description>&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://github.com/NodeSeekDev/NodeScriptKit&#34;&gt;NodeScriptKit&lt;/a&gt;&lt;/strong&gt;：nodeseek社区维护的脚本合集&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;2,&lt;a href=&#34;https://github.com/sjlleo/netflix-verify&#34;&gt;netflix-verify&lt;/a&gt;：奈飞解锁监测&lt;/p&gt;&#xA;&lt;p&gt;3，&lt;strong&gt;&lt;a href=&#34;https://github.com/xykt/IPQuality&#34;&gt;IPQuality&lt;/a&gt;&lt;/strong&gt;：IP质量检测脚本&lt;/p&gt;</description>
+      <description>&lt;ol&gt;&#xA;&lt;li&gt;&lt;strong&gt;&lt;a href=&#34;https://github.com/NodeSeekDev/NodeScriptKit&#34;&gt;NodeScriptKit&lt;/a&gt;&lt;/strong&gt;：nodeseek社区维护的脚本合集&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;p&gt;2,&lt;a href=&#34;https://github.com/sjlleo/netflix-verify&#34;&gt;netflix-verify&lt;/a&gt;：奈飞解锁监测&lt;/p&gt;&#xA;&lt;p&gt;3，&lt;strong&gt;&lt;a href=&#34;https://github.com/xykt/IPQuality&#34;&gt;IPQuality&lt;/a&gt;&lt;/strong&gt;：IP质量检测脚本&lt;/p&gt;&#xA;&lt;p&gt;4，&lt;a href=&#34;https://vps.la/2023/05/10/vps%E5%B8%B8%E7%94%A8%E6%B5%8B%E8%AF%95%E8%84%9A%E6%9C%ACunixbench-yabs-bench-%E4%B8%89%E7%BD%91%E5%9B%9E%E7%A8%8B%E8%B7%AF%E7%94%B1%E5%8F%8A%E6%B5%8B%E9%80%9F-ping-pe%E7%AD%89/&#34;&gt;脚本收录&lt;/a&gt;&lt;/p&gt;</description>
     </item>
     <item>
       <title>Jdk的接口收集</title>
