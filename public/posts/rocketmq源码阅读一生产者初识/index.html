@@ -100,8 +100,8 @@ private String instanceName = System.getProperty(&#34;rocketmq.client.name&#34;,
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-04-16T19:28:54+00:00">
-    <meta property="article:modified_time" content="2025-04-16T19:28:54+00:00">
+    <meta property="article:published_time" content="2025-06-29T10:00:14+08:00">
+    <meta property="article:modified_time" content="2025-06-29T10:00:14+08:00">
 
   <meta itemprop="name" content="rocketmq源码阅读（一）：生产者初识">
   <meta itemprop="description" content="源码阅读（一） 搭建环境 rocketmq的java-sdk并没有什么特殊的构建的，直接加载maven即可。
@@ -118,8 +118,8 @@ private String clientIP = NetworkUtil.getLocalAddress(); 寻找ip的方法。
 private String instanceName = System.getProperty(&#34;rocketmq.client.name&#34;, &#34;DEFAULT&#34;); 生产者名称
 # 客户端id，这个要注意与生产者名称区分，在我看来是类似与多元组一样的， ip&#43;instanceName&#43;...... public String buildMQClientId() { StringBuilder sb = new StringBuilder(); sb.append(this.getClientIP()); sb.append(&#34;@&#34;); sb.append(this.getInstanceName()); if (!UtilAll.isBlank(this.unitName)) { sb.append(&#34;@&#34;); sb.append(this.unitName); } if (enableStreamRequestType) { sb.append(&#34;@&#34;); sb.append(RequestType.STREAM); } return sb.toString(); } 需要注意的是对于修改clentIP可以直接通过producer.setClientIP(DEFAULT_NAMESRVADDR);,clientID则并没有这个字段，他是在生产者启动时自动生成的的一个标识符，或许可以这么说 ip&#43;instanceName表示了这个主机上的所有rocketmq的消费者和生产者。
 追溯buildMQClientId即可发现，start的调用链路中存在这个方法。">
-  <meta itemprop="datePublished" content="2025-04-16T19:28:54+00:00">
-  <meta itemprop="dateModified" content="2025-04-16T19:28:54+00:00">
+  <meta itemprop="datePublished" content="2025-06-29T10:00:14+08:00">
+  <meta itemprop="dateModified" content="2025-06-29T10:00:14+08:00">
   <meta itemprop="wordCount" content="698">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="rocketmq源码阅读（一）：生产者初识">
@@ -173,18 +173,6 @@ private String instanceName = System.getProperty(&#34;rocketmq.client.name&#34;,
           <li class="list f5 f4-ns fw4 dib pr3">
             <a class="hover-white white-90 no-underline" href="/follow/" title="长期更新 page">
               长期更新
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
-              about
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
-              
             </a>
           </li>
           
@@ -526,7 +514,7 @@ public static final int GET_ROUTEINFO_BY_TOPIC = 105;
 <p><img src="https://blog.wenzhuo4657.org/img/2025/04/20244c5203f9570357a426db7ebc3a23.png" alt=""></p>
 <p>客户端所用的code类
 <code>org.apache.rocketmq.remoting.protocol.RequestCode</code></p>
- 
+<pre tabindex="0"><code></code></pre> 
       </div>
     </article>
   </div>

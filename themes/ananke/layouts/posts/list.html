@@ -1,17 +1,29 @@
 {{ define "main" }}
-<!-- {{ partial "menu.html" (dict "menuID" "article" "page"  .) }} -->
-  <article class="pa3 pa4-ns nested-copy-line-height">
-    <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
-      {{- .Content -}}
-    </section>
-
-    <section class="flex-ns mt5 flex-wrap justify-around">
-      {{ range .Paginator.Pages }}
-        <div class="w-100 w-30-l mb4 relative bg-white">
-          {{ .Render "summary" }}
-        </div>
-      {{ end }}
-    </section>
-    <!-- {{- template "_internal/pagination.html" . -}} -->
-  </article>
+<article class="pa3 pa4-ns nested-copy-line-height">
+  <div style="margin-bottom:2em;">
+    <input id="post-search" type="text" placeholder="搜索文章标题..." style="width:100%;padding:0.5em 1em;font-size:1.2em;border:1px solid #ccc;border-radius:4px;">
+  </div>
+  <section id="post-list" class="cf ph3 ph5-l pv3 pv4-l f4 tl center measure-wide lh-copy nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
+    {{ range .Pages.ByDate.Reverse }}
+      <div class="mb3 post-item">
+        <a href="{{ .RelPermalink }}" class="f3 link dim near-black">{{ .Title }}</a>
+        <span class="f6 gray ml2">{{ .Date.Format "2006-01-02" }}</span>
+      </div>
+    {{ end }}
+  </section>
+</article>
+<script>
+(function() {
+  var input = document.getElementById('post-search');
+  var list = document.getElementById('post-list');
+  var items = Array.from(list.getElementsByClassName('post-item'));
+  input.addEventListener('input', function() {
+    var val = this.value.trim().toLowerCase();
+    items.forEach(function(item) {
+      var title = item.textContent.trim().toLowerCase();
+      item.style.display = (val === '' || title.startsWith(val)) ? '' : 'none';
+    });
+  });
+})();
+</script>
 {{ end }}

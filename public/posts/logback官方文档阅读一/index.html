@@ -113,8 +113,8 @@ logger： 指定日志记录根（全限定类名）和appender的关联 appende
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-05-14T08:18:43+00:00">
-    <meta property="article:modified_time" content="2025-05-14T08:18:43+00:00">
+    <meta property="article:published_time" content="2025-06-29T10:00:14+08:00">
+    <meta property="article:modified_time" content="2025-06-29T10:00:14+08:00">
 
   <meta itemprop="name" content="logback官方文档阅读（一）">
   <meta itemprop="description" content="logback 架构 Logback 架构 logback的核心依赖有：logback-core，logback-classic 和 logback-access
@@ -123,8 +123,8 @@ access： 与 Servlet 容器（例如 Tomcat 和 Jetty）集成，以提供 HTTP
 配置 Logback.xml配置的两个重要标签：Logger，Appender
 logger： 指定日志记录根（全限定类名）和appender的关联 appender： 日志的具体输出实现，例如： 控制台输出、文件输出等
 示例配置 &lt;configuration scan=&#34;true&#34; scanPeriod=&#34;60 seconds&#34; debug=&#34;false&#34;&gt; &lt;property name=&#34;console&#34; value=&#34;==\n[%-5level] %red(%d{HH:mm}) Thread:[%thread] Method:%green(%M) %cyan(%X{traceId}) classpath:%c \n%highlight(return):%m%n&#34;&gt;&lt;/property&gt; &lt;property name=&#34;log_dir&#34; value=&#34;./data/log&#34;&gt;&lt;/property&gt; &lt;appender name=&#34;STDOUT&#34; class=&#34;ch.qos.logback.core.ConsoleAppender&#34;&gt; &lt;encoder class=&#34;ch.qos.logback.classic.encoder.PatternLayoutEncoder&#34;&gt; &lt;pattern&gt;${console}&lt;/pattern&gt; &lt;charset&gt;utf8&lt;/charset&gt; &lt;/encoder&gt; &lt;/appender&gt; &lt;!--html格式日志文件输出appender--&gt; &lt;appender name=&#34;SERVICE_APPENDER&#34; class=&#34;ch.qos.logback.core.FileAppender&#34;&gt; &lt;!--日志文件保存路径--&gt; &lt;file&gt;${log_dir}/logback.html&lt;/file&gt; &lt;!--html 消息格式配置--&gt; &lt;encoder class=&#34;ch.qos.logback.core.encoder.LayoutWrappingEncoder&#34;&gt; &lt;layout class=&#34;ch.qos.logback.classic.html.HTMLLayout&#34;&gt; &lt;/layout&gt; &lt;/encoder&gt; &lt;/appender&gt; &lt;appender name=&#34;All_APPENDER&#34; class=&#34;ch.qos.logback.core.rolling.RollingFileAppender&#34;&gt; &lt;file&gt;${log_dir}/All/demo.log&lt;/file&gt; &lt;encoder&gt; &lt;pattern&gt;%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n&lt;/pattern&gt; &lt;/encoder&gt; &lt;rollingPolicy class=&#34;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&#34;&gt; &lt;fileNamePattern&gt;${log_dir}/All/demo.%d{yyyy-MM-dd}.log&lt;/fileNamePattern&gt; &lt;/rollingPolicy&gt; &lt;/appender&gt; &lt;!-- &lt;/appender&gt;--&gt; &lt;root level=&#34;DEBUG&#34;&gt; &lt;appender-ref ref=&#34;STDOUT&#34;/&gt; &lt;appender-ref ref=&#34;All_APPENDER&#34;&gt;&lt;/appender-ref&gt; &lt;appender-ref ref=&#34;SERVICE_APPENDER&#34;/&gt; &lt;/root&gt; &lt;logger name=&#34;org/example&#34; level=&#34;ERROR&#34; additivity=&#34;true&#34;&gt; &lt;appender-ref ref=&#34;SERVICE_APPENDER&#34;/&gt; &lt;/logger&gt; &lt;/configuration&gt; 官网文档阅读 文档首页">
-  <meta itemprop="datePublished" content="2025-05-14T08:18:43+00:00">
-  <meta itemprop="dateModified" content="2025-05-14T08:18:43+00:00">
+  <meta itemprop="datePublished" content="2025-06-29T10:00:14+08:00">
+  <meta itemprop="dateModified" content="2025-06-29T10:00:14+08:00">
   <meta itemprop="wordCount" content="393">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="logback官方文档阅读（一）">
@@ -170,18 +170,6 @@ logger： 指定日志记录根（全限定类名）和appender的关联 appende
           <li class="list f5 f4-ns fw4 dib pr3">
             <a class="hover-white white-90 no-underline" href="/follow/" title="长期更新 page">
               长期更新
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
-              about
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
-              
             </a>
           </li>
           

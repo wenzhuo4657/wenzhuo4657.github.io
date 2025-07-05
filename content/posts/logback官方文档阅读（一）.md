@@ -1,8 +1,8 @@
----
-title: logback官方文档阅读（一）
-date: 2025-05-14 08:18:43
-layout : 'singlet'
----
++++
+date = '2025-06-29T10:00:14+08:00'
+draft = false
+title = 'logback官方文档阅读（一）'
++++
 
 
 

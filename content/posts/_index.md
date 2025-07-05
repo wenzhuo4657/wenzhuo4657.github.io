@@ -1,6 +1,4 @@
 +++
-date = '2025-06-22T21:22:30+08:00'
+date = '2025-06-29T10:00:14+08:00'
 draft = false
-menu =  ['main', 'posts']
-layouts = 'list'
 +++

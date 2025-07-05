@@ -19,10 +19,6 @@ sectionPagesMenu = 'main'
     name = '长期更新'
     pageRef = '/follow/_index'
     weight = 99999
-[[menu.main]]
-    name = 'about'
-    pageRef = '/about/_index'
-    weight = 100000
 [markup.goldmark.renderer]
   unsafe = true  # 允许渲染原始 HTML
 [security]

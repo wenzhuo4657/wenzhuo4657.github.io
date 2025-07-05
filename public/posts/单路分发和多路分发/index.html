@@ -110,8 +110,8 @@ package enums; import java.util.*; import static enums.Outcome.*; enum RoShamBo5
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-01-21T15:01:05+00:00">
-    <meta property="article:modified_time" content="2025-01-21T15:01:05+00:00">
+    <meta property="article:published_time" content="2025-06-29T10:00:14+08:00">
+    <meta property="article:modified_time" content="2025-06-29T10:00:14+08:00">
 
   <meta itemprop="name" content="单路分发和多路分发">
   <meta itemprop="description" content="单路分发 前置概念： 接收者对象：方法调用的目标对象 动态链接：在Java源文件被编译到字节码文件时，所有的变量和方法引用都作为符号引用保存在class文件的常量池里。 引用类型/静态类型：java对象的声明类型 运行类型：jvm中对象的实际类型，是堆区数据的对象类型。
@@ -126,8 +126,8 @@ java实现两路分发实际上就是在方法调用中再次触发方法调用�
 ## 可以使用枚举、swich简化代码实现 @Override public Outcome compete(Item it) { return it.eval(this); } 且注意，只有it.eveal(this)找到的方法才是期望的方法，第一次执行找到compete方法是实现两路分发的过程。
 EnumMap 实现：
 package enums; import java.util.*; import static enums.Outcome.*; enum RoShamBo5 implements Competitor&lt;RoShamBo5&gt; { PAPER, SCISSORS, ROCK; static EnumMap&lt;RoShamBo5,EnumMap&lt;RoShamBo5,Outcome&gt;&gt; table = new EnumMap&lt;&gt;(RoShamBo5.class); static { for(RoShamBo5 it : RoShamBo5.values()) table.put(it, new EnumMap&lt;&gt;(RoShamBo5.class)); initRow(PAPER, DRAW, LOSE, WIN); initRow(SCISSORS, WIN, DRAW, LOSE); initRow(ROCK, LOSE, WIN, DRAW); } static void initRow(RoShamBo5 it, Outcome vPAPER, Outcome vSCISSORS, Outcome vROCK) { EnumMap&lt;RoShamBo5,Outcome&gt; row = RoShamBo5.table.get(it); row.put(RoShamBo5.PAPER, vPAPER); row.put(RoShamBo5.SCISSORS, vSCISSORS); row.put(RoShamBo5.ROCK, vROCK); } @Override public Outcome compete(RoShamBo5 it) { return table.get(this).get(it); } public static void main(String[] args) { RoShamBo.play(RoShamBo5.class, 20); } } 实际上依旧是二次选择，只是没有触发方法的动态链接机制，而是通过map类型手动填充了一张表格进行分发。">
-  <meta itemprop="datePublished" content="2025-01-21T15:01:05+00:00">
-  <meta itemprop="dateModified" content="2025-01-21T15:01:05+00:00">
+  <meta itemprop="datePublished" content="2025-06-29T10:00:14+08:00">
+  <meta itemprop="dateModified" content="2025-06-29T10:00:14+08:00">
   <meta itemprop="wordCount" content="126">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="单路分发和多路分发">
@@ -179,18 +179,6 @@ package enums; import java.util.*; import static enums.Outcome.*; enum RoShamBo5
           <li class="list f5 f4-ns fw4 dib pr3">
             <a class="hover-white white-90 no-underline" href="/follow/" title="长期更新 page">
               长期更新
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
-              about
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
-              
             </a>
           </li>
           

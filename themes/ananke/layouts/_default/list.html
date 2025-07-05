@@ -1,25 +1,37 @@
 {{ define "main" }}
-  <!-- <article class="box pa3 pa4-ns nested-copy-line-height "> -->
-  
-<!-- <article class=" ">  -->
-    <section class="">
-      {{ $image := resources.GetRemote "https://blog.wenzhuo4657.org/img/2025/06/e495c75605c66163a0dcecacb10a7275.jpg" }}
-      {{ if $image }}
-        <img src="{{ $image.RelPermalink }}" alt="示例图片"   style="background-color: rgba(0, 0, 0, 0.5) " class="w-100">
-      {{ else }}
-        <p class="red">图片加载失败，请检查 URL 或网络设置。</p>
-      {{ end }}
+  <article class="box pa3 pa4-ns nested-copy-line-height" style="position:relative; min-height:100vh; height:100vh; overflow:hidden;">
+    <div 
+      style="
+        position:absolute;
+        top:0; left:0; right:0; bottom:0;
+        width:100vw;
+        height:100vh;
+        background: url('https://blog.wenzhuo4657.org/img/2025/06/e495c75605c66163a0dcecacb10a7275.jpg') center center / cover no-repeat;
+        z-index:1;
+      ">
+    </div>
+    <div 
+      style="
+        position:absolute;
+        top:0; left:0; right:0; bottom:0;
+        width:100vw;
+        height:100vh;
+        background: rgba(0,0,0,0.55);
+        z-index:2;
+      ">
+    </div>
+    <section 
+      class="cf ph3 ph5-l pv3 pv4-l f4 center measure-wide lh-copy nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}"
+      style="position:relative; z-index:3; color:#fff; text-shadow: 0 2px 8px rgba(0,0,0,0.8); font-weight:bold; text-align:left;">
+      <style>
+        /* 段落首行缩进2em，li不缩进 */
+        section p { text-indent:2em; margin-bottom:1em; }
+        section li { text-indent:0; }
+      </style>
+      {{- .Content -}}
     </section>
-
-    <!-- <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}"> -->
-      <!-- {{- .Content -}} -->
-    <!-- <section class="flex-ns mt5 flex-wrap justify-around"> -->
-      <!-- {{ range .Paginator.Pages }} -->
-        <!-- <div class="w-100 w-30-l mb4 relative bg-white"> -->
-          <!-- {{ .Render "summary" }} -->
-        <!-- </div> -->
-      <!-- {{ end }} -->
-    <!-- </section> -->
-    <!-- {{- template "_internal/pagination.html" . -}} -->
   </article>
 {{ end }}
+
+
+

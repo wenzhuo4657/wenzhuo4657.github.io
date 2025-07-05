@@ -1,9 +1,8 @@
----
-title: rocketmq源码阅读（一）：生产者初识
-date: 2025-04-16 19:28:54
-layout : 'singlet'
-
----
++++
+date = '2025-06-29T10:00:14+08:00'
+draft = false
+title = 'rocketmq源码阅读（一）：生产者初识'
++++
 
 
 
@@ -533,3 +532,7 @@ broker的更新和维护
 
 客户端所用的code类
 `org.apache.rocketmq.remoting.protocol.RequestCode`
+
+```
+
+```

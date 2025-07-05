@@ -1,11 +1,13 @@
 {{ define "main" }}
   <article class="pa3 pa4-ns nested-copy-line-height">
-    <section class="cf ph3 ph5-l pv3 pv4-l f4 tc-l center measure-wide lh-copy nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
+    <section class="cf ph3 ph5-l pv3 pv4-l f4 tl  lh-copy nested-links {{ $.Param "text_color" | compare.Default "mid-gray" }}">
       {{- .Content -}}
-    <section class="flex-ns mt5 flex-wrap justify-around">
+    </section>
+    <section class="mt5 flex flex-column items-center">
       {{ range .Paginator.Pages }}
-        <div class="w-100 w-30-l mb4 relative bg-white">
-          {{ .Render "summary" }}
+        <div class="w-100 mb4 pb3 bb b--moon-gray post-item" style="max-width: 700px;">
+          <a href="{{ .RelPermalink }}" class="f3 link dim near-black">{{ .Title }}</a>
+          <span class="f6 gray ml2">{{ .Date.Format "2006-01-02" }}</span>
         </div>
       {{ end }}
     </section>

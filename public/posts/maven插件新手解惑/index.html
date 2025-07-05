@@ -129,8 +129,8 @@ spring-boot-maven-plugin:repackage 该repackage目标不应在命令行上单独
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-04-06T16:44:01+00:00">
-    <meta property="article:modified_time" content="2025-04-06T16:44:01+00:00">
+    <meta property="article:published_time" content="2025-06-29T10:00:14+08:00">
+    <meta property="article:modified_time" content="2025-06-29T10:00:14+08:00">
 
   <meta itemprop="name" content="maven插件新手解惑">
   <meta itemprop="description" content="maven插件的定义 maven插件的定义是在pom文件下的
@@ -156,8 +156,8 @@ springboot与spring最大的区别在我这个小白看来则是注解开发，@
 spring-boot-maven-plugin:repackage 该repackage目标不应在命令行上单独使用，因为它会对 阶段生成的源jar（或）进行操作
 翻译成人话就是他需要在maven生命周期的打包阶段之后执行，并且无法单独执行，只能绑定在该打包阶段伴随执行。
 &lt;plugin&gt; &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt; &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt; &lt;version&gt;2.6.0&lt;/version&gt; &lt;executions&gt; &lt;!-- 每一个&lt;execution&gt;都是一个归档包的定义 --&gt; &lt;!-- 可执行jar包配置--&gt; &lt;execution&gt; &lt;id&gt;repackage&lt;/id&gt; &lt;goals&gt; &lt;!-- 绑定生命周期在package后--&gt; &lt;goal&gt;repackage&lt;/goal&gt; &lt;/goals&gt; &lt;configuration&gt; &lt;!-- 为可执行jar包新增后缀名，避免和普通jar包冲突--&gt; &lt;classifier&gt;exec&lt;/classifier&gt; &lt;/configuration&gt; &lt;/execution&gt; &lt;/plugin&gt; classifier: 分类器。官网的解释很绕口，总之实现结果就是给重新打包的jar增加后缀，否则，就会替换普通jar，普通jar最终也只会在构建的target中出现。">
-  <meta itemprop="datePublished" content="2025-04-06T16:44:01+00:00">
-  <meta itemprop="dateModified" content="2025-04-06T16:44:01+00:00">
+  <meta itemprop="datePublished" content="2025-06-29T10:00:14+08:00">
+  <meta itemprop="dateModified" content="2025-06-29T10:00:14+08:00">
   <meta itemprop="wordCount" content="173">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="maven插件新手解惑">
@@ -220,18 +220,6 @@ spring-boot-maven-plugin:repackage 该repackage目标不应在命令行上单独
           <li class="list f5 f4-ns fw4 dib pr3">
             <a class="hover-white white-90 no-underline" href="/follow/" title="长期更新 page">
               长期更新
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
-              about
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
-              
             </a>
           </li>
           

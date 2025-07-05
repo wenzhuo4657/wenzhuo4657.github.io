@@ -24,10 +24,32 @@
 // 不清楚这个文件什么用，但是在这里写css，可以在布局文件中使用，因此，这之后的代码都充当自定义
 
 .box {
-			width: 100%;
-	
-            background-color: rgb(245, 245, 213); /* 浅黄色背景 */
+    /* 设置背景图片 */
+    background-image: url('https://blog.wenzhuo4657.org/img/2025/06/e495c75605c66163a0dcecacb10a7275.jpg');
+    
+    /* 确保背景图片不重复 */
+    /* background-repeat: no-repeat; */
+
+    
+    /* 使背景图片完全覆盖整个元素 */
+    background-size: cover;
+    
+    /* 设置浅黄色作为备用背景色 */
+    background-color: rgb(245, 245, 213);
+    
+    /* 添加半透明的白色覆盖层 */
+    position: relative;  /* 相对定位，以便于绝对定位子元素 */
         }
+/* 创建一个伪元素来实现半透明覆盖效果 */
+.box::before {
+    content: '';  /* 必须定义content属性 */
+    position: absolute;  /* 绝对定位，基于父元素的位置 */
+    top: 0;  /* 从顶部开始 */
+    left: 0;  /* 从左边开始 */
+    right: 0;  /* 延伸到右边结束 */
+    bottom: 0;  /* 延伸到底部结束 */
+    background-color: rgba(255, 255, 255, 0.5);  /* 白色且半透明 */
+}
 		
 // 淡化图片北京
 .bg01{

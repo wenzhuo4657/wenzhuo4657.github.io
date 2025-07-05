@@ -113,8 +113,8 @@ String fname = System.getProperty(&#34;java.util.logging.config.file&#34;); if (
   <meta property="og:locale" content="zh_CN">
   <meta property="og:type" content="article">
     <meta property="article:section" content="posts">
-    <meta property="article:published_time" content="2025-03-07T16:07:46+00:00">
-    <meta property="article:modified_time" content="2025-03-07T16:07:46+00:00">
+    <meta property="article:published_time" content="2025-03-07T16:07:46+08:00">
+    <meta property="article:modified_time" content="2025-03-07T16:07:46+08:00">
 
   <meta itemprop="name" content="tomcat源码阅读（一）">
   <meta itemprop="description" content="tomcat源码 idea环境搭建 源码版本apache-tomcat-9.0.43-src
@@ -137,8 +137,8 @@ https://blog.csdn.net/weixin_44109450/article/details/126544310
 并且由于该类属于依赖包jdk的一部分，
 进一步追溯之后发现关键读取文件的方法LogManager#readConfiguration（）
 String fname = System.getProperty(&#34;java.util.logging.config.file&#34;); if (fname == null) { fname = System.getProperty(&#34;java.home&#34;); if (fname == null) { throw new Error(&#34;Can&#39;t find java.home ??&#34;); } File f = new File(fname, &#34;lib&#34;); f = new File(f, &#34;logging.properties&#34;); fname = f.getCanonicalPath(); } try (final InputStream in = new FileInputStream(fname)) { final BufferedInputStream bin = new BufferedInputStream(in); readConfiguration(bin); } 首先说结论，无论使更改成conf还是jdk目录下的logging.properties,他们所影响的编码都只是外层的一部分，不能影响tomcat输出的报错信息。">
-  <meta itemprop="datePublished" content="2025-03-07T16:07:46+00:00">
-  <meta itemprop="dateModified" content="2025-03-07T16:07:46+00:00">
+  <meta itemprop="datePublished" content="2025-03-07T16:07:46+08:00">
+  <meta itemprop="dateModified" content="2025-03-07T16:07:46+08:00">
   <meta itemprop="wordCount" content="138">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="tomcat源码阅读（一）">
@@ -198,18 +198,6 @@ String fname = System.getProperty(&#34;java.util.logging.config.file&#34;); if (
           <li class="list f5 f4-ns fw4 dib pr3">
             <a class="hover-white white-90 no-underline" href="/follow/" title="长期更新 page">
               长期更新
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/about/" title="about page">
-              about
-            </a>
-          </li>
-          
-          <li class="list f5 f4-ns fw4 dib pr3">
-            <a class="hover-white white-90 no-underline" href="/posts/" title=" page">
-              
             </a>
           </li>
           

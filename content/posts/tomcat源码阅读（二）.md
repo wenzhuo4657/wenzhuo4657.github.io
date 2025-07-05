@@ -1,8 +1,9 @@
----
-title: tomcat源码阅读（二）
-date: 2025-03-10 14:59:35
-layout : 'singlet'
----
++++
+date = '2025-03-10T14:59:35+08:00'
+draft = false
+title = 'tomcat源码阅读（二）'
+layout = 'singlet'
++++
 
 
 

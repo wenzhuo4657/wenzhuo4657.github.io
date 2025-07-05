@@ -1,8 +1,9 @@
----
-title: dubbo的spi
-date: 2025-01-22 16:47:11
-layout : 'singlet'
----
++++
+date = '2025-06-29T10:00:14+08:00'
+draft = false
+title = 'dubbo的spi'
+layout = 'singlet'
++++
 
 
 
@@ -376,3 +377,7 @@ return extension.queryCountry(arg0);//扩展服务执行    
 
 而Dubbo可以通过url携带参数实例化。
 
+
+```
+
+```

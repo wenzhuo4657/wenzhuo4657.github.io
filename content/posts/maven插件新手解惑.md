@@ -1,8 +1,8 @@
----
-title: maven插件新手解惑
-date: 2025-04-06 16:44:01
-layout : 'singlet'
----
++++
+date = '2025-06-29T10:00:14+08:00'
+draft = false
+title = 'maven插件新手解惑'
++++
 
 
 

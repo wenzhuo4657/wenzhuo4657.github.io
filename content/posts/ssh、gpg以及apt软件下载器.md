@@ -1,8 +1,9 @@
----
-title: ssh、gpg以及apt软件下载器
-date: 2025-05-25 20:44:43
-layout : 'singlet'
----
++++
+date = '2025-06-29T10:00:14+08:00'
+draft = false
+title = 'ssh、gpg以及apt软件下载器'
+layout = 'singlet'
++++
 
 
 
