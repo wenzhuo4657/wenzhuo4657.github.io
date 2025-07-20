@@ -1,0 +1,98 @@
+/* 自定义样式 */
+
+/* 优化代码块样式 */
+pre {
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+}
+
+/* 优化引用块样式 */
+blockquote {
+  background-color: #f5f5f5;
+  border-left: 4px solid #333;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 8px 8px 0;
+}
+
+/* 优化链接样式 */
+a {
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s ease;
+}
+
+a:hover {
+  border-bottom-color: currentColor;
+}
+
+/* 深色模式适配 */
+@media (prefers-color-scheme: dark) {
+  blockquote {
+    background-color: #2d2d2d;
+    border-left-color: #666;
+  }
+  
+  body {
+    background-color: #1a1a1a;
+    color: #f5f5f5;
+  }
+  
+  a {
+    color: #66b3ff;
+  }
+}
+
+/* 优化表格样式 */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 2rem 0;
+}
+
+th, td {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+}
+
+th {
+  background-color: #f5f5f5;
+}
+
+/* 响应式图片 */
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+}
+
+/* 文章标题样式优化 */
+.post-title {
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+/* 文章元信息样式 */
+.post-meta {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+/* 标签样式 */
+.tags a {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  margin: 0.2rem;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.tags a:hover {
+  background-color: #e0e0e0;
+}

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="200" height="200" version="1.1" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+ <g fill="none" stroke="#000">
+  <circle cx="100" cy="100" r="90" stroke-width="8"/>
+  <path d="m70 130c0 0 15-50 30-50s30 50 30 50" stroke-linecap="round" stroke-width="8"/>
+  <circle cx="70" cy="70" r="10" fill="#000"/>
+  <circle cx="130" cy="70" r="10" fill="#000"/>
+ </g>
+</svg>
